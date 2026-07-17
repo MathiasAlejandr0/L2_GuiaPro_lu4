@@ -312,13 +312,26 @@
   <div class="chat-panel" id="chatPanel">
     <div class="chat-head">
       <img src="https://masterwork.wiki/i64/etc_exp_point_i00.png" width="32" height="32" alt="" style="image-rendering:pixelated" />
-      <div><strong>Asistente Lu4</strong><span id="chatHeadSub">Índice RAG local · guía + items</span></div>
+      <div><strong>Asistente Lu4</strong><span id="chatHeadSub">Activa Chat inteligente para respuestas tipo IA</span></div>
       <button class="chat-close" id="chatClose">×</button>
     </div>
     <div class="chat-keybar">
-      <span class="mode-pill on" id="chatModePill">RAG Lu4</span>
+      <span class="mode-pill" id="chatModePill">Índice local</span>
+      <button type="button" class="linkish" id="chatAiToggle">Chat inteligente</button>
       <button type="button" class="linkish" id="chatClearHist" title="Olvidar esta charla">Nueva charla</button>
       <button type="button" class="linkish" id="chatRetrain" title="Reconstruir índice">Reentrenar índice</button>
+      <form class="chat-key-form" id="chatAiForm" autocomplete="off">
+        <p class="chat-key-hint" style="width:100%;margin:0 0 6px">
+          Para un chat que <strong>entienda y resuelva</strong> hace falta un LLM gratis (Groq).
+          1) Entra a <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a>
+          2) Crea una key (<code>gsk_…</code>) y pégala abajo.
+          Opcional (amigos sin key): despliega <code>cloudflare-worker</code> y pega la URL del worker.
+        </p>
+        <input id="chatGroqKey" type="password" placeholder="Key Groq gsk_…" spellcheck="false" />
+        <input id="chatWorkerUrl" type="url" placeholder="URL worker (opcional) https://….workers.dev" spellcheck="false" />
+        <button type="submit">Activar IA</button>
+        <button type="button" id="chatAiClear">Desactivar IA</button>
+      </form>
     </div>
     <div class="chat-msgs" id="chatMsgs"></div>
     <div class="chat-suggestions" id="chatSuggestions"></div>
@@ -332,6 +345,7 @@
   <script src="lu4-guides.js"></script>
   <script src="lu4-chat.js"></script>
   <script src="lu4-rag.js"></script>
+  <script src="lu4-ai.js"></script>
   <script>
     const G = window.Lu4Guides;
     if (!G) {
@@ -683,8 +697,61 @@
       ask(v);
     };
 
+    function refreshAiMode() {
+      const on = !!(window.Lu4Ai && Lu4Ai.hasAi());
+      const pill = document.getElementById("chatModePill");
+      const sub = document.getElementById("chatHeadSub");
+      if (pill) {
+        pill.textContent = on ? "IA activa (Groq)" : "Índice local";
+        pill.classList.toggle("on", on);
+      }
+      if (sub) {
+        sub.textContent = on
+          ? "Chat inteligente + guía Lu4 (RAG)"
+          : "Activa Chat inteligente para respuestas tipo IA";
+      }
+    }
+
+    document.getElementById("chatAiToggle").onclick = () => {
+      document.getElementById("chatAiForm").classList.toggle("open");
+      if (window.Lu4Ai) {
+        const k = Lu4Ai.getKey();
+        document.getElementById("chatGroqKey").value = k ? "••••" + k.slice(-4) : "";
+        document.getElementById("chatWorkerUrl").value = Lu4Ai.getEndpoint() || "";
+      }
+    };
+    document.getElementById("chatAiForm").onsubmit = e => {
+      e.preventDefault();
+      if (!window.Lu4Ai) { addMsg("bot", "Falta lu4-ai.js"); return; }
+      let key = document.getElementById("chatGroqKey").value.trim();
+      if (key.startsWith("••••")) key = Lu4Ai.getKey();
+      const ep = document.getElementById("chatWorkerUrl").value.trim();
+      Lu4Ai.setKey(key);
+      Lu4Ai.setEndpoint(ep);
+      document.getElementById("chatAiForm").classList.remove("open");
+      refreshAiMode();
+      if (Lu4Ai.hasAi()) {
+        addMsg("bot", "Chat inteligente activado. Preguntame lo que sea de Lu4: builds, farm, SA, quests, materiales… usaré la guía como contexto.");
+      } else {
+        addMsg("bot", "No hay key ni worker. Sigo con el índice local (menos flexible).");
+      }
+    };
+    document.getElementById("chatAiClear").onclick = () => {
+      if (window.Lu4Ai) {
+        Lu4Ai.clearKey();
+        Lu4Ai.setEndpoint("");
+        Lu4Ai.clearHistory();
+      }
+      document.getElementById("chatGroqKey").value = "";
+      document.getElementById("chatWorkerUrl").value = "";
+      document.getElementById("chatAiForm").classList.remove("open");
+      refreshAiMode();
+      addMsg("bot", "IA desactivada. Modo índice local.");
+    };
+
     document.getElementById("chatClearHist").onclick = () => {
       if (window.Lu4Chat) Lu4Chat.clearHistory();
+      if (window.Lu4Ai) Lu4Ai.clearHistory();
       chatMsgs.innerHTML = "";
       addMsg("bot", "Charla reiniciada. ¿En qué nivel estás o qué clase juegas?");
       setSuggestions(Lu4Chat.defaultSuggestions());
@@ -695,21 +762,19 @@
         return;
       }
       const st = Lu4Rag.train();
-      addMsg("bot", `Índice reentrenado: <strong>${st.chunks}</strong> trozos indexados (${st.builtAt}). Ya puedo responder con esa base.`);
+      addMsg("bot", `Índice reentrenado: <strong>${st.chunks}</strong> trozos. La IA usará este contexto.`);
     };
 
-    // Entrenar RAG al cargar (todas las fuentes ya están en memoria)
-    if (window.Lu4Rag) {
-      const st = Lu4Rag.train();
-      const pill = document.getElementById("chatModePill");
-      if (pill) pill.textContent = `RAG · ${st.chunks} trozos`;
-    }
-
+    if (window.Lu4Rag) Lu4Rag.train();
+    refreshAiMode();
     setSuggestions(window.Lu4Chat ? Lu4Chat.defaultSuggestions() : []);
-    const ragN = window.Lu4Rag && Lu4Rag.status().chunks;
-    addMsg("bot", ragN
-      ? `Asistente con <strong>RAG local</strong> (${ragN} trozos: clases, SA, equipo, items). Pregúntame, por ej. «qué hago en el 37» o «cómo consigo Gemstone C».`
-      : "Asistente Lu4 listo. Pregúntame por nivel, clase, SA o materiales.");
+    addMsg("bot", window.Lu4Ai && Lu4Ai.hasAi()
+      ? "Chat inteligente listo. Preguntame cualquier cosa de Lu4."
+      : "Quieres un chat que <strong>entienda y te solucione</strong> (no solo busque fichas): pulsa <button type='button' class='linkish' id='bootAi'>Chat inteligente</button> y pega una key gratis de Groq (2 minutos).");
+    document.getElementById("bootAi")?.addEventListener("click", () => {
+      document.getElementById("chatAiForm").classList.add("open");
+      document.getElementById("chatGroqKey").focus();
+    });
 
     renderRaces();
     fillCompareSelects();

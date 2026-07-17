@@ -650,7 +650,7 @@
   }
 
   /**
-   * Respuesta del asistente (solo guía local / ítems / wiki links).
+   * Respuesta: IA (Groq) + RAG si está configurada; si no, índice local.
    * ctx: { className, raceName, level, classId }
    */
   async function ask(question, ctx) {
@@ -663,6 +663,38 @@
         mode: "local"
       };
     }
+
+    const Ai = global.Lu4Ai;
+    if (Ai && Ai.hasAi()) {
+      try {
+        const res = await Ai.chat(raw, ctx || {});
+        pushHistory("user", raw);
+        pushHistory("model", res.text.slice(0, 800));
+        return {
+          html: formatAnswer(res.text),
+          sources: ["ai-groq"],
+          suggestions: defaultSuggestions(),
+          mode: "ai"
+        };
+      } catch (e) {
+        const msg = String(e.message || e)
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        const local = answer(raw, ctx || {});
+        pushHistory("user", raw);
+        pushHistory("model", local.html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 800));
+        let hint = "";
+        if (/Failed to fetch|CORS|NetworkError/i.test(String(e.message || e))) {
+          hint = " El navegador bloqueó Groq (CORS): usa el Cloudflare Worker o solo la URL del worker.";
+        }
+        return {
+          html: "<p class='chat-fallback-note'>IA no disponible (" + msg + ")." + hint + " Respuesta del índice local:</p>" + local.html,
+          sources: local.sources,
+          suggestions: local.suggestions || defaultSuggestions(),
+          mode: "local-fallback"
+        };
+      }
+    }
+
     const local = answer(raw, ctx || {});
     pushHistory("user", raw);
     pushHistory("model", local.html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 800));
