@@ -1,0 +1,7 @@
+wiki_scrape/
+wiki_images.json
+.DS_Store
+Thumbs.db
+*.tmp
+_*.py
+.git/

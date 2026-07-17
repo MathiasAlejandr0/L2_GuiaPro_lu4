@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lu4 · Elige tu guía (Raza → Clase)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #12151a; --bg2: #1a1f27; --panel: #222933; --line: #3a4454;
+      --text: #e8e2d6; --muted: #9aa3b2; --accent: #c4894a; --accent2: #8fbf8a;
+      --danger: #d07a6a; --info: #6ea8c9; --shadow: 0 12px 40px rgba(0,0,0,.45); --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: "Source Sans 3", system-ui, sans-serif; color: var(--text);
+      background: radial-gradient(1000px 500px at 0% 0%, rgba(196,137,74,.12), transparent 50%),
+        linear-gradient(180deg, #0e1116, var(--bg)); min-height: 100vh;
+    }
+    a { color: var(--accent); }
+    img { max-width: 100%; display: block; }
+    .icon-lg { width: 48px; height: 48px; image-rendering: pixelated; }
+    .class-art { width: 100px; height: 130px; object-fit: cover; object-position: top; border-radius: 10px; border: 1px solid var(--line); background: #0b0d11; }
+    .race-art { width: 64px; height: 64px; object-fit: contain; background: #0b0d11; border-radius: 12px; border: 1px solid var(--line); padding: 4px; }
+    .shot { width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: 10px; border: 1px solid var(--line); cursor: zoom-in; background: #0b0d11; }
+    .shot:hover { border-color: var(--accent); }
+    .shot-cap { font-size: .78rem; color: var(--muted); margin-top: 6px; }
+    .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .topbar {
+      position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+      padding: 12px 20px; background: rgba(14,17,22,.92); border-bottom: 1px solid var(--line); backdrop-filter: blur(8px);
+    }
+    .brand { font-family: Cinzel, serif; font-size: 1.25rem; margin: 0; }
+    .brand span { color: var(--accent); }
+    .crumbs { color: var(--muted); font-size: .9rem; flex: 1; }
+    .crumbs button { background: none; border: 0; color: var(--accent); cursor: pointer; font: inherit; padding: 0; }
+    .topbar .btn {
+      border: 1px solid var(--line); background: var(--panel); color: var(--text);
+      padding: 8px 12px; border-radius: 10px; cursor: pointer; font: inherit;
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 24px 18px 100px; }
+    h1, h2, h3 { font-family: Cinzel, serif; }
+    h1 { font-size: 1.9rem; margin: 0 0 .4em; }
+    h2 { font-size: 1.35rem; margin: 1.6em 0 .5em; }
+    h3 { font-size: 1.05rem; color: var(--accent); }
+    .muted { color: var(--muted); }
+    .lead { font-size: 1.05rem; line-height: 1.55; color: #d7d1c5; max-width: 70ch; }
+    .card {
+      background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 16px; box-shadow: var(--shadow);
+    }
+    .card.soft { background: var(--bg2); }
+    .card-head { display: flex; gap: 14px; align-items: center; margin-bottom: 10px; }
+    .grid { display: grid; gap: 14px; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .pick {
+      cursor: pointer; transition: transform .15s, border-color .15s; text-align: left; width: 100%;
+      font: inherit; color: inherit; display: block;
+    }
+    .pick:hover { transform: translateY(-3px); border-color: var(--accent); }
+    .pick .name { font-family: Cinzel, serif; font-size: 1.15rem; margin: 8px 0 4px; }
+    .tag { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: .78rem; background: #314052; }
+    .tag.ok { background: rgba(143,191,138,.18); color: var(--accent2); }
+    .tag.warn { background: rgba(208,122,106,.18); color: var(--danger); }
+    .tag.info { background: rgba(110,168,201,.18); color: var(--info); }
+    .hero-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px; background: #2b3340; border: 1px solid var(--line);
+      padding: 6px 10px; border-radius: 999px; font-size: .85rem; color: var(--text); text-decoration: none;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    th, td { border-bottom: 1px solid var(--line); padding: 9px 6px; text-align: left; vertical-align: top; }
+    th { color: var(--muted); font-size: .78rem; text-transform: uppercase; }
+    .step-panel { display: none; }
+    .step-panel.active { display: block; animation: fade .25s ease; }
+    @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .guide-hero { margin-bottom: 8px; }
+    ol, ul { line-height: 1.55; color: #d7d1c5; }
+    .howto { background: #1a2430; border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin: 12px 0; }
+    .howto p { margin: 0 0 8px; }
+    .howto p:last-child { margin: 0; }
+    .secrets { display: grid; gap: 10px; }
+    .secret {
+      background: #1a2430; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
+    }
+    .secret h4 { margin: 0 0 6px; font-family: Cinzel, serif; font-size: .95rem; color: var(--accent); }
+    .secret .what { margin: 0 0 4px; color: #d7d1c5; font-size: .92rem; }
+    .secret .do { margin: 0; color: var(--accent2); font-size: .9rem; }
+    .tag.mision { background: rgba(110,168,201,.18); color: var(--info); }
+    .tag.zona { background: rgba(143,191,138,.18); color: var(--accent2); }
+    .tag.clase { background: rgba(196,137,74,.18); color: var(--accent); }
+    .roadmap td:first-child { white-space: nowrap; font-weight: 600; color: var(--accent); }
+    .lightbox {
+      position: fixed; inset: 0; background: rgba(0,0,0,.86); display: none; align-items: center; justify-content: center; z-index: 50; padding: 24px;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: min(1100px, 96vw); max-height: 90vh; border-radius: 12px; border: 1px solid var(--line); }
+    .lightbox .close {
+      position: absolute; top: 18px; right: 22px; border: 0; background: var(--panel); color: var(--text);
+      width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.2rem;
+    }
+
+    /* chat */
+    .chat-fab {
+      position: fixed; right: 22px; bottom: 22px; z-index: 60; width: 60px; height: 60px; border-radius: 50%;
+      border: 1px solid var(--line); background: linear-gradient(145deg, #d4a05c, #a86d2f); color: #1a120a;
+      font-size: 1.5rem; cursor: pointer; box-shadow: var(--shadow);
+    }
+    .chat-panel {
+      position: fixed; right: 22px; bottom: 96px; z-index: 60; width: min(420px, calc(100vw - 28px));
+      height: min(560px, calc(100vh - 120px)); background: var(--bg2); border: 1px solid var(--line);
+      border-radius: 18px; box-shadow: var(--shadow); display: none; flex-direction: column; overflow: hidden;
+    }
+    .chat-panel.open { display: flex; }
+    .chat-head {
+      padding: 14px 16px; background: #1c222c; border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .chat-head strong { font-family: Cinzel, serif; display: block; }
+    .chat-head span { color: var(--muted); font-size: .8rem; }
+    .chat-close { margin-left: auto; border: 0; background: #2b3340; color: var(--text); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; }
+    .chat-msgs { flex: 1; overflow: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .msg { max-width: 92%; padding: 10px 12px; border-radius: 12px; font-size: .92rem; line-height: 1.45; }
+    .msg.bot { align-self: flex-start; background: var(--panel); border: 1px solid var(--line); }
+    .msg.user { align-self: flex-end; background: rgba(196,137,74,.22); border: 1px solid rgba(196,137,74,.45); }
+    .chat-suggestions { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 12px 10px; }
+    .chat-suggestions button {
+      border: 1px solid var(--line); background: #171c24; color: var(--muted);
+      padding: 5px 9px; border-radius: 999px; font-size: .75rem; cursor: pointer;
+    }
+    .chat-input-row { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--line); background: #151920; }
+    .chat-input-row input {
+      flex: 1; border: 1px solid var(--line); background: #0f1319; color: var(--text);
+      border-radius: 10px; padding: 10px 12px; font: inherit;
+    }
+    .chat-input-row button {
+      border: 0; background: var(--accent); color: #1a120a; font-weight: 700;
+      border-radius: 10px; padding: 0 14px; cursor: pointer; font: inherit;
+    }
+    @media (max-width: 800px) {
+      .grid-2, .grid-3, .shots { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <p class="brand">LU4 <span>Guías</span></p>
+    <div class="crumbs" id="crumbs">1. Elige tu raza</div>
+    <button class="btn" type="button" id="btnHome">← Empezar de nuevo</button>
+    <button class="btn" type="button" id="btnChat">Asistente 💬</button>
+  </header>
+
+  <div class="wrap">
+    <!-- STEP 1: RACE -->
+    <section id="step-race" class="step-panel active">
+      <h1>¿Cuál es tu raza?</h1>
+      <p class="lead">Elige tu raza. Luego verás <strong>todas las clases</strong> de esa raza. Al elegir una, verás la guía completa del nivel 1 al 85: lista de misiones, mejores zonas de farmeo, Path, Templo, marcas, Saga y reglas claras de Lu4.</p>
+      <div class="grid grid-3" id="raceGrid" style="margin-top:20px"></div>
+    </section>
+
+    <!-- STEP 2: CLASS -->
+    <section id="step-class" class="step-panel">
+      <h1 id="classTitle">Clases</h1>
+      <p class="lead" id="classLead"></p>
+      <div class="grid grid-2" id="classGrid" style="margin-top:20px"></div>
+    </section>
+
+    <!-- STEP 3: GUIDE -->
+    <section id="step-guide" class="step-panel">
+      <div id="guideRoot"></div>
+    </section>
+  </div>
+
+  <div class="lightbox" id="lightbox"><button class="close" id="lbClose">×</button><img id="lbImg" alt="" /></div>
+
+  <button class="chat-fab" id="chatFab" title="Asistente">💬</button>
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-head">
+      <img src="https://masterwork.wiki/i64/etc_exp_point_i00.png" width="32" height="32" alt="" style="image-rendering:pixelated" />
+      <div><strong>Asistente Lu4</strong><span>Niveles, NPCs, misiones…</span></div>
+      <button class="chat-close" id="chatClose">×</button>
+    </div>
+    <div class="chat-msgs" id="chatMsgs"></div>
+    <div class="chat-suggestions" id="chatSuggestions">
+      <button type="button" data-q="¿Qué hago en el nivel 18?">Nivel 18</button>
+      <button type="button" data-q="¿Qué hago en el nivel 40?">Nivel 40</button>
+      <button type="button" data-q="¿Dónde está Varika?">NPC Varika</button>
+      <button type="button" data-q="¿Qué es Fatigue?">Fatiga</button>
+      <button type="button" data-q="cadena del templo">Templo</button>
+    </div>
+    <form class="chat-input-row" id="chatForm">
+      <input id="chatInput" type="text" placeholder="Pregunta lo que necesites…" autocomplete="off" />
+      <button type="submit">Enviar</button>
+    </form>
+  </div>
+
+  <script src="lu4-guides.js"></script>
+  <script src="lu4-chat.js"></script>
+  <script>
+    const G = window.Lu4Guides;
+    if (!G) {
+      document.querySelector(".wrap").innerHTML = "<div class='card'><p>Falta <code>lu4-guides.js</code> en la misma carpeta que este HTML.</p></div>";
+      throw new Error("Lu4Guides missing");
+    }
+
+    const state = { race: null, classId: null };
+    const panels = {
+      race: document.getElementById("step-race"),
+      class: document.getElementById("step-class"),
+      guide: document.getElementById("step-guide")
+    };
+
+    function show(step) {
+      Object.values(panels).forEach(p => p.classList.remove("active"));
+      panels[step].classList.add("active");
+      const crumbs = document.getElementById("crumbs");
+      if (step === "race") crumbs.textContent = "1. Elige raza → 2. Clase → 3. Guía completa";
+      if (step === "class") crumbs.innerHTML = `1. <button type="button" id="crumbRace">${G.RACES[state.race].name}</button> → 2. Elige clase`;
+      if (step === "guide") {
+        const c = G.getClass(state.classId);
+        crumbs.innerHTML = `1. <button type="button" id="crumbRace">${G.RACES[state.race].name}</button> → 2. <button type="button" id="crumbClass">${c.name}</button> → 3. Guía`;
+      }
+      document.getElementById("crumbRace")?.addEventListener("click", () => { state.classId = null; renderClasses(); show("class"); });
+      document.getElementById("crumbClass")?.addEventListener("click", () => show("class"));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      bindShots();
+    }
+
+    function renderRaces() {
+      const grid = document.getElementById("raceGrid");
+      grid.innerHTML = "";
+      Object.values(G.RACES).forEach(r => {
+        const count = G.getClassesByRace(r.id).length;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "card pick";
+        btn.innerHTML = `
+          <img class="race-art" src="${r.raceIcon}" alt="${r.name}"/>
+          <div class="name">${r.name}</div>
+          <p class="muted" style="margin:0;font-size:.9rem">${r.village}</p>
+          <p style="margin:8px 0 0">${r.blurb}</p>
+          <p style="margin:10px 0 0"><span class="tag info">${count} clases finales disponibles</span></p>`;
+        btn.onclick = () => {
+          state.race = r.id;
+          state.classId = null;
+          renderClasses();
+          show("class");
+        };
+        grid.appendChild(btn);
+      });
+    }
+
+    function renderClasses() {
+      const r = G.RACES[state.race];
+      document.getElementById("classTitle").textContent = `Clases ${r.name}`;
+      document.getElementById("classLead").textContent = `Elige la clase final (3ª) que quieres jugar. Aquí tienes la ruta completa: inicio ${r.name} → Path → Templo/marcas → zonas → Saga.`;
+      const grid = document.getElementById("classGrid");
+      grid.innerHTML = "";
+      G.getClassesByRace(state.race).forEach(c => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "card pick";
+        btn.innerHTML = `
+          <div class="card-head" style="margin:0">
+            <img class="class-art" src="${G.art(c.classId)}" alt="${c.name2}" onerror="this.src='${G.icon(c.classId)}'"/>
+            <div>
+              <div class="name" style="margin:0">${c.name}</div>
+              <p class="muted" style="margin:4px 0 0">${c.name2} ← ${G.FIRST[c.first].name}</p>
+              <p style="margin:8px 0 0"><span class="tag">${c.role}</span></p>
+            </div>
+          </div>
+          <p style="margin:12px 0 0;font-size:.92rem">${c.tip}</p>
+          <p class="muted" style="margin:8px 0 0;font-size:.85rem">Marcas: ${c.marks}</p>`;
+        btn.onclick = () => {
+          state.classId = c.id;
+          document.getElementById("guideRoot").innerHTML = G.buildGuideHtml(c);
+          show("guide");
+        };
+        grid.appendChild(btn);
+      });
+    }
+
+    function bindShots() {
+      document.querySelectorAll(".shot").forEach(img => {
+        img.onclick = () => {
+          document.getElementById("lbImg").src = img.dataset.full || img.src;
+          document.getElementById("lightbox").classList.add("open");
+        };
+      });
+    }
+
+    document.getElementById("btnHome").onclick = () => {
+      state.race = null; state.classId = null; show("race");
+    };
+    document.getElementById("lbClose").onclick = () => document.getElementById("lightbox").classList.remove("open");
+    document.getElementById("lightbox").onclick = e => {
+      if (e.target.id === "lightbox") e.currentTarget.classList.remove("open");
+    };
+
+    // Chat
+    const chatPanel = document.getElementById("chatPanel");
+    const chatMsgs = document.getElementById("chatMsgs");
+    const openChat = () => { chatPanel.classList.add("open"); document.getElementById("chatInput").focus(); };
+    document.getElementById("chatFab").onclick = () => chatPanel.classList.toggle("open");
+    document.getElementById("btnChat").onclick = openChat;
+    document.getElementById("chatClose").onclick = () => chatPanel.classList.remove("open");
+
+    function addMsg(role, html) {
+      const d = document.createElement("div");
+      d.className = "msg " + role;
+      d.innerHTML = html.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+      chatMsgs.appendChild(d);
+      chatMsgs.scrollTop = chatMsgs.scrollHeight;
+    }
+    function ask(q) {
+      if (!q.trim()) return;
+      addMsg("user", q.replace(/</g, "&lt;"));
+      if (!window.Lu4Chat) {
+        addMsg("bot", "Falta lu4-chat.js");
+        return;
+      }
+      addMsg("bot", window.Lu4Chat.answer(q).html);
+    }
+    document.getElementById("chatForm").onsubmit = e => {
+      e.preventDefault();
+      const v = document.getElementById("chatInput").value;
+      document.getElementById("chatInput").value = "";
+      ask(v);
+    };
+    document.querySelectorAll("#chatSuggestions button").forEach(b => b.onclick = () => ask(b.dataset.q));
+    addMsg("bot", "Elige <strong>raza → clase</strong> arriba para la guía completa, o pregúntame aquí (por ejemplo: «qué hago en el nivel 18»).");
+
+    renderRaces();
+    show("race");
+
+    // Deep link ?class=stormscreamer
+    const params = new URLSearchParams(location.search);
+    const deep = params.get("class");
+    if (deep && G.getClass(deep)) {
+      const c = G.getClass(deep);
+      state.race = c.race;
+      state.classId = c.id;
+      renderClasses();
+      document.getElementById("guideRoot").innerHTML = G.buildGuideHtml(c);
+      show("guide");
+    }
+  </script>
+</body>
+</html>
