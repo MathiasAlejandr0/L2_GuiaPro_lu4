@@ -285,9 +285,9 @@
     },
     {
       id: "sa",
-      tags: ["sa", "soul crystal", "soulcrystal", "special ability", "cristal", "enhance your weapon", "poner sa"],
-      q: ["cómo poner sa", "donde poner sa", "qué es sa", "soul crystal"],
-      a: `**SA (Soul Crystal) en Lu4** — se pone en armas **D / C / B / A** (no en NoGrade).\n\n1. Compra cristal vacío **Red / Green / Blue** en el **Blacksmith** de cualquier ciudad.\n2. Deja **solo 1 cristal** en el inventario y mata mobs (en Lu4 no hace falta usarlo sobre el mob).\n3. Cuando el Stage sea el del grado de tu arma, habla con el Blacksmith + **Gemstones** del grado para insertarlo.\n4. Quitar SA: Blacksmith (el cristal **no** vuelve).\n5. **Duals:** no llevan cristal; el efecto sale al enchant **+4**.\n\nWiki: ${W}/lu4/posts/post/367-soul-crystal-sa-enhancement`
+      tags: ["sa", "soul crystal", "soulcrystal", "special ability", "cristal", "enhance your weapon", "poner sa", "levear cristal", "subir sa", "gemstone"],
+      q: ["cómo poner sa", "donde poner sa", "qué es sa", "soul crystal", "cómo subir cristal", "cómo levear sa", "dónde farmear soul crystal"],
+      a: `**Soul Crystal (SA) — Lu4 completo**\n\n**Conseguir:** Blacksmith de ciudad → compra cristal vacío nivel 0 (Red / Green / Blue). Un cristal por diálogo.\n\n**Levear:** deja **solo 1** cristal en el inventario y mata mobs. En Lu4 **no** hace falta usarlo sobre el mob. Si hay varios → *crystal resonance* y no sube. La quest se activa al **loguear** (si la cancelaste → relog).\n\n**Atajo:** puedes subir del 1 al stage objetivo farmeando solo los mobs de ese stage.\n\n**Stages → arma:**\n• D: Stage 2/3/4 · C: 5/6/7/8 · B: 9/10 · A: 11/12/13\n• Insertar: Blacksmith + Gemstones del grado. Quitar SA: Blacksmith (el cristal **no** vuelve).\n\n**Farm rápido:**\n• Stage 2–4: Ol Mahum / Ants / Hatu / Porta\n• Stage 5–6: Timak Orcs / Blade Stakato\n• Stage 7–8: Forest of Mirrors / Doll Blader / Sairon\n• Stage 9–10: Drake / Maluk / Platinum Tribe\n• Stage 11+: RBs; Epics Queen Ant/Core/Orfen/Zaken = **100%** party\n\n**Duals:** sin cristal; SA al enchant **+4**.\n**NoGrade:** no admite SA.\n\nWiki: ${W}/lu4/posts/post/367-soul-crystal-sa-enhancement`
     },
     {
       id: "equipo-grados",

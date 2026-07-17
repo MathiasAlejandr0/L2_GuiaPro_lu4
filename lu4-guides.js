@@ -842,35 +842,109 @@
           <tbody>${setRows}</tbody>
         </table>
       </div>
+      <p style="margin-top:14px"><span class="tag warn">${rec.saNote}</span>
+        Guía completa de cristales abajo → <strong>Soul Crystals (SA)</strong>.</p>`;
+  }
 
-      <h4 style="margin:18px 0 8px">Cómo poner SA (Soul Crystal)</h4>
+  /** Guía completa Soul Crystal / SA (wiki Lu4 post 367) */
+  function soulCrystalHtml() {
+    const wiki = `${W}/lu4/posts/post/367-soul-crystal-sa-enhancement`;
+    return `
+      <p>En Lu4 los <strong>Soul Crystals</strong> (SA) dan efectos especiales al arma.
+        Fuente: <a href="${wiki}" target="_blank" rel="noopener">Soul Crystal (SA) Enhancement</a>.</p>
+
+      <h4>Qué debes saber</h4>
+      <ul>
+        <li>Se insertan en armas <strong>D, C, B y A</strong>. <strong>NoGrade no admite SA</strong>.</li>
+        <li>Hay 3 colores: <strong>Red / Green / Blue</strong> (eligen el efecto al insertar).</li>
+        <li><strong>Dual weapons</strong> (swords / daggers / blunts duales): <em>no</em> usan cristal. El SA sale al enchant <strong>+4 o más</strong>.</li>
+        <li>Insertar y quitar: <strong>Blacksmith de cualquier ciudad</strong>. Al quitar, el cristal <strong>no vuelve</strong>.</li>
+      </ul>
+
+      <h4>1) Cómo conseguir / “crear” el cristal</h4>
+      <ol>
+        <li>Ve a un <strong>Blacksmith</strong> de ciudad.</li>
+        <li>Compra un Soul Crystal <strong>vacío nivel 0</strong> (Red, Green o Blue).</li>
+        <li>Solo puedes comprar <strong>uno por diálogo</strong>; habla otra vez si quieres otro.</li>
+        <li>Para levear necesitas <strong>exactamente 1 cristal</strong> en el inventario (si hay varios → mensaje de <em>crystal resonance</em> y no sube).</li>
+      </ol>
+
+      <h4>2) Cómo levearlo (absorber almas)</h4>
       <div class="place-box">
-        <ol style="margin:0;padding-left:1.2rem">
-          <li><strong>Compra</strong> un Soul Crystal vacío (Red / Green / Blue) en el <strong>Blacksmith</strong> de cualquier ciudad. Solo 1 cristal en el inventario.</li>
-          <li><strong>Sube el cristal</strong> matando mobs con el cristal en inventario (en Lu4 <em>no</em> hace falta usarlo sobre el mob). La quest de SA se activa al loguear.</li>
-          <li>Nivel del cristal según el arma: D low = Stage 2 … C top = Stage 8 … B top = Stage 10 … A top = Stage 13. Detalle en la wiki.</li>
-          <li><strong>Inserta</strong> el cristal en el arma hablando con el <strong>Blacksmith</strong> de ciudad + <strong>Gemstones</strong> del grado (D/C/B/A).</li>
-          <li><strong>Quitar SA:</strong> también en Blacksmith — el cristal <em>no</em> se recupera.</li>
-        </ol>
-        <p style="margin:10px 0 0"><span class="tag warn">${rec.saNote}</span></p>
-        <p class="muted" style="margin:8px 0 0">NoGrade no admite SA. Duals = efecto al <strong>+4</strong>, no cristal.</p>
-        <p style="margin:8px 0 0">
-          <a href="${W}/lu4/posts/post/367-soul-crystal-sa-enhancement" target="_blank">Wiki Soul Crystal (SA) Lu4 →</a>
-          · <a href="${W}/lu4/posts/post/12-blacksmith-of-mammon-weapon-upgradeexchange" target="_blank">Mammon weapon exchange →</a>
-        </p>
+        <ul style="margin:0;padding-left:1.2rem">
+          <li>En Lu4 el leveo fue <strong>reworkeado</strong>: deja el cristal en el inventario y mata mobs. <strong>No hace falta usarlo sobre el monstruo</strong>.</li>
+          <li>La quest de SA se <strong>activa al loguear</strong> (no hay que aceptarla en un NPC). Si la cancelaste a mano → relog.</li>
+          <li>La chance no es 100%: por nivel puedes necesitar de 1 a varias docenas de kills.</li>
+          <li><strong>Atajo Lu4:</strong> para subir del stage 1 al stage que necesitas, puedes farmear solo los mobs del <em>nivel objetivo</em> (no hace falta cambiar de mob en cada stage intermedio).</li>
+          <li>Stages <strong>11–13 (A-grade)</strong>: se suben con <strong>Raid Bosses / Epics</strong> (cristal en inventario; tampoco hace falta usarlo en el boss).</li>
+        </ul>
       </div>
-      <div class="table-scroll" style="margin-top:12px">
+
+      <h4>3) Stage del cristal según el arma + Gemstones</h4>
+      <div class="table-scroll">
         <table class="responsive">
-          <thead><tr><th>Arma</th><th>Cristal (ejemplo)</th><th>Gemstones</th></tr></thead>
+          <thead><tr><th>Arma</th><th>Soul Crystal</th><th>Gemstones al insertar</th></tr></thead>
           <tbody>
-            <tr><td data-label="Arma">D top</td><td data-label="Cristal">Soul Crystal Stage 4</td><td data-label="Gems">Gemstone D ×150</td></tr>
-            <tr><td data-label="Arma">C mid</td><td data-label="Cristal">Soul Crystal Stage 6</td><td data-label="Gems">Gemstone C ×238</td></tr>
-            <tr><td data-label="Arma">C top</td><td data-label="Cristal">Soul Crystal Stage 8</td><td data-label="Gems">Gemstone C ×555</td></tr>
-            <tr><td data-label="Arma">B top</td><td data-label="Cristal">Soul Crystal Stage 10</td><td data-label="Gems">Gemstone B ×339</td></tr>
-            <tr><td data-label="Arma">A top</td><td data-label="Cristal">Soul Crystal Stage 13</td><td data-label="Gems">Gemstone A ×400</td></tr>
+            <tr><td data-label="Arma">D low</td><td data-label="Cristal">Stage 2</td><td data-label="Gems">Gemstone D ×75</td></tr>
+            <tr><td data-label="Arma">D middle</td><td data-label="Cristal">Stage 3</td><td data-label="Gems">Gemstone D ×120</td></tr>
+            <tr><td data-label="Arma">D top</td><td data-label="Cristal">Stage 4</td><td data-label="Gems">Gemstone D ×150</td></tr>
+            <tr><td data-label="Arma">C low</td><td data-label="Cristal">Stage 5</td><td data-label="Gems">Gemstone C ×97</td></tr>
+            <tr><td data-label="Arma">C middle</td><td data-label="Cristal">Stage 6</td><td data-label="Gems">Gemstone C ×238</td></tr>
+            <tr><td data-label="Arma">C high</td><td data-label="Cristal">Stage 7</td><td data-label="Gems">Gemstone C ×306</td></tr>
+            <tr><td data-label="Arma">C top</td><td data-label="Cristal">Stage 8</td><td data-label="Gems">Gemstone C ×555</td></tr>
+            <tr><td data-label="Arma">B low</td><td data-label="Cristal">Stage 9</td><td data-label="Gems">Gemstone B ×222</td></tr>
+            <tr><td data-label="Arma">B top</td><td data-label="Cristal">Stage 10</td><td data-label="Gems">Gemstone B ×339</td></tr>
+            <tr><td data-label="Arma">A low</td><td data-label="Cristal">Stage 11</td><td data-label="Gems">Gemstone A ×170</td></tr>
+            <tr><td data-label="Arma">A middle</td><td data-label="Cristal">Stage 12</td><td data-label="Gems">Gemstone A ×260</td></tr>
+            <tr><td data-label="Arma">A top</td><td data-label="Cristal">Stage 13</td><td data-label="Gems">Gemstone A ×400</td></tr>
           </tbody>
         </table>
-      </div>`;
+      </div>
+
+      <h4>4) Dónde farmear cada stage (mobs recomendados)</h4>
+      <p class="muted">Lista resumida de la wiki. Puedes usar cualquier mob de esa columna Stage.</p>
+      <div class="table-scroll">
+        <table class="roadmap responsive">
+          <thead><tr><th>Stage</th><th>Para arma</th><th>Mobs ejemplo (Lv)</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Stage"><strong>2</strong></td><td data-label="Arma">D low</td><td data-label="Mobs">Ol Mahum Captain / Langk Lizardman Leader / Cloudy Beast Turen (25–29)</td></tr>
+            <tr><td data-label="Stage"><strong>3</strong></td><td data-label="Arma">D mid</td><td data-label="Mobs">Delu Lizardman Warrior / Ant Captain / Ghoul / Marsh Stakato Drone (30–35)</td></tr>
+            <tr><td data-label="Stage"><strong>4</strong></td><td data-label="Arma">D top</td><td data-label="Mobs">Hatu Onyx Beast / Noble Ant / Ogre / Porta / Lienrik (36–40)</td></tr>
+            <tr><td data-label="Stage"><strong>5</strong></td><td data-label="Arma">C low</td><td data-label="Mobs">Timak Orc / Blade Stakato / Great White Shark / Zaken's Pikeman (40–43)</td></tr>
+            <tr><td data-label="Stage"><strong>6</strong></td><td data-label="Arma">C mid</td><td data-label="Mobs">Timak Orc Overlord / Water Giant / Forest of Mirrors Ghost / Unpleasant Humming (44–46)</td></tr>
+            <tr><td data-label="Stage"><strong>7</strong></td><td data-label="Arma">C high</td><td data-label="Mobs">Eva's Seeker / Death Flyer / Fiend Archer / Garden Guard / Musveren (47–50)</td></tr>
+            <tr><td data-label="Stage"><strong>8</strong></td><td data-label="Arma">C top</td><td data-label="Mobs">Doll Blader / Sairon's Doll / Veil Master / Sairon / Harit Lizardman (53–54)</td></tr>
+            <tr><td data-label="Stage"><strong>9</strong></td><td data-label="Arma">B low</td><td data-label="Mobs">Unicorn Elder / Thunder Wyrm / Drake / Maluk Succubus / Halingka (55–59)</td></tr>
+            <tr><td data-label="Stage"><strong>10</strong></td><td data-label="Arma">B top</td><td data-label="Mobs">Maluk Knight / Pytan / Platinum Tribe / Seal Angel / Doom Knight (62–73)</td></tr>
+            <tr><td data-label="Stage"><strong>11–13</strong></td><td data-label="Arma">A</td><td data-label="Mobs">Raid Bosses / Epics (ver tabla abajo)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>5) Stage 10 → 11+ (Raid Bosses)</h4>
+      <p>Cristal en inventario. Chance personal por miembro de party (salvo Epics).</p>
+      <div class="table-scroll">
+        <table class="responsive">
+          <thead><tr><th>Boss</th><th>Nota</th><th>Chance</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Boss">Queen Ant / Core / Orfen / Zaken (Epic Lv.66)</td><td data-label="Nota">Epic Boss</td><td data-label="Chance"><strong>100%</strong> para todo el party</td></tr>
+            <tr><td data-label="Boss">Giant Marpanak / Ancient Drake / Fierce Tiger King Angel / Gargoyle Lord Tiphon (RB ~64–65)</td><td data-label="Nota">Raid Boss</td><td data-label="Chance">~3% personal</td></tr>
+            <tr><td data-label="Boss">Ghost of the Well Lidia / Rahha / Hekaton Prime / Demon Kuri / Roaring Lord Kastor / etc.</td><td data-label="Nota">Raid Boss</td><td data-label="Chance">~1% personal</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">Lista completa de RBs y mobs: <a href="${wiki}" target="_blank" rel="noopener">wiki post 367</a>.</p>
+
+      <h4>6) Cómo usar / insertar el SA</h4>
+      <ol>
+        <li>Arma del grado correcto en inventario (o equipada, según UI del herrero).</li>
+        <li>Cristal al <strong>Stage</strong> requerido + <strong>Gemstones</strong> del grado.</li>
+        <li>Habla con el <strong>Blacksmith</strong> → opción de insertar Soul Crystal.</li>
+        <li>Elige el color/efecto disponible para esa arma.</li>
+        <li>Para cambiar de SA: quita el actual (pierdes el cristal) y vuelve a insertar otro.</li>
+      </ol>
+
+      <p class="pin">💡 Tip rápido: si farmeas C top, sube directo a Stage 8 en Doll Blader / Sairon zone; si vas a B, apunta Stage 10 en Maluk / Platinum. Para A, prioriza Epics (100%).</p>`;
   }
 
   /** Lugares clave con ubicación simple (+ capturas cuando hay) */
@@ -937,7 +1011,7 @@
       { lv: "40", tipo: "Clase", nombre: `Cambio a ${cls.name2}`, detalle: "Cuando tengas las 3 marcas.", where: "Grand Master / Prefect de tu raza", wiki: cls.threeInOne },
       { lv: "40–44", tipo: "Misión", nombre: "Kusto chain", detalle: "CRÍTICO antes del 45. ~600k EXP.", where: "Giran — Herrería (Kusto)", wiki: `${W}/lu4/posts/post/386-lu4-kusto-quest-chain-40` },
       { lv: "40–47", tipo: "Misión", nombre: gearLabel, detalle: g.body, where: g.where, wiki: g.wiki },
-      { lv: "40–60", tipo: "Misión", nombre: "Soul Crystal SA (Enhance Your Weapon)", detalle: "Compra cristal en Blacksmith, súbelo con mobs, inserta SA en arma D/C/B/A.", where: "Blacksmith de cualquier ciudad", wiki: `${W}/lu4/posts/post/367-soul-crystal-sa-enhancement` },
+      { lv: "40–60", tipo: "Misión", nombre: "Soul Crystal SA", detalle: "Blacksmith: cristal vacío → levear (1 en inventario) → insertar + Gemstones. Stages 2–10 mobs; 11–13 RBs/Epics.", where: "Blacksmith de cualquier ciudad", wiki: `${W}/lu4/posts/post/367-soul-crystal-sa-enhancement` },
       { lv: "40–52", tipo: "Misión", nombre: "Warehouse Pastime / Treasure Hunt", detalle: "Más equipo C y adena.", where: "Almacenes / Heine zona Alligator", wiki: `${W}/lu4/posts/post/368-lu4-equipment-quests` },
       { lv: "40–48", tipo: "Zona", nombre: "Grave Robber Hideout", detalle: "Élite 42–45. Grupo 5–9.", where: "Schuttgart — Grave Robber Hideout", wiki: `${W}/lu4/posts/post/323-update-grave-robber-hideout-4050` },
       { lv: "47–57", tipo: "Zona", nombre: "Den of Evil", detalle: "Mejor zona mid.", where: "Schuttgart — Den of Evil", wiki: `${W}/lu4/posts/post/324-update-den-of-evil-4757` },
@@ -1080,7 +1154,7 @@
           <a class="badge" href="${first.pathUrl}" target="_blank" rel="noopener">Path wiki</a>
           <a class="badge" href="${cls.threeInOne}" target="_blank" rel="noopener">Marcas 3-en-1</a>
           <a class="badge" href="${cls.saga}" target="_blank" rel="noopener">Saga 76+</a>
-          <a class="badge" href="${W}/lu4/posts/post/367-soul-crystal-sa-enhancement" target="_blank" rel="noopener">SA wiki</a>
+          <a class="badge" href="${W}/lu4/posts/post/367-soul-crystal-sa-enhancement" target="_blank" rel="noopener">Soul Crystal wiki</a>
           <a class="badge" href="?class=${cls.id}">Link de esta clase</a>
         </div>
       </div>
@@ -1096,9 +1170,14 @@
         ${gearGradesHtml(cls)}
       </div>
 
-      <h2>Armas recomendadas + SA</h2>
+      <h2>Armas recomendadas</h2>
       <div class="card">
         ${weaponsAndSaHtml(cls)}
+      </div>
+
+      <h2>Soul Crystals (SA) — guía completa</h2>
+      <div class="card">
+        ${soulCrystalHtml()}
       </div>
 
       <h2>Lista — Misiones + zonas ${filterLevel ? `(nivel ~${filterLevel})` : "(1 → 85)"}</h2>
@@ -1166,8 +1245,8 @@
           <a href="${W}/lu4/posts/post/386-lu4-kusto-quest-chain-40" target="_blank">Wiki</a></p>
         <p class="pin">📍 <strong>${g.title}</strong><br>${g.where}<br>${g.body}
           <a href="${g.wiki}" target="_blank">Wiki</a></p>
-        <p class="pin">📍 <strong>SA:</strong> compra Soul Crystal en Blacksmith → súbelo con mobs (1 cristal en inventario) → inserta en arma D/C/B.
-          <a href="${W}/lu4/posts/post/367-soul-crystal-sa-enhancement" target="_blank">Wiki SA</a></p>
+        <p class="pin">📍 <strong>SA / Soul Crystal:</strong> compra cristal vacío en Blacksmith → levea con 1 solo en inventario → inserta con Gemstones.
+          Guía completa arriba · <a href="${W}/lu4/posts/post/367-soul-crystal-sa-enhancement" target="_blank">Wiki SA</a></p>
         <p class="pin">📍 Zona: Grave Robber Hideout (Élite 42–45).
           <a href="${W}/lu4/posts/post/323-update-grave-robber-hideout-4050" target="_blank">Wiki</a></p>
       </div>
