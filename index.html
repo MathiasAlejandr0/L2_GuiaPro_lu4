@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="lu4-build" content="20260717-ai" />
+  <base href="./" />
   <title>Lu4 · Guías 1–85 (MasterWork)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -322,10 +324,10 @@
       <button type="button" class="linkish" id="chatRetrain" title="Reconstruir índice">Reentrenar índice</button>
       <form class="chat-key-form" id="chatAiForm" autocomplete="off">
         <p class="chat-key-hint" style="width:100%;margin:0 0 6px">
-          Para un chat que <strong>entienda y resuelva</strong> hace falta un LLM gratis (Groq).
-          1) Entra a <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a>
-          2) Crea una key (<code>gsk_…</code>) y pégala abajo.
-          Opcional (amigos sin key): despliega <code>cloudflare-worker</code> y pega la URL del worker.
+          La key se guarda <strong>solo en este navegador</strong> (no se sube a GitHub).
+          Actívala aquí en Pages: <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a>
+          → pega <code>gsk_…</code> abajo → Activar IA.
+          Si la activaste en otro archivo/local, hay que pegarla otra vez en esta web.
         </p>
         <input id="chatGroqKey" type="password" placeholder="Key Groq gsk_…" spellcheck="false" />
         <input id="chatWorkerUrl" type="url" placeholder="URL worker (opcional) https://….workers.dev" spellcheck="false" />
@@ -341,11 +343,11 @@
     </form>
   </div>
 
-  <script src="lu4-items.js"></script>
-  <script src="lu4-guides.js"></script>
-  <script src="lu4-chat.js"></script>
-  <script src="lu4-rag.js"></script>
-  <script src="lu4-ai.js"></script>
+  <script src="lu4-items.js?v=20260717ai"></script>
+  <script src="lu4-guides.js?v=20260717ai"></script>
+  <script src="lu4-chat.js?v=20260717ai"></script>
+  <script src="lu4-rag.js?v=20260717ai"></script>
+  <script src="lu4-ai.js?v=20260717ai"></script>
   <script>
     const G = window.Lu4Guides;
     if (!G) {

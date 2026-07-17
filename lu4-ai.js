@@ -99,19 +99,28 @@
   async function callGroqDirect(messages) {
     const key = getKey();
     if (!key) throw new Error("NO_KEY");
-    const res = await fetch(GROQ_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + key
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        temperature: 0.4,
-        max_tokens: 1200,
-        messages
-      })
-    });
+    if (!/^gsk_/i.test(key)) {
+      throw new Error("La key de Groq debe empezar con gsk_");
+    }
+    let res;
+    try {
+      res = await fetch(GROQ_URL, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + key
+        },
+        body: JSON.stringify({
+          model: MODEL,
+          temperature: 0.4,
+          max_tokens: 1200,
+          messages
+        })
+      });
+    } catch (err) {
+      throw new Error("No se pudo conectar con Groq: " + (err.message || err));
+    }
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
       const msg = (data.error && data.error.message) || ("HTTP " + res.status);
