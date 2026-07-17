@@ -6,13 +6,12 @@
   const W = "https://masterwork.wiki";
   const KEY_STORAGE = "lu4_gemini_api_key";
   const KEY_OFF_STORAGE = "lu4_gemini_off";
-  /** Key compartida del grupo (partes unidas en runtime). */
-  const SHARED_KEY = [
-    "AQ.Ab8RN6Kq9v5i",
-    "QSkklU0qhBGaCT6",
-    "IVNhGfCNvj5-tHI3",
-    "dBBbWOQ"
-  ].join("");
+  /**
+   * Key compartida opcional del grupo.
+   * Vacía a propósito: la anterior AQ. quedó inválida/filtrada.
+   * Pega una key NUEVA en «Configurar Gemini» (se guarda en este navegador).
+   */
+  const SHARED_KEY = "";
   const MODEL = "gemini-2.5-flash";
   const MAX_HISTORY = 8;
 
@@ -637,18 +636,63 @@
       .trim();
   }
 
+  function geminiAuthError(msg, status) {
+    const m = String(msg || "");
+    const authFail = status === 401 || /invalid authentication|UNAUTHENTICATED|API_KEY|ACCESS_TOKEN/i.test(m);
+    if (authFail) {
+      return new Error(
+        "La API key de Gemini no es válida o fue bloqueada. " +
+        "Crea una key NUEVA en https://aistudio.google.com/apikey " +
+        "→ Configurar Gemini → pegarla y Guardar. " +
+        "(Las keys AQ. se invalidan si se filtran en GitHub/chat.)"
+      );
+    }
+    const err = new Error(m || ("HTTP " + status));
+    err.status = status;
+    return err;
+  }
+
+  async function postGemini(url, key, body, authMode) {
+    const headers = { "Content-Type": "application/json" };
+    let finalUrl = url;
+    if (authMode === "header") headers["x-goog-api-key"] = key;
+    else if (authMode === "query") finalUrl += (url.includes("?") ? "&" : "?") + "key=" + encodeURIComponent(key);
+    else if (authMode === "bearer") headers["Authorization"] = "Bearer " + key;
+
+    const res = await fetch(finalUrl, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body)
+    });
+    const data = await res.json().catch(() => ({}));
+    return { res, data };
+  }
+
+  function extractGeminiText(data) {
+    // generateContent
+    const parts = (((data.candidates || [])[0] || {}).content || {}).parts || [];
+    let text = parts.map(p => p.text || "").join("").trim();
+    if (text) return text;
+    // interactions API
+    if (data.output_text) return String(data.output_text).trim();
+    if (Array.isArray(data.outputs)) {
+      text = data.outputs.map(o => (o && o.text) || "").join("").trim();
+      if (text) return text;
+    }
+    return "";
+  }
+
   async function callGemini(question, ctx) {
     const key = getApiKey();
     if (!key) throw new Error("NO_KEY");
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
     const contents = history.map(h => ({
       role: h.role === "model" ? "model" : "user",
       parts: [{ text: h.text }]
     }));
     contents.push({ role: "user", parts: [{ text: question }] });
 
-    const body = {
+    const genBody = {
       system_instruction: {
         parts: [{ text: buildSystemPrompt({ ...(ctx || {}), lastQuestion: question }) }]
       },
@@ -659,27 +703,43 @@
       }
     };
 
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": key
-      },
-      body: JSON.stringify(body)
-    });
+    const sys = buildSystemPrompt({ ...(ctx || {}), lastQuestion: question });
+    const interactBody = {
+      model: MODEL,
+      input: question,
+      system_instruction: sys,
+      generation_config: {
+        temperature: 0.55,
+        max_output_tokens: 900
+      }
+    };
 
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      const msg = (data.error && data.error.message) || ("HTTP " + res.status);
-      const err = new Error(msg);
-      err.status = res.status;
-      throw err;
+    const attempts = [
+      { url: `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, body: genBody, auth: "header" },
+      { url: `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, body: genBody, auth: "query" },
+      { url: "https://generativelanguage.googleapis.com/v1beta/interactions", body: interactBody, auth: "header" }
+    ];
+
+    let lastErr = null;
+    for (const a of attempts) {
+      try {
+        const { res, data } = await postGemini(a.url, key, a.body, a.auth);
+        if (!res.ok) {
+          lastErr = geminiAuthError((data.error && data.error.message) || ("HTTP " + res.status), res.status);
+          if (res.status === 401 || res.status === 403) continue;
+          throw lastErr;
+        }
+        const text = extractGeminiText(data);
+        if (!text) {
+          lastErr = new Error("Respuesta vacía de Gemini");
+          continue;
+        }
+        return text;
+      } catch (e) {
+        lastErr = e;
+      }
     }
-
-    const parts = (((data.candidates || [])[0] || {}).content || {}).parts || [];
-    const text = parts.map(p => p.text || "").join("").trim();
-    if (!text) throw new Error("Respuesta vacía de Gemini");
-    return text;
+    throw lastErr || new Error("Gemini no respondió");
   }
 
   /**

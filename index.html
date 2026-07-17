@@ -297,7 +297,7 @@
         <button type="submit">Guardar</button>
         <button type="button" id="chatKeyClear">Usar key del grupo</button>
         <button type="button" id="chatKeyOff">Solo local</button>
-        <p class="chat-key-hint">Gemini ya viene con la key del grupo. Opcional: pega otra key propia. <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">AI Studio</a>.</p>
+        <p class="chat-key-hint">Crea una key en <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">AI Studio</a>, pégala aquí y Guarda (queda en este navegador). Si falla con error de autenticación, genera una key <strong>nueva</strong> (las filtradas se bloquean).</p>
       </form>
     </div>
     <div class="chat-msgs" id="chatMsgs"></div>
@@ -647,8 +647,12 @@
     refreshChatMode();
     setSuggestions(window.Lu4Chat ? Lu4Chat.defaultSuggestions() : []);
     addMsg("bot", window.Lu4Chat && Lu4Chat.hasGemini()
-      ? "Gemini listo para ti y tus amigos. Pregúntame (ej. «qué hago en el 37») o elige una clase arriba."
-      : "Modo local. Puedes activar Gemini en Configurar Gemini.");
+      ? "Gemini listo. Pregúntame (ej. «qué hago en el 37») o elige una clase arriba."
+      : "Modo local por ahora. Para Gemini: <button type='button' class='linkish' id='bootGemini'>Configurar Gemini</button> y pega una API key nueva de AI Studio.");
+    document.getElementById("bootGemini")?.addEventListener("click", () => {
+      document.getElementById("chatKeyForm").classList.add("open");
+      document.getElementById("chatApiKey").focus();
+    });
 
     renderRaces();
     fillCompareSelects();
