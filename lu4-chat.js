@@ -282,6 +282,18 @@
       tags: ["coins of magic", "monedas"],
       q: ["coins of magic"],
       a: `**Coins of Magic no está disponible en Lu4.** Usa Alligator / Ivory Tower / Warehouse Pastime / Treasure Hunt para C-grade.`
+    },
+    {
+      id: "sa",
+      tags: ["sa", "soul crystal", "soulcrystal", "special ability", "cristal", "enhance your weapon", "poner sa"],
+      q: ["cómo poner sa", "donde poner sa", "qué es sa", "soul crystal"],
+      a: `**SA (Soul Crystal) en Lu4** — se pone en armas **D / C / B / A** (no en NoGrade).\n\n1. Compra cristal vacío **Red / Green / Blue** en el **Blacksmith** de cualquier ciudad.\n2. Deja **solo 1 cristal** en el inventario y mata mobs (en Lu4 no hace falta usarlo sobre el mob).\n3. Cuando el Stage sea el del grado de tu arma, habla con el Blacksmith + **Gemstones** del grado para insertarlo.\n4. Quitar SA: Blacksmith (el cristal **no** vuelve).\n5. **Duals:** no llevan cristal; el efecto sale al enchant **+4**.\n\nWiki: ${W}/lu4/posts/post/367-soul-crystal-sa-enhancement`
+    },
+    {
+      id: "equipo-grados",
+      tags: ["equipo", "grado", "grade", "armadura", "arma recomendada", "full plate", "karmian", "ng", "c-grade", "b-grade"],
+      q: ["equipo por grados", "qué arma usar", "qué set usar", "armadura recomendada"],
+      a: `**Equipo Lu4 por grados:**\n• **NG** — quests de aldea + Seal · sets con bonus (wiki 362)\n• **D** — cupón Path NG→D · Dragon Fangs · Feast · Acts of Evil\n• **C** — Alligator (físicos) o Ivory Tower (magos) · Pastime · Treasure Hunt · **no** Coins of Magic\n• **B/A** — craft / drop / Mammon · sets Avadon→Majestic (wiki 558)\n• **S+** — post Saga / endgame\n\nAbre tu clase en la guía: secciones **Equipo por grados** y **Armas + SA**.\nWiki: ${W}/lu4/posts/post/368-lu4-equipment-quests`
     }
   ];
 

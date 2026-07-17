@@ -580,6 +580,299 @@
     };
   }
 
+  /** Perfil de arma/armadura según clase (nombres wiki en inglés). */
+  function weaponProfile(cls) {
+    const n = `${cls.id} ${cls.name} ${cls.name2} ${cls.role}`.toLowerCase();
+    if (/duelist|gladiator|spectraldancer|bladedancer|swordmuse|swordsinger/.test(n)) return "dual";
+    if (/dreadnought|warlord|lanza|área/.test(n)) return "spear";
+    if (/titan|destroyer|doombringer|berserker|dos manos|twohand|two hand/.test(n)) return "twohand";
+    if (/khavatari|tyrant|puño|fist/.test(n)) return "fist";
+    if (/adventurer|treasure|windrider|plains|ghosthunter|abyss|daga|dagger/.test(n)) return "dagger";
+    if (/sagittarius|hawkeye|moonlight|silver|ghostsentinel|phantom ranger|trickster|arbalester|arquero/.test(n)) return "bow";
+    if (/phoenix|hell|evatemplar|temple knight|shilientemplar|shillien knight|tanque/.test(n)) return "tank";
+    if (/cardinal|bishop|evasant|elven elder|sanador/.test(n)) return "healer";
+    if (/hierophant|prophet|shilliensaint|shillien elder|dominator|overlord|doomcryer|warcryer|buffer/.test(n)) return "buffer";
+    if (/archmage|sorcerer|soultaker|necromancer|mysticmuse|spellsinger|storm|spellhowler|tectonic|terramancer|soulhound|soul breaker|mago|nuker|mágico/.test(n)) return "mage";
+    if (/arcana|warlock|elemaster|elemental|spectralmaster|phantom summoner|invocador/.test(n)) return "summoner";
+    if (/fortune|bounty|maestro|warsmith|spoil|craft/.test(n)) return "dwarf";
+    return "melee";
+  }
+
+  const WEAPON_REC = {
+    dual: {
+      label: "Dual swords",
+      armor: "Light (Rind / Drake Leather) o Heavy (Full Plate) según playstyle",
+      saNote: "Las duals NO llevan Soul Crystal: el SA sale al enchant +4 o superior.",
+      grades: [
+        { g: "NG→D", w: "Cupón del Path: mejora tu arma starter a D (low). Luego Dual D (shop / craft)." },
+        { g: "C", w: "Stormbringer*Katana / Shamshir*Spirit Sword / Sword of Revolution duals (Alligator / craft / Mammon)." },
+        { g: "B+", w: "Duals B (Samurai Duals, etc.) vía craft, drop o Blacksmith of Mammon." }
+      ]
+    },
+    spear: {
+      label: "Spear / polearm",
+      armor: "Heavy — Full Plate C → Zubei / Doom B → Majestic A",
+      saNote: "SA con Soul Crystal (Red/Green/Blue) en herrero de ciudad.",
+      grades: [
+        { g: "NG→D", w: "Cupón Path + polearm D (Winged Spear / Pike)." },
+        { g: "C", w: "Orcish Poleaxe / Widow Maker / Bec de Corbin (Alligator / Mammon)." },
+        { g: "B+", w: "Lance / Tiphon's Spear vía craft o Mammon." }
+      ]
+    },
+    twohand: {
+      label: "Two-handed sword / blunt",
+      armor: "Heavy — Full Plate C (STR/HP) → Blue Wolf / Doom B → Majestic Plate A",
+      saNote: "SA con Soul Crystal en Blacksmith. Prioriza daño / crit según color.",
+      grades: [
+        { g: "NG→D", w: "Butcher's Sword / 2H D del cupón Path." },
+        { g: "C", w: "Samurai Longsword / Battle Axe / War Axe C (Alligator pool)." },
+        { g: "B+", w: "Great Sword / Guardian Sword / Damascus → luego A (Tallum Blade, etc.)." }
+      ]
+    },
+    fist: {
+      label: "Fists",
+      armor: "Light — Rind / Drake → Zubei Leather → Tallum / Majestic Leather",
+      saNote: "SA con Soul Crystal en Blacksmith.",
+      grades: [
+        { g: "NG→D", w: "Fist D del cupón Path / shop." },
+        { g: "C", w: "Bich'Hwa / Scallop Jamadhr / Chakram (Alligator / craft)." },
+        { g: "B+", w: "Arthro Nail / Bellion Cestus → A fists." }
+      ]
+    },
+    dagger: {
+      label: "Dagger",
+      armor: "Light — Rind / Drake Leather → Zubei / Leather of Doom → Tallum Leather",
+      saNote: "SA con Soul Crystal (suele buscarse Crit / Haste según build).",
+      grades: [
+        { g: "NG→D", w: "Cupón Path → dagger D (Mithril Dagger)." },
+        { g: "C", w: "Crystal Dagger / Cursed Dagger / Dark Screamer (Alligator)." },
+        { g: "B+", w: "Demon's Dagger / Kris → A (Naga Storm, etc.)." }
+      ]
+    },
+    bow: {
+      label: "Bow",
+      armor: "Light — Reinforced Mithril / Rind → Zubei Leather → Majestic Leather",
+      saNote: "SA con Soul Crystal en Blacksmith.",
+      grades: [
+        { g: "NG→D", w: "Cupón Path → bow D (Light Bow / Reinforced Bow)." },
+        { g: "C", w: "Akat Long Bow / Eminence Bow (Alligator / craft)." },
+        { g: "B+", w: "Dark Elven Long Bow / Carnage Bow → A (Shyeed's Bow)." }
+      ]
+    },
+    tank: {
+      label: "Sword + shield (tank)",
+      armor: "Heavy — Chain / Composite / Full Plate C → Avadon / Doom B → Dark Crystal / Nightmare / Majestic A",
+      saNote: "SA en el arma (Blacksmith). Escudo aparte; sets heavy dan bonus con shield.",
+      grades: [
+        { g: "NG→D", w: "Sword of Solidarity / one-hand D + Bone Shield → Hoplon (Acts of Evil)." },
+        { g: "C", w: "Homunkulus's Sword / Stormbringer + Chain/Composite Shield (Alligator)." },
+        { g: "B+", w: "Sword of Valhalla / Keshanberk + Avadon/Doom shield path." }
+      ]
+    },
+    mage: {
+      label: "Magic blunt / staff",
+      armor: "Robe — Karmian / Demon / Seal C → Zubei / Blue Wolf / Doom robe B → Tallum / Dark Crystal / Nightmare robe A",
+      saNote: "SA mágico con Soul Crystal (Acumen / Magic Power / Conversion según arma).",
+      grades: [
+        { g: "NG→D", w: "Wand of Adept / Staff of Mana → cupón Path a D (Buffalo's Horn / Mystic Staff)." },
+        { g: "C", w: "Homunkulus's Sword (magic) / Staff of Life / Crystal Staff / Pa'agrian Axe (Ivory Tower)." },
+        { g: "B+", w: "Deadman's Staff / Ghoul Staff / Dasparion's Staff → A (Cabrio's Hand, etc.)." }
+      ]
+    },
+    healer: {
+      label: "Healer blunt / staff",
+      armor: "Robe — Karmian / Divine C → Avadon / Blue Wolf robe B → Majestic / Dark Crystal robe A",
+      saNote: "SA de cast speed / heal (Acumen, Conversion) vía Soul Crystal.",
+      grades: [
+        { g: "NG→D", w: "Cupón Path → healer blunt D." },
+        { g: "C", w: "Staff of Life / Stick of Eternity / Divine Tome path (Ivory)." },
+        { g: "B+", w: "Spell Breaker / Kaim Vanul's Bones → A healer weapons." }
+      ]
+    },
+    buffer: {
+      label: "Buffer blunt / staff",
+      armor: "Robe o Light según clase — Karmian C → Blue Wolf / Doom robe → Tallum / Majestic robe",
+      saNote: "SA Acumen / Magic Power con Soul Crystal.",
+      grades: [
+        { g: "NG→D", w: "Cupón Path → magic blunt D." },
+        { g: "C", w: "Igual que magos: Crystal Staff / Homunkulus (Ivory o Alligator si eres Shaman)." },
+        { g: "B+", w: "Mismo camino de armas mágicas B→A." }
+      ]
+    },
+    summoner: {
+      label: "Summoner staff / blunt",
+      armor: "Robe — Karmian / Demon → Zubei robe → Tallum / Nightmare robe",
+      saNote: "SA mágico con Soul Crystal.",
+      grades: [
+        { g: "NG→D", w: "Cupón Path → magic weapon D." },
+        { g: "C", w: "Ivory Tower rewards (staffs / magic swords)." },
+        { g: "B+", w: "Craft / Mammon magic weapons B→A." }
+      ]
+    },
+    dwarf: {
+      label: "Blunt / sword (spoil-friendly)",
+      armor: "Heavy o Light — Dwarven Chain / Full Plate C → Zubei / Doom → Majestic",
+      saNote: "SA con Soul Crystal. Spoil > DPS puro al principio.",
+      grades: [
+        { g: "NG→D", w: "Silversmith Hammer → cupón Path a D blunt." },
+        { g: "C", w: "War Axe / Battle Axe / Dwarven War Hammer (Alligator)." },
+        { g: "B+", w: "Artisan's / craft B blunts → A." }
+      ]
+    },
+    melee: {
+      label: "One-hand melee",
+      armor: "Heavy o Light según build",
+      saNote: "SA con Soul Crystal en Blacksmith.",
+      grades: [
+        { g: "NG→D", w: "Cupón Path NG→D." },
+        { g: "C", w: "Alligator / Ivory según tu tipo → arma C del pool." },
+        { g: "B+", w: "Craft, drop Élite o Blacksmith of Mammon." }
+      ]
+    }
+  };
+
+  function armorSetsForProfile(profile) {
+    const mageLike = /mage|healer|buffer|summoner/.test(profile);
+    const lightLike = /dual|dagger|bow|fist/.test(profile);
+    if (mageLike) {
+      return [
+        { g: "C", s: "Karmian Set (Cast. Spd.) · Demon's Set (INT) · Divine Set (heal)" },
+        { g: "B", s: "Tunic of Zubei · Blue Wolf Tunic · Tunic of Doom" },
+        { g: "A", s: "Tallum Tunic · Dark Crystal Robe · Robe of Nightmare · Majestic Robe" }
+      ];
+    }
+    if (lightLike) {
+      return [
+        { g: "C", s: "Rind Leather (Atk. Spd.) · Drake Leather · Plated Leather (STR)" },
+        { g: "B", s: "Zubei's Leather · Leather Armor of Doom · Blue Wolf Leather" },
+        { g: "A", s: "Tallum Leather · Dark Crystal Leather · Leather of Nightmare · Majestic Leather" }
+      ];
+    }
+    return [
+      { g: "C", s: "Full Plate (STR/HP) · Composite · Chain Mail · Dwarven Chain" },
+      { g: "B", s: "Avadon / Zubei / Blue Wolf / Doom Plate" },
+      { g: "A", s: "Tallum Plate · Dark Crystal · Nightmare · Majestic Plate" }
+    ];
+  }
+
+  function gearGradesHtml(cls) {
+    const g = gearBlock(cls.gear);
+    const cQuest = cls.gear === "ivory"
+      ? "Under the Shadow of the Ivory Tower (Cema, Hardin's)"
+      : cls.gear === "both"
+        ? "Alligator (Enverun) + Ivory Tower (Cema)"
+        : "Alligator Hunter (Enverun, Heine)";
+    return `
+      <div class="table-scroll">
+        <table class="roadmap responsive">
+          <thead><tr><th>Grado</th><th>Nivel típico</th><th>Cómo conseguirlo (Lu4)</th><th>Sets / nota</th></tr></thead>
+          <tbody>
+            <tr>
+              <td data-label="Grado"><strong>NG</strong></td>
+              <td data-label="Nivel">1–20</td>
+              <td data-label="Cómo">Quests de ${RACES[cls.race].village} + shops. Seal be Broken (armadura NG).</td>
+              <td data-label="Sets">Sets NG con bonus Lu4 en shops.
+                <a href="${W}/lu4/posts/post/362-ngd-grade-sets-upgrades" target="_blank">Ng/D Sets</a></td>
+            </tr>
+            <tr>
+              <td data-label="Grado"><strong>D</strong></td>
+              <td data-label="Nivel">18–40</td>
+              <td data-label="Cómo">Cupón Path (arma NG→D) · Dragon Fangs · Magnificent Feast · Acts of Evil · upgrade en merchant.</td>
+              <td data-label="Sets"><a href="${W}/lu4/posts/post/362-ngd-grade-sets-upgrades" target="_blank">Ng/D upgrades</a></td>
+            </tr>
+            <tr>
+              <td data-label="Grado"><strong>C</strong></td>
+              <td data-label="Nivel">40–52</td>
+              <td data-label="Cómo"><strong>${cQuest}</strong> · Warehouse Pastime · Treasure Hunt.
+                <span class="tag warn">No Coins of Magic</span></td>
+              <td data-label="Sets">Karmian / Full Plate / Rind / Drake…
+                <a href="${W}/lu4/posts/post/558-cba-grade-sets-upgrades" target="_blank">C/B/A Sets</a>
+                · <a href="${g.wiki}" target="_blank">Equipment Quests</a></td>
+            </tr>
+            <tr>
+              <td data-label="Grado"><strong>B</strong></td>
+              <td data-label="Nivel">~52–61</td>
+              <td data-label="Cómo">Craft, spoil/drop Élite, exchange Blacksmith of Mammon (Ancient Adena).</td>
+              <td data-label="Sets">Avadon / Zubei / Blue Wolf / Doom.
+                <a href="${W}/lu4/posts/post/558-cba-grade-sets-upgrades" target="_blank">Bonos B</a>
+                · <a href="${W}/lu4/posts/post/12-blacksmith-of-mammon-weapon-upgradeexchange" target="_blank">Mammon</a></td>
+            </tr>
+            <tr>
+              <td data-label="Grado"><strong>A</strong></td>
+              <td data-label="Nivel">~61–76</td>
+              <td data-label="Cómo">Craft, RBs, Mammon exchange, MasterWork crystals.</td>
+              <td data-label="Sets">Tallum / Dark Crystal / Nightmare / Majestic.
+                <a href="${W}/lu4/posts/post/558-cba-grade-sets-upgrades" target="_blank">Bonos A</a></td>
+            </tr>
+            <tr>
+              <td data-label="Grado"><strong>S+</strong></td>
+              <td data-label="Nivel">76–85</td>
+              <td data-label="Cómo">Tras Saga / endgame. Sets S y S80–84 en wiki MasterWork.</td>
+              <td data-label="Sets"><a href="${W}/lu4/posts/post/556-enchantment-bonuses-for-sets-dcba-grade" target="_blank">Enchant de sets</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted" style="margin-top:10px">Enchant: usa scrolls del grado correcto. Los sets dan bonus extra al enchant —
+        <a href="${W}/lu4/posts/post/556-enchantment-bonuses-for-sets-dcba-grade" target="_blank">Enchantment bonuses D/C/B/A</a>.</p>`;
+  }
+
+  function weaponsAndSaHtml(cls) {
+    const profile = weaponProfile(cls);
+    const rec = WEAPON_REC[profile] || WEAPON_REC.melee;
+    const sets = armorSetsForProfile(profile);
+    const weaponRows = rec.grades.map(x =>
+      `<tr><td data-label="Grado"><strong>${x.g}</strong></td><td data-label="Arma">${x.w}</td></tr>`
+    ).join("");
+    const setRows = sets.map(x =>
+      `<tr><td data-label="Grado"><strong>${x.g}</strong></td><td data-label="Set">${x.s}</td></tr>`
+    ).join("");
+    return `
+      <p><span class="tag info">${rec.label}</span> para <strong>${cls.name2} → ${cls.name}</strong></p>
+      <p><strong>Armadura recomendada:</strong> ${rec.armor}</p>
+      <div class="table-scroll">
+        <table class="responsive">
+          <thead><tr><th>Grado</th><th>Arma objetivo</th></tr></thead>
+          <tbody>${weaponRows}</tbody>
+        </table>
+      </div>
+      <div class="table-scroll" style="margin-top:12px">
+        <table class="responsive">
+          <thead><tr><th>Grado</th><th>Sets útiles (Lu4)</th></tr></thead>
+          <tbody>${setRows}</tbody>
+        </table>
+      </div>
+
+      <h4 style="margin:18px 0 8px">Cómo poner SA (Soul Crystal)</h4>
+      <div class="place-box">
+        <ol style="margin:0;padding-left:1.2rem">
+          <li><strong>Compra</strong> un Soul Crystal vacío (Red / Green / Blue) en el <strong>Blacksmith</strong> de cualquier ciudad. Solo 1 cristal en el inventario.</li>
+          <li><strong>Sube el cristal</strong> matando mobs con el cristal en inventario (en Lu4 <em>no</em> hace falta usarlo sobre el mob). La quest de SA se activa al loguear.</li>
+          <li>Nivel del cristal según el arma: D low = Stage 2 … C top = Stage 8 … B top = Stage 10 … A top = Stage 13. Detalle en la wiki.</li>
+          <li><strong>Inserta</strong> el cristal en el arma hablando con el <strong>Blacksmith</strong> de ciudad + <strong>Gemstones</strong> del grado (D/C/B/A).</li>
+          <li><strong>Quitar SA:</strong> también en Blacksmith — el cristal <em>no</em> se recupera.</li>
+        </ol>
+        <p style="margin:10px 0 0"><span class="tag warn">${rec.saNote}</span></p>
+        <p class="muted" style="margin:8px 0 0">NoGrade no admite SA. Duals = efecto al <strong>+4</strong>, no cristal.</p>
+        <p style="margin:8px 0 0">
+          <a href="${W}/lu4/posts/post/367-soul-crystal-sa-enhancement" target="_blank">Wiki Soul Crystal (SA) Lu4 →</a>
+          · <a href="${W}/lu4/posts/post/12-blacksmith-of-mammon-weapon-upgradeexchange" target="_blank">Mammon weapon exchange →</a>
+        </p>
+      </div>
+      <div class="table-scroll" style="margin-top:12px">
+        <table class="responsive">
+          <thead><tr><th>Arma</th><th>Cristal (ejemplo)</th><th>Gemstones</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Arma">D top</td><td data-label="Cristal">Soul Crystal Stage 4</td><td data-label="Gems">Gemstone D ×150</td></tr>
+            <tr><td data-label="Arma">C mid</td><td data-label="Cristal">Soul Crystal Stage 6</td><td data-label="Gems">Gemstone C ×238</td></tr>
+            <tr><td data-label="Arma">C top</td><td data-label="Cristal">Soul Crystal Stage 8</td><td data-label="Gems">Gemstone C ×555</td></tr>
+            <tr><td data-label="Arma">B top</td><td data-label="Cristal">Soul Crystal Stage 10</td><td data-label="Gems">Gemstone B ×339</td></tr>
+            <tr><td data-label="Arma">A top</td><td data-label="Cristal">Soul Crystal Stage 13</td><td data-label="Gems">Gemstone A ×400</td></tr>
+          </tbody>
+        </table>
+      </div>`;
+  }
+
   /** Lugares clave con ubicación simple (+ capturas cuando hay) */
   const PLACES = {
     gludin: { name: "Gludin", tip: "Pueblo costero oeste. Gremios, templo, almacén, puerta oeste." },
@@ -644,6 +937,7 @@
       { lv: "40", tipo: "Clase", nombre: `Cambio a ${cls.name2}`, detalle: "Cuando tengas las 3 marcas.", where: "Grand Master / Prefect de tu raza", wiki: cls.threeInOne },
       { lv: "40–44", tipo: "Misión", nombre: "Kusto chain", detalle: "CRÍTICO antes del 45. ~600k EXP.", where: "Giran — Herrería (Kusto)", wiki: `${W}/lu4/posts/post/386-lu4-kusto-quest-chain-40` },
       { lv: "40–47", tipo: "Misión", nombre: gearLabel, detalle: g.body, where: g.where, wiki: g.wiki },
+      { lv: "40–60", tipo: "Misión", nombre: "Soul Crystal SA (Enhance Your Weapon)", detalle: "Compra cristal en Blacksmith, súbelo con mobs, inserta SA en arma D/C/B/A.", where: "Blacksmith de cualquier ciudad", wiki: `${W}/lu4/posts/post/367-soul-crystal-sa-enhancement` },
       { lv: "40–52", tipo: "Misión", nombre: "Warehouse Pastime / Treasure Hunt", detalle: "Más equipo C y adena.", where: "Almacenes / Heine zona Alligator", wiki: `${W}/lu4/posts/post/368-lu4-equipment-quests` },
       { lv: "40–48", tipo: "Zona", nombre: "Grave Robber Hideout", detalle: "Élite 42–45. Grupo 5–9.", where: "Schuttgart — Grave Robber Hideout", wiki: `${W}/lu4/posts/post/323-update-grave-robber-hideout-4050` },
       { lv: "47–57", tipo: "Zona", nombre: "Den of Evil", detalle: "Mejor zona mid.", where: "Schuttgart — Den of Evil", wiki: `${W}/lu4/posts/post/324-update-den-of-evil-4757` },
@@ -779,13 +1073,14 @@
           <p class="muted" style="margin:8px 0 0;font-size:.85rem">Escribe tu nivel y verás solo misiones/zonas relevantes (no toda la guía).</p>
         </div>
         <div class="howto">
-          <p><strong>Cómo usar esta guía:</strong> lee el aviso Lu4 → mira la <em>Lista</em> (con filtro si quieres) → Path y fases.</p>
+          <p><strong>Cómo usar esta guía:</strong> lee el aviso Lu4 → <em>Equipo / Armas+SA</em> → Lista → Path y fases.</p>
           <p class="muted">Verde = zona · Azul = misión · Dorado = clase · Pin = dónde ir · Wiki = enlace</p>
         </div>
         <div class="hero-badges">
           <a class="badge" href="${first.pathUrl}" target="_blank" rel="noopener">Path wiki</a>
           <a class="badge" href="${cls.threeInOne}" target="_blank" rel="noopener">Marcas 3-en-1</a>
           <a class="badge" href="${cls.saga}" target="_blank" rel="noopener">Saga 76+</a>
+          <a class="badge" href="${W}/lu4/posts/post/367-soul-crystal-sa-enhancement" target="_blank" rel="noopener">SA wiki</a>
           <a class="badge" href="?class=${cls.id}">Link de esta clase</a>
         </div>
       </div>
@@ -793,6 +1088,17 @@
       <h2>Secretos de Lu4</h2>
       <div class="card" style="border-color:var(--accent)">
         <div class="secrets">${secrets}</div>
+      </div>
+
+      <h2>Equipo por grados (NG → S)</h2>
+      <div class="card">
+        <p>Progresión de armadura/arma en Lu4. Tu misión de equipo C: <strong>${g.title}</strong>.</p>
+        ${gearGradesHtml(cls)}
+      </div>
+
+      <h2>Armas recomendadas + SA</h2>
+      <div class="card">
+        ${weaponsAndSaHtml(cls)}
       </div>
 
       <h2>Lista — Misiones + zonas ${filterLevel ? `(nivel ~${filterLevel})` : "(1 → 85)"}</h2>
@@ -854,12 +1160,14 @@
         <p>📍 Templo: <a href="${W}/lu4/posts/post/380-temple-executor-quest-chain-35" target="_blank">cadena Executor</a></p>
       </div>
 
-      <h3>Fase 5 — 40 a 45 · Kusto + equipo C</h3>
+      <h3>Fase 5 — 40 a 45 · Kusto + equipo C + SA</h3>
       <div class="card">
         <p class="pin">📍 <strong>Kusto:</strong> Giran Blacksmith.
           <a href="${W}/lu4/posts/post/386-lu4-kusto-quest-chain-40" target="_blank">Wiki</a></p>
         <p class="pin">📍 <strong>${g.title}</strong><br>${g.where}<br>${g.body}
           <a href="${g.wiki}" target="_blank">Wiki</a></p>
+        <p class="pin">📍 <strong>SA:</strong> compra Soul Crystal en Blacksmith → súbelo con mobs (1 cristal en inventario) → inserta en arma D/C/B.
+          <a href="${W}/lu4/posts/post/367-soul-crystal-sa-enhancement" target="_blank">Wiki SA</a></p>
         <p class="pin">📍 Zona: Grave Robber Hideout (Élite 42–45).
           <a href="${W}/lu4/posts/post/323-update-grave-robber-hideout-4050" target="_blank">Wiki</a></p>
       </div>
@@ -902,6 +1210,7 @@
   global.Lu4Guides = {
     W, RACES, FIRST, CLASSES, SECRETS, PLACES, NPC_INDEX,
     icon, art, getClassesByRace, getClass, buildGuideHtml,
-    getRoadmapRows, compareClasses, searchAll, gearBlock
+    getRoadmapRows, compareClasses, searchAll, gearBlock,
+    weaponProfile, WEAPON_REC
   };
 })(window);
