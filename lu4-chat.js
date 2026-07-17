@@ -511,21 +511,38 @@
     return ranked.map(x => `- [${x.e.id}] ${x.e.a.replace(/\n/g, " ").slice(0, 320)}`).join("\n");
   }
 
+  function guideContextBlock(ctx, question) {
+    const G = global.Lu4Guides;
+    if (!G || !G.explainGuideTopic) return "";
+    const explained = G.explainGuideTopic(question || "", ctx || {});
+    if (explained) return explained.slice(0, 3500);
+    if (ctx && ctx.classId && G.getClass) {
+      const cls = G.getClass(ctx.classId);
+      if (cls && G.classDigest) return G.classDigest(cls).slice(0, 2000);
+    }
+    return "";
+  }
+
   function buildSystemPrompt(ctx) {
     const classLine = ctx && ctx.className
-      ? `Clase abierta en la guía: ${ctx.className}${ctx.raceName ? " (" + ctx.raceName + ")" : ""}${ctx.level ? ", filtro nivel " + ctx.level : ""}.`
+      ? `Clase abierta en la guía: ${ctx.className}${ctx.raceName ? " (" + ctx.raceName + ")" : ""}${ctx.level ? ", filtro nivel " + ctx.level : ""}${ctx.classId ? " [id=" + ctx.classId + "]" : ""}.`
       : (ctx && ctx.level ? `El usuario filtró nivel ${ctx.level} en la guía.` : "No hay clase abierta ahora.");
+    const guideBlock = guideContextBlock(ctx, (ctx && ctx.lastQuestion) || "");
     return [
       "Eres el asistente de la guía Lineage 2 Lu4 (MasterWork / E-Global).",
       "Responde en español neutro latinoamericano (tú: haz, puedes, elige). Nunca uses voseo rioplatense.",
-      "Nombres de quests, aldeas, zonas, NPCs y clases: déjalos en inglés como en la wiki (Talking Island, Dragon Fangs, Master Sorius, etc.).",
-      "Sé conversacional y útil: 2–6 frases o bullets cortos. No sueltes solo links.",
-      "Si citas la wiki, pon 1 link al final como «Más info». No inventes mecánicas fuera de Lu4.",
-      "Reglas Lu4 clave: Fatigue (Worn = EXP mobs ×0.1, quests OK); ventana mobs −5/+4; party 5–9 misma EXP; sin pets/pesca; Path 18 = 250k EXP; Marks 35+; Temple+Kusto antes del 45; cap 85.",
+      "Nombres de quests, aldeas, zonas, NPCs, ítems y clases: déjalos en inglés como en la wiki.",
+      "Sé conversacional y claro: explica el POR QUÉ y el CÓMO, no solo listes links. Usa 4–10 bullets si hace falta.",
+      "Prioriza SIEMPRE los datos de la guía/contexto debajo. Si hablan de un ítem/material, indica tip + que abran Drop Spoil en la wiki del ítem.",
+      "Si citas la wiki, 1 link al final como «Más info». No inventes mecánicas fuera de Lu4.",
+      "Reglas Lu4: Fatigue Worn = EXP mobs ×0.1 (quests OK); mobs −5/+4; party 5–9; sin pets/pesca; Path 18=250k; Marks 35+; Temple+Kusto <45; cap 85.",
       classLine,
       "",
-      "Fragmentos de la base local (úsalos si aplican):",
-      buildKbDigest((ctx && ctx.lastQuestion) || "", 7)
+      "=== DATOS DE LA GUÍA (fuente principal) ===",
+      guideBlock || "(sin digest específico)",
+      "",
+      "=== KB corta ===",
+      buildKbDigest((ctx && ctx.lastQuestion) || "", 5)
     ].join("\n");
   }
 
@@ -533,8 +550,8 @@
     const base = [
       { label: "Nivel 18", q: "¿Qué hago en el nivel 18?" },
       { label: "Nivel 40", q: "¿Qué hago en el nivel 40?" },
-      { label: "Fatiga", q: "¿Qué es Fatigue y qué hago si estoy Worn?" },
-      { label: "Templo", q: "Explícame la cadena del Temple Executor" }
+      { label: "Soul Crystal", q: "Explícame cómo conseguir y levear Soul Crystals" },
+      { label: "Gemstone C", q: "¿Cómo consigo Gemstone C?" }
     ];
     if (topic === "level") {
       return [
@@ -546,10 +563,18 @@
     }
     if (topic === "class") {
       return [
-        { label: "Path 18", q: "¿Cómo hago el Path de 1ª profesión?" },
-        { label: "2ª clase", q: "¿Qué necesito para la 2ª profesión?" },
+        { label: "Armas", q: "¿Qué armas y sets me recomiendas?" },
+        { label: "Path 18", q: "Explícame el Path de mi clase paso a paso" },
         { label: "Antes del 45", q: "¿Qué quests debo hacer antes del 45?" },
-        { label: "Saga", q: "¿Qué preparo para la Saga?" }
+        { label: "SA", q: "Cómo pongo SA a mi arma" }
+      ];
+    }
+    if (topic === "item") {
+      return [
+        { label: "Steel", q: "¿Cómo consigo Steel?" },
+        { label: "Gemstone C", q: "¿Dónde dropea Gemstone C?" },
+        { label: "Enria", q: "¿Cómo consigo Enria?" },
+        { label: "Soul Crystal", q: "Cómo levear Soul Crystal" }
       ];
     }
     return base;
@@ -562,11 +587,12 @@
     return defaultSuggestions();
   }
 
-  function answer(question) {
+  function answer(question, ctx) {
     const raw = (question || "").trim();
+    ctx = ctx || {};
     if (!raw) {
       return {
-        html: formatAnswer("Escribe una pregunta sobre Lu4 (nivel, NPC, quest, zona, clase…)."),
+        html: formatAnswer("Escribe una pregunta sobre Lu4 (nivel, NPC, quest, zona, clase, material…)."),
         sources: [],
         suggestions: defaultSuggestions(),
         mode: "local"
@@ -574,14 +600,52 @@
     }
     const qNorm = normalize(raw);
     const tokens = qNorm.split(" ").filter(t => t.length > 2);
+    const G = global.Lu4Guides;
+    const I = global.Lu4Items;
 
     if (/^(hola|hey|buenas|hi|hello|que tal|qué tal)\b/.test(qNorm)) {
       return {
-        html: formatAnswer("¡Hola! Soy el asistente de la guía **Lu4**.\n\nPregúntame cosas como:\n• «¿Qué hago en el nivel 40?»\n• «¿Dónde está Varika?»\n• «Guía Storm Screamer»\n• «¿Qué es Fatigue?»\n• «¿Dónde farmear 70?»\n\nSi pegas tu API de Gemini arriba, puedo conversar con más fluidez."),
+        html: formatAnswer("¡Hola! Puedo explicar **cualquier parte de la guía** (clases, equipo, SA, zonas) y ayudarte a buscar **ítems/materiales**.\n\nEjemplos:\n• «Explícame el Path de Storm Screamer»\n• «¿Qué armas uso de C a B?»\n• «¿Cómo consigo Gemstone C / Steel / Enria?»\n• «¿Qué hago en el 40?»"),
         sources: [],
         suggestions: defaultSuggestions(),
         mode: "local"
       };
+    }
+
+    // Ítems / materiales (prioridad)
+    if (I && /(dropea|drop|spoil|material|conseguir|gemstone|crystal|steel|acero|enria|asofe|thons|varnish|animal skin|mithril|oriharukon|mold|soul crystal stage)/.test(qNorm)) {
+      const hits = I.searchItems(raw, 6);
+      if (hits.length) {
+        const body = hits.map(it => I.explainItem(it)).join("\n\n---\n\n");
+        return {
+          html: formatAnswer("Encontré esto en el índice Lu4:\n\n" + body +
+            "\n\nSi no es el ítem exacto, usa el buscador **Items** de la guía o: " + I.wikiItemSearchUrl(raw)),
+          sources: hits.map(h => "item-" + h.id),
+          suggestions: defaultSuggestions("item"),
+          mode: "local"
+        };
+      }
+    }
+
+    // Digests de la guía (clase abierta / SA / equipo)
+    if (G && G.explainGuideTopic) {
+      const explained = G.explainGuideTopic(raw, ctx);
+      if (explained && (/(explica|explicame|explícame|cómo|como|armas|equipo|sa|path|saga|mi clase|guía|guia|set|soul)/.test(qNorm) || G.findClassByText(raw) || ctx.classId)) {
+        const rankedQuick = KB.map(e => ({ e, s: scoreEntry(e, qNorm, tokens) }))
+          .filter(x => x.s >= 8)
+          .sort((a, b) => b.s - a.s)
+          .slice(0, 1);
+        let html = formatAnswer(explained);
+        if (rankedQuick[0]) {
+          html += "<br><br><hr style='border-color:#3a4454;margin:10px 0'>" + formatAnswer(rankedQuick[0].e.a);
+        }
+        return {
+          html,
+          sources: ["guide-digest"],
+          suggestions: defaultSuggestions(G.findClassByText(raw) || ctx.classId ? "class" : "item"),
+          mode: "local"
+        };
+      }
     }
 
     const lv = extractLevel(raw);
@@ -590,7 +654,17 @@
       (/(que|qué|hacer|hago|farmear|ir|zona|subir|estoy|tengo|lleg|consejo|ruta)/.test(qNorm) ||
         /(nivel|lv|lvl|level)/.test(qNorm))
     ) {
-      const a = answerByLevel(lv);
+      let a = answerByLevel(lv);
+      if (a && G && ctx.classId && G.getClass) {
+        const cls = G.getClass(ctx.classId);
+        if (cls) {
+          const rows = G.getRoadmapRows(cls).filter(r => lv >= r.min - 2 && lv <= r.max + 4).slice(0, 5);
+          if (rows.length) {
+            a += "\n\n**Para " + cls.name + " en ~" + lv + ":**\n" +
+              rows.map((r, i) => (i + 1) + ". " + r.nombre + " — " + r.detalle).join("\n");
+          }
+        }
+      }
       if (a) {
         return {
           html: formatAnswer(a),
@@ -605,10 +679,24 @@
       .filter(x => x.s > 0)
       .sort((a, b) => b.s - a.s);
 
+    // Clase mencionada → digest aunque KB sea floja
+    if (G && G.findClassByText) {
+      const cls = G.findClassByText(raw);
+      if (cls && (!ranked.length || ranked[0].s < 8)) {
+        return {
+          html: formatAnswer(G.classDigest(cls)),
+          sources: ["class-" + cls.id],
+          suggestions: defaultSuggestions("class"),
+          mode: "local"
+        };
+      }
+    }
+
     if (!ranked.length || ranked[0].s < 4) {
+      const wikiItem = I ? I.wikiItemSearchUrl(raw) : W + "/lu4/search";
       return {
         html: formatAnswer(
-          "No encontré una respuesta clara en la base Lu4.\n\nPrueba ser más específico:\n• Nivel: «qué hago en el 35»\n• NPC: «dónde está Karukia»\n• Clase: «guía destroyer»\n• Zona: «dónde farmear 50»\n• Mecánica: «fatigue» / «temple» / «kusto»\n\nO activa Gemini con tu API key para una charla más abierta.\n\nWiki: " + W + "/lu4/main"
+          "No encontré una respuesta clara.\n\nPrueba:\n• Nivel: «qué hago en el 35»\n• Clase: «explícame Destroyer»\n• SA: «cómo levear Soul Crystal»\n• Ítem: «Gemstone C» / «Steel» / «Enria»\n• Buscador **Items** de la guía\n\nWiki ítems: " + wikiItem
         ),
         sources: [],
         suggestions: defaultSuggestions(),
@@ -620,6 +708,13 @@
     let html = formatAnswer(top[0].e.a);
     if (top[1] && top[1].s >= top[0].s * 0.7 && top[1].s >= 6) {
       html += "<br><br><hr style='border-color:#3a4454;margin:10px 0'>" + formatAnswer(top[1].e.a);
+    }
+    // Enriquecer con digest de guía si aplica
+    if (G && G.explainGuideTopic) {
+      const extra = G.explainGuideTopic(raw, ctx);
+      if (extra && extra.length > 80) {
+        html += "<br><br><hr style='border-color:#3a4454;margin:10px 0'><strong>Desde la guía:</strong><br>" + formatAnswer(extra);
+      }
     }
     const result = {
       html,
@@ -770,7 +865,7 @@
     }
 
     if (!hasGemini()) {
-      const local = answer(raw);
+      const local = answer(raw, ctx || {});
       pushHistory("user", raw);
       pushHistory("model", local.html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 800));
       return local;
@@ -780,11 +875,12 @@
       const promptHint = [
         raw,
         "",
+        "Explica con claridad usando los DATOS DE LA GUÍA del system prompt. Si preguntan por un ítem, di cómo orientarse al Drop Spoil de la wiki.",
         "Al final, si tiene sentido, agrega hasta 3 líneas exactamente así:",
         "FOLLOWUP: pregunta corta sugerida"
       ].join("\n");
 
-      const text = await callGemini(promptHint, ctx || {});
+      const text = await callGemini(promptHint, { ...(ctx || {}), lastQuestion: raw });
       const follow = extractFollowUps(text);
       const clean = stripFollowUps(text);
       pushHistory("user", raw);
@@ -797,7 +893,7 @@
         mode: "gemini"
       };
     } catch (e) {
-      const local = answer(raw);
+      const local = answer(raw, ctx || {});
       pushHistory("user", raw);
       pushHistory("model", local.html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 800));
       const note = e && e.message === "NO_KEY"

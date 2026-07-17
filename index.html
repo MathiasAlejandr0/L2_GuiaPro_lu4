@@ -194,6 +194,18 @@
       border-radius: 10px; padding: 0 14px; cursor: pointer; font: inherit;
     }
     .chat-input-row button:disabled { opacity: .55; cursor: wait; }
+    .item-hit {
+      display: block; width: 100%; text-align: left; margin: 0 0 8px; padding: 12px 14px;
+      border: 1px solid var(--line); border-radius: 12px; background: #171c24; color: var(--text);
+      cursor: pointer; font: inherit;
+    }
+    .item-hit:hover { border-color: var(--accent); }
+    .item-hit .item-actions { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .item-hit .item-actions a {
+      font-size: .8rem; color: #1a120a; background: var(--accent); text-decoration: none;
+      padding: 5px 10px; border-radius: 8px; font-weight: 700;
+    }
+    .item-hit .item-actions a.secondary { background: #2b3340; color: var(--text); font-weight: 500; }
     @media (max-width: 800px) {
       .grid-2, .grid-3, .shots { grid-template-columns: 1fr; }
       h1 { font-size: 1.45rem; }
@@ -220,6 +232,7 @@
     <p class="brand">LU4 <span>Guías</span></p>
     <div class="crumbs" id="crumbs">Inicio</div>
     <button class="btn" type="button" id="btnHome">← Inicio</button>
+    <button class="btn" type="button" id="btnItemsNav">Items</button>
     <button class="btn" type="button" id="btnCompareNav">Comparar</button>
     <button class="btn" type="button" id="btnChat">Asistente</button>
   </header>
@@ -236,9 +249,9 @@
     </div>
 
     <div class="card tools">
-      <strong>Buscar clase o NPC</strong>
+      <strong>Buscar clase, NPC o material</strong>
       <div class="tools-row">
-        <input id="globalSearch" type="search" placeholder="Ej: Storm, Varika, Cardinal, Kusto…" autocomplete="off" />
+        <input id="globalSearch" type="search" placeholder="Ej: Storm, Gemstone C, Steel, Varika…" autocomplete="off" />
         <button class="btn accent" type="button" id="btnSearch">Buscar</button>
       </div>
       <div class="search-results" id="searchResults" hidden></div>
@@ -261,6 +274,20 @@
     <!-- STEP 3: GUIDE -->
     <section id="step-guide" class="step-panel">
       <div id="guideRoot"></div>
+    </section>
+
+    <!-- ITEMS -->
+    <section id="step-items" class="step-panel">
+      <h1>Items & materiales</h1>
+      <p class="lead">Busca un material o arma. Abre la ficha de la wiki para ver <strong>quién lo dropea / spoil</strong>, precios y recetas. También puedes preguntarle al asistente.</p>
+      <div class="card tools">
+        <div class="tools-row">
+          <input id="itemSearch" type="search" placeholder="Ej: Gemstone C, Steel, Enria, Animal Skin, Damascus…" autocomplete="off" />
+          <button class="btn accent" type="button" id="btnItemSearch">Buscar</button>
+        </div>
+        <p class="muted" style="margin:8px 0 0;font-size:.85rem">Índice local de materiales comunes + link a Drop Spoil en masterwork.wiki. En el juego: Bestiary del target.</p>
+        <div id="itemResults" style="margin-top:14px"></div>
+      </div>
     </section>
 
     <!-- COMPARE -->
@@ -308,6 +335,7 @@
     </form>
   </div>
 
+  <script src="lu4-items.js"></script>
   <script src="lu4-guides.js"></script>
   <script src="lu4-chat.js"></script>
   <script>
@@ -322,8 +350,10 @@
       race: document.getElementById("step-race"),
       class: document.getElementById("step-class"),
       guide: document.getElementById("step-guide"),
+      items: document.getElementById("step-items"),
       compare: document.getElementById("step-compare")
     };
+    const I = window.Lu4Items;
 
     function show(step) {
       Object.values(panels).forEach(p => p.classList.remove("active"));
@@ -335,12 +365,14 @@
         const c = G.getClass(state.classId);
         crumbs.innerHTML = `1. <button type="button" id="crumbRace">${G.RACES[state.race].name}</button> → 2. <button type="button" id="crumbClass">${c.name}</button> → 3. Guía`;
       }
+      if (step === "items") crumbs.textContent = "Items & materiales";
       if (step === "compare") crumbs.textContent = "Comparar clases";
       document.getElementById("crumbRace")?.addEventListener("click", () => { state.classId = null; renderClasses(); show("class"); });
       document.getElementById("crumbClass")?.addEventListener("click", () => show("class"));
       window.scrollTo({ top: 0, behavior: "smooth" });
       bindShots();
       bindGuideControls();
+      if (step === "items") renderItemSearch(document.getElementById("itemSearch").value || "gemstone");
     }
 
     function openClass(id, level) {
@@ -441,7 +473,7 @@
     function renderSearch() {
       const q = document.getElementById("globalSearch").value;
       const box = document.getElementById("searchResults");
-      const { classes, npcs } = G.searchAll(q);
+      const { classes, npcs, items, wikiItem, wikiNpc } = G.searchAll(q);
       if (!q || q.trim().length < 2) {
         box.hidden = true;
         box.innerHTML = "";
@@ -468,12 +500,69 @@
           </button>`;
         });
       }
-      if (!classes.length && !npcs.length) {
-        html = `<p class="muted">Sin resultados. Prueba «Storm», «Varika», «Cardinal», «Kusto».</p>`;
+      if (items && items.length) {
+        html += `<p class="muted" style="margin:8px 0 0">Items / materiales</p>`;
+        items.slice(0, 6).forEach(it => {
+          const url = I ? I.itemUrl(it) : "#";
+          html += `<button type="button" class="search-hit" data-item-url="${url}">
+            <strong>${it.name}</strong> <span class="muted">(${I && I.CAT_LABEL[it.cat] || it.cat})</span><br>
+            <span style="font-size:.88rem">${it.tip}</span><br>
+            <span class="muted" style="font-size:.8rem">Click → Drop / Spoil en la wiki</span>
+          </button>`;
+        });
+      }
+      html += `<p style="margin:10px 0 0;font-size:.85rem">
+        <a href="${wikiItem}" target="_blank" rel="noopener">Buscar ítem en wiki Lu4 →</a>
+        · <a href="${wikiNpc}" target="_blank" rel="noopener">Buscar NPC →</a>
+        · <button type="button" class="linkish" id="goItemsPanel">Abrir panel Items</button>
+      </p>`;
+      if (!classes.length && !npcs.length && !(items && items.length)) {
+        html = `<p class="muted">Sin coincidencias locales. Usa los links wiki abajo o el panel <strong>Items</strong>.</p>` + html;
       }
       box.innerHTML = html;
       box.querySelectorAll("[data-class]").forEach(b => b.onclick = () => openClass(b.dataset.class));
       box.querySelectorAll("[data-npc-wiki]").forEach(b => b.onclick = () => window.open(b.dataset.npcWiki, "_blank"));
+      box.querySelectorAll("[data-item-url]").forEach(b => b.onclick = () => window.open(b.dataset.itemUrl, "_blank"));
+      document.getElementById("goItemsPanel")?.addEventListener("click", () => {
+        document.getElementById("itemSearch").value = q;
+        show("items");
+      });
+    }
+
+    function renderItemSearch(q) {
+      const box = document.getElementById("itemResults");
+      if (!I) {
+        box.innerHTML = "<p class='muted'>Falta lu4-items.js</p>";
+        return;
+      }
+      const query = (q || "").trim();
+      const list = query.length >= 2 ? I.searchItems(query, 24) : I.ITEMS.filter(x => /gemstone|material|rare|sa/.test(x.cat)).slice(0, 16);
+      let html = "";
+      if (query.length >= 2) {
+        html += `<p class="muted">Resultados para «${query.replace(/</g, "")}»</p>`;
+      } else {
+        html += `<p class="muted">Materiales frecuentes (escribe para filtrar):</p>`;
+      }
+      list.forEach(it => {
+        html += `<div class="item-hit">
+          <strong>${it.name}</strong> <span class="tag info">${I.CAT_LABEL[it.cat] || it.cat}</span>
+          <p style="margin:6px 0 0;font-size:.9rem">${it.tip}</p>
+          <div class="item-actions">
+            <a href="${I.itemUrl(it)}" target="_blank" rel="noopener">Drop / Spoil (wiki)</a>
+            <a class="secondary" href="${I.wikiItemSearchUrl(it.name)}" target="_blank" rel="noopener">Buscar en wiki</a>
+            <a class="secondary" href="#" data-ask-item="${it.name.replace(/"/g, "")}">Preguntar al chat</a>
+          </div>
+        </div>`;
+      });
+      html += `<p style="margin-top:12px"><a href="${I.wikiItemSearchUrl(query || "Gemstone")}" target="_blank" rel="noopener">Buscar cualquier ítem en la wiki Lu4 →</a></p>`;
+      box.innerHTML = html;
+      box.querySelectorAll("[data-ask-item]").forEach(a => {
+        a.onclick = e => {
+          e.preventDefault();
+          openChat();
+          ask("¿Cómo consigo " + a.dataset.askItem + "? ¿Quién lo dropea o spoil?");
+        };
+      });
     }
 
     function fillCompareSelects() {
@@ -489,8 +578,17 @@
       state.race = null; state.classId = null; show("race");
       history.replaceState(null, "", location.pathname);
     };
+    document.getElementById("btnItemsNav").onclick = () => show("items");
     document.getElementById("btnCompareNav").onclick = () => show("compare");
     document.getElementById("btnSearch").onclick = renderSearch;
+    document.getElementById("btnItemSearch").onclick = () => renderItemSearch(document.getElementById("itemSearch").value);
+    document.getElementById("itemSearch").addEventListener("input", () => {
+      const v = document.getElementById("itemSearch").value;
+      if (v.trim().length >= 2 || v.trim().length === 0) renderItemSearch(v);
+    });
+    document.getElementById("itemSearch").addEventListener("keydown", e => {
+      if (e.key === "Enter") { e.preventDefault(); renderItemSearch(document.getElementById("itemSearch").value); }
+    });
     document.getElementById("globalSearch").addEventListener("input", () => {
       if (document.getElementById("globalSearch").value.trim().length >= 2) renderSearch();
       else {
@@ -532,7 +630,7 @@
     }
 
     function chatContext() {
-      const ctx = { level: state.level || null, className: null, raceName: null };
+      const ctx = { level: state.level || null, classId: state.classId || null, className: null, raceName: null };
       if (state.classId && G.getClass(state.classId)) {
         const c = G.getClass(state.classId);
         ctx.className = c.name;

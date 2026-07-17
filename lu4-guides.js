@@ -1084,7 +1084,7 @@
 
   function searchAll(query) {
     const q = (query || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
-    if (!q || q.length < 2) return { classes: [], npcs: [] };
+    if (!q || q.length < 2) return { classes: [], npcs: [], items: [], wikiItem: null, wikiNpc: null };
     const classes = CLASSES.filter(c => {
       const blob = `${c.id} ${c.name} ${c.name2} ${c.role} ${c.tip} ${c.marks}`.toLowerCase()
         .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -1095,7 +1095,113 @@
       n.name.toLowerCase().includes(q) ||
       n.tip.toLowerCase().includes(q)
     ).slice(0, 10);
-    return { classes, npcs };
+    const I = global.Lu4Items;
+    const items = I ? I.searchItems(query, 12) : [];
+    return {
+      classes,
+      npcs,
+      items,
+      wikiItem: I ? I.wikiItemSearchUrl(query) : `${W}/lu4/search?Search%5Bsearch_type%5D=2&Search%5Bname%5D=${encodeURIComponent(query)}`,
+      wikiNpc: I ? I.wikiNpcSearchUrl(query) : `${W}/lu4/search?Search%5Bsearch_type%5D=1&Search%5Bname%5D=${encodeURIComponent(query)}`
+    };
+  }
+
+  /** Resumen de clase para el chatbot / digests */
+  function classDigest(cls) {
+    if (!cls) return "";
+    const race = RACES[cls.race];
+    const first = FIRST[cls.first];
+    const g = gearBlock(cls.gear);
+    const profile = weaponProfile(cls);
+    const rec = WEAPON_REC[profile] || WEAPON_REC.melee;
+    const steps = (getRoadmapRows(cls) || []).filter(r => r.min <= 45).slice(0, 8)
+      .map(r => `${r.lv}: ${r.nombre}`).join(" · ");
+    return [
+      `Clase: ${cls.name} (${cls.name2}) · ${race.name} · ${cls.role}`,
+      `Ruta: ${first.name} → ${cls.name2} → ${cls.name}`,
+      `Tip: ${cls.tip}`,
+      `Equipo 40: ${g.title} — ${g.where}`,
+      `Armas (${rec.label}): ${rec.grades.map(x => x.g + " " + x.w).join(" | ")}`,
+      `Armadura: ${rec.armor}`,
+      `SA: ${rec.saNote}`,
+      `Marcas: ${cls.marks}`,
+      `Saga: ${cls.sagaNpc}`,
+      `Roadmap temprano: ${steps}`,
+      `Wiki Path: ${first.pathUrl}`,
+      `Wiki 3-in-1: ${cls.threeInOne}`,
+      `Wiki Saga: ${cls.saga}`
+    ].join("\n");
+  }
+
+  function saDigest() {
+    return [
+      "Soul Crystal (SA) Lu4:",
+      "1) Compra cristal vacío Red/Green/Blue en Blacksmith (1 por diálogo).",
+      "2) Deja SOLO 1 cristal en inventario y mata mobs (no hace falta usarlo). Quest al loguear.",
+      "3) Stages: D=2-4, C=5-8, B=9-10, A=11-13. Insertar en Blacksmith + Gemstones del grado.",
+      "4) Quitar SA: Blacksmith (cristal no vuelve). Duals: SA al +4. NoGrade: sin SA.",
+      "5) Farm: 2 Ol Mahum/Langk · 5-6 Timak · 7-8 Forest/Doll Blader · 9-10 Maluk/Platinum · 11+ RBs (Epics 100%).",
+      `Wiki: ${W}/lu4/posts/post/367-soul-crystal-sa-enhancement`
+    ].join("\n");
+  }
+
+  function findClassByText(text) {
+    const q = (text || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    if (!q) return null;
+    let best = null, score = 0;
+    for (const c of CLASSES) {
+      const names = [c.id, c.name, c.name2].map(n => n.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+      for (const n of names) {
+        if (q.includes(n) && n.length > score) {
+          best = c;
+          score = n.length;
+        }
+      }
+    }
+    return best;
+  }
+
+  function explainGuideTopic(question, ctx) {
+    const q = (question || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const parts = [];
+
+    if (/(soul crystal|soulcrystal|\bsa\b|poner sa|subir cristal|levear sa|gemstone)/.test(q)) {
+      parts.push(saDigest());
+    }
+
+    const mentioned = findClassByText(question);
+    const openCls = ctx && ctx.classId ? getClass(ctx.classId) : null;
+    const cls = mentioned || openCls;
+    if (cls && (mentioned || /(mi clase|esta clase|armas|equipo|set|path|saga|guia|guía|cómo subir|como subir)/.test(q))) {
+      parts.push(classDigest(cls));
+    }
+
+    if (/(equipo por grado|grado c|grado d|alligat|ivory tower|full plate|karmian)/.test(q) && cls) {
+      parts.push(`Equipo C de esta clase: ${gearBlock(cls.gear).body}`);
+    }
+
+    if (/(material|dropea|drop|spoil|conseguir|donde farm|dónde farm|gemstone|cristal d|steel|acero|enria|asofe|thons)/.test(q)) {
+      const I = global.Lu4Items;
+      if (I) {
+        const hits = I.searchItems(question, 5);
+        if (hits.length) {
+          parts.push("Ítems relacionados:\n" + hits.map(it =>
+            `• **${it.name}** — ${it.tip}\n  Drop/Spoil: ${I.itemUrl(it)}`
+          ).join("\n"));
+        }
+        parts.push(`Buscar cualquier ítem en la wiki: ${I.wikiItemSearchUrl(question.replace(/^(dónde|donde|como|cómo|conseguir|dropea|drop|spoil)\s+/i, "").trim() || question)}`);
+      }
+    }
+
+    if (!parts.length && cls && /(qué hago|que hago|siguiente|prioridad)/.test(q) && ctx && ctx.level) {
+      const rows = getRoadmapRows(cls).filter(r => ctx.level >= r.min - 3 && ctx.level <= r.max + 5).slice(0, 6);
+      if (rows.length) {
+        parts.push(`Prioridades cerca del nivel ${ctx.level} (${cls.name}):\n` +
+          rows.map((r, i) => `${i + 1}. [${r.lv}] ${r.nombre} — ${r.detalle} (${r.where})`).join("\n"));
+      }
+    }
+
+    return parts.length ? parts.join("\n\n") : null;
   }
 
   function buildGuideHtml(cls, opts) {
@@ -1290,6 +1396,7 @@
     W, RACES, FIRST, CLASSES, SECRETS, PLACES, NPC_INDEX,
     icon, art, getClassesByRace, getClass, buildGuideHtml,
     getRoadmapRows, compareClasses, searchAll, gearBlock,
-    weaponProfile, WEAPON_REC
+    weaponProfile, WEAPON_REC, classDigest, saDigest,
+    findClassByText, explainGuideTopic
   };
 })(window);
