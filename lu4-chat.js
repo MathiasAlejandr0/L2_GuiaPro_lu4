@@ -1,9 +1,20 @@
 /**
- * Lu4 Guide Chat — base de conocimiento local (wiki Lu4 / MasterWork)
- * Responde en español sin API externa.
+ * Lu4 Guide Chat — KB local + Gemini opcional (API key en localStorage).
+ * Español neutro LatAm. Quests / aldeas / NPCs en inglés wiki.
  */
 (function (global) {
   const W = "https://masterwork.wiki";
+  const KEY_STORAGE = "lu4_gemini_api_key";
+  const KEY_OFF_STORAGE = "lu4_gemini_off";
+  /** Key compartida del grupo (partes unidas en runtime). */
+  const SHARED_KEY = [
+    "AQ.Ab8RN6Kq9v5i",
+    "QSkklU0qhBGaCT6",
+    "IVNhGfCNvj5-tHI3",
+    "dBBbWOQ"
+  ].join("");
+  const MODEL = "gemini-2.5-flash";
+  const MAX_HISTORY = 8;
 
   const KB = [
     // —— Reglas ——
@@ -406,28 +417,162 @@
   }
 
   function formatAnswer(text) {
-    return text
+    let s = (text || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
       .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-      .replace(/\n/g, "<br>");
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    // Enlazar URLs sueltas sin tocar las que ya están en href=
+    s = s.replace(/(^|[^"'>=])(https?:\/\/[^\s<]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
+    return s.replace(/\n/g, "<br>");
+  }
+
+  function isGeminiDisabled() {
+    try { return localStorage.getItem(KEY_OFF_STORAGE) === "1"; }
+    catch (_) { return false; }
+  }
+
+  function getApiKey() {
+    if (isGeminiDisabled()) return "";
+    try {
+      const personal = (localStorage.getItem(KEY_STORAGE) || "").trim();
+      if (personal) return personal;
+    } catch (_) { /* ignore */ }
+    return SHARED_KEY;
+  }
+
+  function setApiKey(key) {
+    const v = (key || "").trim();
+    try {
+      if (v) {
+        localStorage.setItem(KEY_STORAGE, v);
+        localStorage.removeItem(KEY_OFF_STORAGE);
+      } else {
+        localStorage.removeItem(KEY_STORAGE);
+      }
+    } catch (_) { /* ignore */ }
+    return !!getApiKey();
+  }
+
+  /** Quita override personal y vuelve a la key compartida del grupo. */
+  function clearApiKey() {
+    try {
+      localStorage.removeItem(KEY_STORAGE);
+      localStorage.removeItem(KEY_OFF_STORAGE);
+    } catch (_) { /* ignore */ }
+  }
+
+  /** Desactiva Gemini en este navegador (solo modo local). */
+  function disableGemini() {
+    try {
+      localStorage.setItem(KEY_OFF_STORAGE, "1");
+      localStorage.removeItem(KEY_STORAGE);
+    } catch (_) { /* ignore */ }
+  }
+
+  function hasGemini() {
+    return !!getApiKey();
+  }
+
+  /** Historial de sesión para Gemini (role: user|model) */
+  let history = [];
+
+  function clearHistory() {
+    history = [];
+  }
+
+  function pushHistory(role, text) {
+    history.push({ role, text: String(text || "").slice(0, 4000) });
+    while (history.length > MAX_HISTORY) history.shift();
+  }
+
+  function buildKbDigest(question, limit) {
+    const qNorm = normalize(question);
+    const tokens = qNorm.split(" ").filter(t => t.length > 2);
+    const ranked = KB.map(e => ({ e, s: scoreEntry(e, qNorm, tokens) }))
+      .filter(x => x.s > 0)
+      .sort((a, b) => b.s - a.s)
+      .slice(0, limit || 6);
+    if (!ranked.length) {
+      return KB.slice(0, 8).map(e => `- [${e.id}] ${e.a.replace(/\n/g, " ").slice(0, 280)}`).join("\n");
+    }
+    return ranked.map(x => `- [${x.e.id}] ${x.e.a.replace(/\n/g, " ").slice(0, 320)}`).join("\n");
+  }
+
+  function buildSystemPrompt(ctx) {
+    const classLine = ctx && ctx.className
+      ? `Clase abierta en la guía: ${ctx.className}${ctx.raceName ? " (" + ctx.raceName + ")" : ""}${ctx.level ? ", filtro nivel " + ctx.level : ""}.`
+      : (ctx && ctx.level ? `El usuario filtró nivel ${ctx.level} en la guía.` : "No hay clase abierta ahora.");
+    return [
+      "Eres el asistente de la guía Lineage 2 Lu4 (MasterWork / E-Global).",
+      "Responde en español neutro latinoamericano (tú: haz, puedes, elige). Nunca uses voseo rioplatense.",
+      "Nombres de quests, aldeas, zonas, NPCs y clases: déjalos en inglés como en la wiki (Talking Island, Dragon Fangs, Master Sorius, etc.).",
+      "Sé conversacional y útil: 2–6 frases o bullets cortos. No sueltes solo links.",
+      "Si citas la wiki, pon 1 link al final como «Más info». No inventes mecánicas fuera de Lu4.",
+      "Reglas Lu4 clave: Fatigue (Worn = EXP mobs ×0.1, quests OK); ventana mobs −5/+4; party 5–9 misma EXP; sin pets/pesca; Path 18 = 250k EXP; Marks 35+; Temple+Kusto antes del 45; cap 85.",
+      classLine,
+      "",
+      "Fragmentos de la base local (úsalos si aplican):",
+      buildKbDigest((ctx && ctx.lastQuestion) || "", 7)
+    ].join("\n");
+  }
+
+  function defaultSuggestions(topic) {
+    const base = [
+      { label: "Nivel 18", q: "¿Qué hago en el nivel 18?" },
+      { label: "Nivel 40", q: "¿Qué hago en el nivel 40?" },
+      { label: "Fatiga", q: "¿Qué es Fatigue y qué hago si estoy Worn?" },
+      { label: "Templo", q: "Explícame la cadena del Temple Executor" }
+    ];
+    if (topic === "level") {
+      return [
+        { label: "¿Y después?", q: "¿Y qué hago después de eso?" },
+        { label: "Dónde farmear", q: "¿Dónde farmear en este nivel?" },
+        { label: "Si estoy fatigado", q: "Si estoy Battle Worn, ¿qué hago?" },
+        { label: "Templo", q: "¿Cuándo hago el Temple?" }
+      ];
+    }
+    if (topic === "class") {
+      return [
+        { label: "Path 18", q: "¿Cómo hago el Path de 1ª profesión?" },
+        { label: "2ª clase", q: "¿Qué necesito para la 2ª profesión?" },
+        { label: "Antes del 45", q: "¿Qué quests debo hacer antes del 45?" },
+        { label: "Saga", q: "¿Qué preparo para la Saga?" }
+      ];
+    }
+    return base;
+  }
+
+  function suggestionsForLocal(result) {
+    const src = (result && result.sources) || [];
+    if (src.some(s => String(s).startsWith("Nivel"))) return defaultSuggestions("level");
+    if (src.some(s => String(s).startsWith("class-"))) return defaultSuggestions("class");
+    return defaultSuggestions();
   }
 
   function answer(question) {
     const raw = (question || "").trim();
     if (!raw) {
-      return { html: "Escribe una pregunta sobre Lu4 (nivel, NPC, quest, zona, clase…).", sources: [] };
+      return {
+        html: formatAnswer("Escribe una pregunta sobre Lu4 (nivel, NPC, quest, zona, clase…)."),
+        sources: [],
+        suggestions: defaultSuggestions(),
+        mode: "local"
+      };
     }
     const qNorm = normalize(raw);
     const tokens = qNorm.split(" ").filter(t => t.length > 2);
 
-    // Saludos
     if (/^(hola|hey|buenas|hi|hello|que tal|qué tal)\b/.test(qNorm)) {
       return {
-        html: formatAnswer("¡Hola! Soy el asistente de la guía **Lu4**.\n\nPregúntame cosas como:\n• «¿Qué hago en el nivel 40?»\n• «¿Dónde está Varika?»\n• «Guía Storm Screamer»\n• «¿Qué es Fatigue?»\n• «¿Dónde farmear 70?»"),
-        sources: []
+        html: formatAnswer("¡Hola! Soy el asistente de la guía **Lu4**.\n\nPregúntame cosas como:\n• «¿Qué hago en el nivel 40?»\n• «¿Dónde está Varika?»\n• «Guía Storm Screamer»\n• «¿Qué es Fatigue?»\n• «¿Dónde farmear 70?»\n\nSi pegas tu API de Gemini arriba, puedo conversar con más fluidez."),
+        sources: [],
+        suggestions: defaultSuggestions(),
+        mode: "local"
       };
     }
 
-    // Nivel
     const lv = extractLevel(raw);
     if (
       lv != null &&
@@ -435,10 +580,16 @@
         /(nivel|lv|lvl|level)/.test(qNorm))
     ) {
       const a = answerByLevel(lv);
-      if (a) return { html: formatAnswer(a), sources: [`Nivel ${lv}`] };
+      if (a) {
+        return {
+          html: formatAnswer(a),
+          sources: [`Nivel ${lv}`],
+          suggestions: defaultSuggestions("level"),
+          mode: "local"
+        };
+      }
     }
 
-    // Score KB
     const ranked = KB.map(e => ({ e, s: scoreEntry(e, qNorm, tokens) }))
       .filter(x => x.s > 0)
       .sort((a, b) => b.s - a.s);
@@ -446,9 +597,11 @@
     if (!ranked.length || ranked[0].s < 4) {
       return {
         html: formatAnswer(
-          "No encontré una respuesta clara en la base Lu4.\n\nPrueba ser más específico:\n• Nivel: «qué hago en el 35»\n• NPC: «dónde está Karukia»\n• Clase: «guía destroyer»\n• Zona: «dónde farmear 50»\n• Mecánica: «fatigue» / «temple» / «kusto»\n\nTambién puedes abrir las secciones de esta guía o la wiki: " + W + "/lu4/main"
+          "No encontré una respuesta clara en la base Lu4.\n\nPrueba ser más específico:\n• Nivel: «qué hago en el 35»\n• NPC: «dónde está Karukia»\n• Clase: «guía destroyer»\n• Zona: «dónde farmear 50»\n• Mecánica: «fatigue» / «temple» / «kusto»\n\nO activa Gemini con tu API key para una charla más abierta.\n\nWiki: " + W + "/lu4/main"
         ),
-        sources: []
+        sources: [],
+        suggestions: defaultSuggestions(),
+        mode: "local"
       };
     }
 
@@ -457,11 +610,149 @@
     if (top[1] && top[1].s >= top[0].s * 0.7 && top[1].s >= 6) {
       html += "<br><br><hr style='border-color:#3a4454;margin:10px 0'>" + formatAnswer(top[1].e.a);
     }
-    return {
+    const result = {
       html,
-      sources: top.map(t => t.e.id)
+      sources: top.map(t => t.e.id),
+      mode: "local"
     };
+    result.suggestions = suggestionsForLocal(result);
+    return result;
   }
 
-  global.Lu4Chat = { answer, KB, answerByLevel };
+  function extractFollowUps(text) {
+    const lines = String(text || "").split("\n").map(l => l.trim()).filter(Boolean);
+    const chips = [];
+    for (const line of lines) {
+      const m = line.match(/^FOLLOWUP:\s*(.+)$/i);
+      if (m) chips.push({ label: m[1].slice(0, 36), q: m[1] });
+    }
+    return chips.slice(0, 4);
+  }
+
+  function stripFollowUps(text) {
+    return String(text || "")
+      .split("\n")
+      .filter(l => !/^FOLLOWUP:/i.test(l.trim()))
+      .join("\n")
+      .trim();
+  }
+
+  async function callGemini(question, ctx) {
+    const key = getApiKey();
+    if (!key) throw new Error("NO_KEY");
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
+    const contents = history.map(h => ({
+      role: h.role === "model" ? "model" : "user",
+      parts: [{ text: h.text }]
+    }));
+    contents.push({ role: "user", parts: [{ text: question }] });
+
+    const body = {
+      system_instruction: {
+        parts: [{ text: buildSystemPrompt({ ...(ctx || {}), lastQuestion: question }) }]
+      },
+      contents,
+      generationConfig: {
+        temperature: 0.55,
+        maxOutputTokens: 900
+      }
+    };
+
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": key
+      },
+      body: JSON.stringify(body)
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const msg = (data.error && data.error.message) || ("HTTP " + res.status);
+      const err = new Error(msg);
+      err.status = res.status;
+      throw err;
+    }
+
+    const parts = (((data.candidates || [])[0] || {}).content || {}).parts || [];
+    const text = parts.map(p => p.text || "").join("").trim();
+    if (!text) throw new Error("Respuesta vacía de Gemini");
+    return text;
+  }
+
+  /**
+   * Respuesta async: Gemini si hay key; si no / falla → local.
+   * ctx: { className, raceName, level }
+   */
+  async function ask(question, ctx) {
+    const raw = (question || "").trim();
+    if (!raw) {
+      return {
+        html: formatAnswer("Escribe una pregunta sobre Lu4…"),
+        sources: [],
+        suggestions: defaultSuggestions(),
+        mode: "local"
+      };
+    }
+
+    if (!hasGemini()) {
+      const local = answer(raw);
+      pushHistory("user", raw);
+      pushHistory("model", local.html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 800));
+      return local;
+    }
+
+    try {
+      const promptHint = [
+        raw,
+        "",
+        "Al final, si tiene sentido, agrega hasta 3 líneas exactamente así:",
+        "FOLLOWUP: pregunta corta sugerida"
+      ].join("\n");
+
+      const text = await callGemini(promptHint, ctx || {});
+      const follow = extractFollowUps(text);
+      const clean = stripFollowUps(text);
+      pushHistory("user", raw);
+      pushHistory("model", clean);
+
+      return {
+        html: formatAnswer(clean),
+        sources: ["gemini"],
+        suggestions: follow.length ? follow : defaultSuggestions(),
+        mode: "gemini"
+      };
+    } catch (e) {
+      const local = answer(raw);
+      pushHistory("user", raw);
+      pushHistory("model", local.html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 800));
+      const note = e && e.message === "NO_KEY"
+        ? ""
+        : "<p class='chat-fallback-note'>Gemini no respondió (" + formatAnswer(String(e.message || e)).replace(/<br>/g, " ") + "). Usé la guía local:</p>";
+      return {
+        html: note + local.html,
+        sources: local.sources,
+        suggestions: local.suggestions || defaultSuggestions(),
+        mode: "local-fallback"
+      };
+    }
+  }
+
+  global.Lu4Chat = {
+    answer,
+    ask,
+    KB,
+    answerByLevel,
+    getApiKey,
+    setApiKey,
+    clearApiKey,
+    disableGemini,
+    hasGemini,
+    clearHistory,
+    formatAnswer,
+    defaultSuggestions,
+    MODEL
+  };
 })(window);

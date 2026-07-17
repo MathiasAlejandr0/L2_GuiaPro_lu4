@@ -145,15 +145,45 @@
     .chat-head strong { font-family: Cinzel, serif; display: block; }
     .chat-head span { color: var(--muted); font-size: .8rem; }
     .chat-close { margin-left: auto; border: 0; background: #2b3340; color: var(--text); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; }
+    .chat-keybar {
+      padding: 8px 12px; border-bottom: 1px solid var(--line); background: #151920;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .78rem;
+    }
+    .chat-keybar .mode-pill {
+      border: 1px solid var(--line); border-radius: 999px; padding: 3px 8px; color: var(--muted);
+      background: #171c24; white-space: nowrap;
+    }
+    .chat-keybar .mode-pill.on { color: #c8e6c9; border-color: #3d6b45; }
+    .chat-keybar button.linkish,
+    .msg button.linkish {
+      border: 0; background: transparent; color: var(--accent); cursor: pointer; font: inherit; padding: 0; text-decoration: underline;
+    }
+    .chat-key-form {
+      display: none; width: 100%; gap: 6px; flex-wrap: wrap; align-items: center;
+    }
+    .chat-key-form.open { display: flex; }
+    .chat-key-form input {
+      flex: 1; min-width: 140px; border: 1px solid var(--line); background: #0f1319; color: var(--text);
+      border-radius: 8px; padding: 7px 9px; font: inherit; font-size: .8rem;
+    }
+    .chat-key-form button {
+      border: 1px solid var(--line); background: #2b3340; color: var(--text);
+      border-radius: 8px; padding: 7px 10px; cursor: pointer; font: inherit; font-size: .78rem;
+    }
+    .chat-key-hint { width: 100%; color: var(--muted); font-size: .72rem; line-height: 1.35; }
+    .chat-key-hint a { color: var(--accent); }
     .chat-msgs { flex: 1; overflow: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
     .msg { max-width: 92%; padding: 10px 12px; border-radius: 12px; font-size: .92rem; line-height: 1.45; }
     .msg.bot { align-self: flex-start; background: var(--panel); border: 1px solid var(--line); }
     .msg.user { align-self: flex-end; background: rgba(196,137,74,.22); border: 1px solid rgba(196,137,74,.45); }
+    .msg.typing { color: var(--muted); font-style: italic; }
+    .chat-fallback-note { margin: 0 0 8px; color: var(--muted); font-size: .8rem; }
     .chat-suggestions { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 12px 10px; }
     .chat-suggestions button {
       border: 1px solid var(--line); background: #171c24; color: var(--muted);
       padding: 5px 9px; border-radius: 999px; font-size: .75rem; cursor: pointer;
     }
+    .chat-suggestions button:hover { color: var(--text); border-color: var(--accent); }
     .chat-input-row { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--line); background: #151920; }
     .chat-input-row input {
       flex: 1; border: 1px solid var(--line); background: #0f1319; color: var(--text);
@@ -163,6 +193,7 @@
       border: 0; background: var(--accent); color: #1a120a; font-weight: 700;
       border-radius: 10px; padding: 0 14px; cursor: pointer; font: inherit;
     }
+    .chat-input-row button:disabled { opacity: .55; cursor: wait; }
     @media (max-width: 800px) {
       .grid-2, .grid-3, .shots { grid-template-columns: 1fr; }
       h1 { font-size: 1.45rem; }
@@ -254,20 +285,26 @@
   <div class="chat-panel" id="chatPanel">
     <div class="chat-head">
       <img src="https://masterwork.wiki/i64/etc_exp_point_i00.png" width="32" height="32" alt="" style="image-rendering:pixelated" />
-      <div><strong>Asistente Lu4</strong><span>Niveles, NPCs, misiones…</span></div>
+      <div><strong>Asistente Lu4</strong><span id="chatHeadSub">Niveles, NPCs, misiones…</span></div>
       <button class="chat-close" id="chatClose">×</button>
     </div>
-    <div class="chat-msgs" id="chatMsgs"></div>
-    <div class="chat-suggestions" id="chatSuggestions">
-      <button type="button" data-q="¿Qué hago en el nivel 18?">Nivel 18</button>
-      <button type="button" data-q="¿Qué hago en el nivel 40?">Nivel 40</button>
-      <button type="button" data-q="¿Dónde está Varika?">NPC Varika</button>
-      <button type="button" data-q="¿Qué es Fatigue?">Fatiga</button>
-      <button type="button" data-q="cadena del templo">Templo</button>
+    <div class="chat-keybar">
+      <span class="mode-pill" id="chatModePill">Modo local</span>
+      <button type="button" class="linkish" id="chatKeyToggle">Configurar Gemini</button>
+      <button type="button" class="linkish" id="chatClearHist" title="Olvidar esta charla">Nueva charla</button>
+      <form class="chat-key-form" id="chatKeyForm" autocomplete="off">
+        <input id="chatApiKey" type="password" placeholder="Pega tu API key de Gemini" spellcheck="false" />
+        <button type="submit">Guardar</button>
+        <button type="button" id="chatKeyClear">Usar key del grupo</button>
+        <button type="button" id="chatKeyOff">Solo local</button>
+        <p class="chat-key-hint">Gemini ya viene con la key del grupo. Opcional: pega otra key propia. <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">AI Studio</a>.</p>
+      </form>
     </div>
+    <div class="chat-msgs" id="chatMsgs"></div>
+    <div class="chat-suggestions" id="chatSuggestions"></div>
     <form class="chat-input-row" id="chatForm">
       <input id="chatInput" type="text" placeholder="Pregunta lo que necesites…" autocomplete="off" />
-      <button type="submit">Enviar</button>
+      <button type="submit" id="chatSend">Enviar</button>
     </form>
   </div>
 
@@ -476,32 +513,142 @@
     // Chat
     const chatPanel = document.getElementById("chatPanel");
     const chatMsgs = document.getElementById("chatMsgs");
+    const chatSuggestions = document.getElementById("chatSuggestions");
+    const chatSend = document.getElementById("chatSend");
+    let chatBusy = false;
+
     const openChat = () => { chatPanel.classList.add("open"); document.getElementById("chatInput").focus(); };
     document.getElementById("chatFab").onclick = () => chatPanel.classList.toggle("open");
     document.getElementById("btnChat").onclick = openChat;
     document.getElementById("chatClose").onclick = () => chatPanel.classList.remove("open");
 
-    function addMsg(role, html) {
+    function refreshChatMode() {
+      const on = !!(window.Lu4Chat && Lu4Chat.hasGemini());
+      const pill = document.getElementById("chatModePill");
+      const sub = document.getElementById("chatHeadSub");
+      pill.textContent = on ? "Gemini activo" : "Modo local";
+      pill.classList.toggle("on", on);
+      if (sub) sub.textContent = on ? "Conversación con Gemini + guía Lu4" : "Base local · opcional Gemini";
+    }
+
+    function chatContext() {
+      const ctx = { level: state.level || null, className: null, raceName: null };
+      if (state.classId && G.getClass(state.classId)) {
+        const c = G.getClass(state.classId);
+        ctx.className = c.name;
+        ctx.raceName = G.RACES[c.race] ? G.RACES[c.race].name : c.race;
+      }
+      return ctx;
+    }
+
+    function setSuggestions(list) {
+      const items = list && list.length
+        ? list
+        : (window.Lu4Chat ? Lu4Chat.defaultSuggestions() : []);
+      chatSuggestions.innerHTML = "";
+      items.forEach(item => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = item.label || item.q;
+        b.onclick = () => ask(item.q);
+        chatSuggestions.appendChild(b);
+      });
+    }
+
+    function addMsg(role, html, extraClass) {
       const d = document.createElement("div");
-      d.className = "msg " + role;
-      d.innerHTML = html.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+      d.className = "msg " + role + (extraClass ? " " + extraClass : "");
+      d.innerHTML = html;
       chatMsgs.appendChild(d);
       chatMsgs.scrollTop = chatMsgs.scrollHeight;
+      return d;
     }
-    function ask(q) {
-      if (!q.trim()) return;
-      addMsg("user", q.replace(/</g, "&lt;"));
-      if (!window.Lu4Chat) { addMsg("bot", "Falta lu4-chat.js"); return; }
-      addMsg("bot", window.Lu4Chat.answer(q).html);
+
+    async function ask(q) {
+      if (!q || !q.trim() || chatBusy) return;
+      chatBusy = true;
+      chatSend.disabled = true;
+      addMsg("user", q.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"));
+      if (!window.Lu4Chat) {
+        addMsg("bot", "Falta lu4-chat.js");
+        chatBusy = false;
+        chatSend.disabled = false;
+        return;
+      }
+      const typing = addMsg("bot", "Pensando…", "typing");
+      try {
+        const res = await Lu4Chat.ask(q, chatContext());
+        typing.remove();
+        addMsg("bot", res.html);
+        setSuggestions(res.suggestions);
+      } catch (err) {
+        typing.remove();
+        const fallback = Lu4Chat.answer(q);
+        addMsg("bot", "<p class='chat-fallback-note'>Error inesperado. Respuesta local:</p>" + fallback.html);
+        setSuggestions(fallback.suggestions);
+      }
+      chatBusy = false;
+      chatSend.disabled = false;
+      document.getElementById("chatInput").focus();
     }
+
     document.getElementById("chatForm").onsubmit = e => {
       e.preventDefault();
-      const v = document.getElementById("chatInput").value;
-      document.getElementById("chatInput").value = "";
+      const input = document.getElementById("chatInput");
+      const v = input.value;
+      input.value = "";
       ask(v);
     };
-    document.querySelectorAll("#chatSuggestions button").forEach(b => b.onclick = () => ask(b.dataset.q));
-    addMsg("bot", "Busca una clase arriba, elige raza, o pregúntame (ej. «qué hago en el 37»).");
+
+    document.getElementById("chatKeyToggle").onclick = () => {
+      const form = document.getElementById("chatKeyForm");
+      form.classList.toggle("open");
+      if (form.classList.contains("open")) {
+        const key = Lu4Chat.getApiKey();
+        document.getElementById("chatApiKey").value = key ? "••••••••" + key.slice(-4) : "";
+        document.getElementById("chatApiKey").focus();
+      }
+    };
+    document.getElementById("chatKeyForm").onsubmit = e => {
+      e.preventDefault();
+      const input = document.getElementById("chatApiKey");
+      let v = input.value.trim();
+      if (v.startsWith("••••")) {
+        document.getElementById("chatKeyForm").classList.remove("open");
+        return;
+      }
+      Lu4Chat.setApiKey(v);
+      input.value = "";
+      document.getElementById("chatKeyForm").classList.remove("open");
+      refreshChatMode();
+      addMsg("bot", v
+        ? "Gemini activado. Puedes hablar con más fluidez; si falla, uso la guía local."
+        : "Key vacía: sigo en modo local.");
+    };
+    document.getElementById("chatKeyClear").onclick = () => {
+      Lu4Chat.clearApiKey();
+      document.getElementById("chatApiKey").value = "";
+      refreshChatMode();
+      addMsg("bot", "Usando la key compartida del grupo. Gemini activo.");
+    };
+    document.getElementById("chatKeyOff").onclick = () => {
+      Lu4Chat.disableGemini();
+      document.getElementById("chatApiKey").value = "";
+      refreshChatMode();
+      addMsg("bot", "Gemini desactivado en este navegador. Modo local.");
+    };
+    document.getElementById("chatClearHist").onclick = () => {
+      if (window.Lu4Chat) Lu4Chat.clearHistory();
+      chatMsgs.innerHTML = "";
+      addMsg("bot", "Charla reiniciada. ¿En qué nivel estás o qué clase juegas?");
+      setSuggestions(Lu4Chat.defaultSuggestions());
+    };
+
+    refreshChatMode();
+    setSuggestions(window.Lu4Chat ? Lu4Chat.defaultSuggestions() : []);
+    addMsg("bot", window.Lu4Chat && Lu4Chat.hasGemini()
+      ? "Gemini listo para ti y tus amigos. Pregúntame (ej. «qué hago en el 37») o elige una clase arriba."
+      : "Modo local. Puedes activar Gemini en Configurar Gemini.");
 
     renderRaces();
     fillCompareSelects();
