@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lu4 · Elige tu guía (Raza → Clase)</title>
+  <title>Lu4 · Guías 1–85 (MasterWork)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -21,7 +21,6 @@
     }
     a { color: var(--accent); }
     img { max-width: 100%; display: block; }
-    .icon-lg { width: 48px; height: 48px; image-rendering: pixelated; }
     .class-art { width: 100px; height: 130px; object-fit: cover; object-position: top; border-radius: 10px; border: 1px solid var(--line); background: #0b0d11; }
     .race-art { width: 64px; height: 64px; object-fit: contain; background: #0b0d11; border-radius: 12px; border: 1px solid var(--line); padding: 4px; }
     .shot { width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: 10px; border: 1px solid var(--line); cursor: zoom-in; background: #0b0d11; }
@@ -29,24 +28,25 @@
     .shot-cap { font-size: .78rem; color: var(--muted); margin-top: 6px; }
     .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .topbar {
-      position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-      padding: 12px 20px; background: rgba(14,17,22,.92); border-bottom: 1px solid var(--line); backdrop-filter: blur(8px);
+      position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      padding: 12px 16px; background: rgba(14,17,22,.94); border-bottom: 1px solid var(--line); backdrop-filter: blur(8px);
     }
-    .brand { font-family: Cinzel, serif; font-size: 1.25rem; margin: 0; }
+    .brand { font-family: Cinzel, serif; font-size: 1.2rem; margin: 0; }
     .brand span { color: var(--accent); }
-    .crumbs { color: var(--muted); font-size: .9rem; flex: 1; }
+    .crumbs { color: var(--muted); font-size: .88rem; flex: 1; min-width: 160px; }
     .crumbs button { background: none; border: 0; color: var(--accent); cursor: pointer; font: inherit; padding: 0; }
-    .topbar .btn {
+    .btn {
       border: 1px solid var(--line); background: var(--panel); color: var(--text);
       padding: 8px 12px; border-radius: 10px; cursor: pointer; font: inherit;
     }
-    .wrap { max-width: 1100px; margin: 0 auto; padding: 24px 18px 100px; }
+    .btn.accent { background: var(--accent); color: #1a120a; border-color: transparent; font-weight: 700; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 18px 16px 110px; }
     h1, h2, h3 { font-family: Cinzel, serif; }
-    h1 { font-size: 1.9rem; margin: 0 0 .4em; }
-    h2 { font-size: 1.35rem; margin: 1.6em 0 .5em; }
+    h1 { font-size: 1.7rem; margin: 0 0 .4em; }
+    h2 { font-size: 1.3rem; margin: 1.5em 0 .5em; }
     h3 { font-size: 1.05rem; color: var(--accent); }
     .muted { color: var(--muted); }
-    .lead { font-size: 1.05rem; line-height: 1.55; color: #d7d1c5; max-width: 70ch; }
+    .lead { font-size: 1.02rem; line-height: 1.55; color: #d7d1c5; max-width: 70ch; }
     .card {
       background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
       padding: 16px; box-shadow: var(--shadow);
@@ -61,11 +61,14 @@
       font: inherit; color: inherit; display: block;
     }
     .pick:hover { transform: translateY(-3px); border-color: var(--accent); }
-    .pick .name { font-family: Cinzel, serif; font-size: 1.15rem; margin: 8px 0 4px; }
+    .pick .name { font-family: Cinzel, serif; font-size: 1.1rem; margin: 8px 0 4px; }
     .tag { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: .78rem; background: #314052; }
     .tag.ok { background: rgba(143,191,138,.18); color: var(--accent2); }
     .tag.warn { background: rgba(208,122,106,.18); color: var(--danger); }
     .tag.info { background: rgba(110,168,201,.18); color: var(--info); }
+    .tag.mision { background: rgba(110,168,201,.18); color: var(--info); }
+    .tag.zona { background: rgba(143,191,138,.18); color: var(--accent2); }
+    .tag.clase { background: rgba(196,137,74,.18); color: var(--accent); }
     .hero-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
     .badge {
       display: inline-flex; align-items: center; gap: 6px; background: #2b3340; border: 1px solid var(--line);
@@ -73,26 +76,51 @@
     }
     table { width: 100%; border-collapse: collapse; font-size: .92rem; }
     th, td { border-bottom: 1px solid var(--line); padding: 9px 6px; text-align: left; vertical-align: top; }
-    th { color: var(--muted); font-size: .78rem; text-transform: uppercase; }
+    th { color: var(--muted); font-size: .75rem; text-transform: uppercase; }
     .step-panel { display: none; }
     .step-panel.active { display: block; animation: fade .25s ease; }
     @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-    .guide-hero { margin-bottom: 8px; }
-    ol, ul { line-height: 1.55; color: #d7d1c5; }
     .howto { background: #1a2430; border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin: 12px 0; }
     .howto p { margin: 0 0 8px; }
     .howto p:last-child { margin: 0; }
     .secrets { display: grid; gap: 10px; }
-    .secret {
-      background: #1a2430; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
-    }
+    .secret { background: #1a2430; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
     .secret h4 { margin: 0 0 6px; font-family: Cinzel, serif; font-size: .95rem; color: var(--accent); }
     .secret .what { margin: 0 0 4px; color: #d7d1c5; font-size: .92rem; }
     .secret .do { margin: 0; color: var(--accent2); font-size: .9rem; }
-    .tag.mision { background: rgba(110,168,201,.18); color: var(--info); }
-    .tag.zona { background: rgba(143,191,138,.18); color: var(--accent2); }
-    .tag.clase { background: rgba(196,137,74,.18); color: var(--accent); }
     .roadmap td:first-child { white-space: nowrap; font-weight: 600; color: var(--accent); }
+    .wiki-link {
+      display: inline-block; margin-left: 8px; font-size: .78rem; padding: 1px 7px;
+      border: 1px solid var(--line); border-radius: 999px; text-decoration: none; color: var(--info);
+    }
+    .pin { color: #d7d1c5; }
+    .place-box {
+      background: #1a2430; border: 1px dashed var(--accent); border-radius: 12px;
+      padding: 12px 14px; margin: 10px 0;
+    }
+    .lu4-banner {
+      background: linear-gradient(135deg, rgba(208,122,106,.18), rgba(196,137,74,.12));
+      border: 1px solid rgba(208,122,106,.45); border-radius: 14px; padding: 14px 16px; margin-bottom: 18px;
+    }
+    .lu4-banner h2 { margin: 0 0 8px; font-size: 1.05rem; color: var(--danger); }
+    .lu4-banner ul { margin: 0; padding-left: 1.1em; color: #e0d8c8; font-size: .92rem; line-height: 1.5; }
+    .tools { display: grid; gap: 12px; margin-bottom: 18px; }
+    .tools-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .tools input, .tools select {
+      border: 1px solid var(--line); background: #0f1319; color: var(--text);
+      border-radius: 10px; padding: 10px 12px; font: inherit;
+    }
+    .tools input[type="search"] { flex: 1; min-width: 180px; }
+    .search-results { margin-top: 10px; display: grid; gap: 8px; }
+    .search-hit {
+      width: 100%; text-align: left; border: 1px solid var(--line); background: #1a2430;
+      color: var(--text); border-radius: 10px; padding: 10px 12px; cursor: pointer; font: inherit;
+    }
+    .search-hit:hover { border-color: var(--accent); }
+    .level-filter-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px; }
+    .level-filter-row input { width: 100px; border: 1px solid var(--line); background: #0f1319; color: var(--text); border-radius: 10px; padding: 10px; font: inherit; }
+    .linkish { background: none; border: 0; color: var(--accent); cursor: pointer; font: inherit; text-decoration: underline; padding: 0; }
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .lightbox {
       position: fixed; inset: 0; background: rgba(0,0,0,.86); display: none; align-items: center; justify-content: center; z-index: 50; padding: 24px;
     }
@@ -102,23 +130,18 @@
       position: absolute; top: 18px; right: 22px; border: 0; background: var(--panel); color: var(--text);
       width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.2rem;
     }
-
-    /* chat */
     .chat-fab {
-      position: fixed; right: 22px; bottom: 22px; z-index: 60; width: 60px; height: 60px; border-radius: 50%;
+      position: fixed; right: 18px; bottom: 18px; z-index: 60; width: 56px; height: 56px; border-radius: 50%;
       border: 1px solid var(--line); background: linear-gradient(145deg, #d4a05c, #a86d2f); color: #1a120a;
-      font-size: 1.5rem; cursor: pointer; box-shadow: var(--shadow);
+      font-size: 1.4rem; cursor: pointer; box-shadow: var(--shadow);
     }
     .chat-panel {
-      position: fixed; right: 22px; bottom: 96px; z-index: 60; width: min(420px, calc(100vw - 28px));
+      position: fixed; right: 18px; bottom: 88px; z-index: 60; width: min(420px, calc(100vw - 24px));
       height: min(560px, calc(100vh - 120px)); background: var(--bg2); border: 1px solid var(--line);
       border-radius: 18px; box-shadow: var(--shadow); display: none; flex-direction: column; overflow: hidden;
     }
     .chat-panel.open { display: flex; }
-    .chat-head {
-      padding: 14px 16px; background: #1c222c; border-bottom: 1px solid var(--line);
-      display: flex; align-items: center; gap: 10px;
-    }
+    .chat-head { padding: 14px 16px; background: #1c222c; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 10px; }
     .chat-head strong { font-family: Cinzel, serif; display: block; }
     .chat-head span { color: var(--muted); font-size: .8rem; }
     .chat-close { margin-left: auto; border: 0; background: #2b3340; color: var(--text); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; }
@@ -142,22 +165,58 @@
     }
     @media (max-width: 800px) {
       .grid-2, .grid-3, .shots { grid-template-columns: 1fr; }
+      h1 { font-size: 1.45rem; }
+      .class-art { width: 72px; height: 96px; }
+      table.responsive thead { display: none; }
+      table.responsive tr {
+        display: block; border: 1px solid var(--line); border-radius: 12px;
+        padding: 10px 12px; margin-bottom: 10px; background: #1a2430;
+      }
+      table.responsive td {
+        display: block; border: 0; padding: 4px 0;
+      }
+      table.responsive td::before {
+        content: attr(data-label);
+        display: block; font-size: .72rem; text-transform: uppercase; color: var(--muted); margin-bottom: 2px;
+      }
+      .roadmap td:first-child { white-space: normal; }
+      .topbar .btn { padding: 8px 10px; font-size: .9rem; }
     }
   </style>
 </head>
 <body>
   <header class="topbar">
     <p class="brand">LU4 <span>Guías</span></p>
-    <div class="crumbs" id="crumbs">1. Elige tu raza</div>
-    <button class="btn" type="button" id="btnHome">← Empezar de nuevo</button>
-    <button class="btn" type="button" id="btnChat">Asistente 💬</button>
+    <div class="crumbs" id="crumbs">Inicio</div>
+    <button class="btn" type="button" id="btnHome">← Inicio</button>
+    <button class="btn" type="button" id="btnCompareNav">Comparar</button>
+    <button class="btn" type="button" id="btnChat">Asistente</button>
   </header>
 
   <div class="wrap">
+    <div class="lu4-banner">
+      <h2>⚠ Datos solo del servidor Lu4 (MasterWork)</h2>
+      <ul>
+        <li><strong>Tope de nivel 85</strong> (base y subclase).</li>
+        <li><strong>Fatiga:</strong> si estás agotado, monstruos dan ×0.1 EXP — las misiones dan 100%.</li>
+        <li><strong>Sin mascotas ni pesca</strong>. Coins of Magic no existe.</li>
+        <li>Templo + Kusto: <strong>sin EXP desde el 45</strong>. Path: hazlo en 18–20.</li>
+      </ul>
+    </div>
+
+    <div class="card tools">
+      <strong>Buscar clase o NPC</strong>
+      <div class="tools-row">
+        <input id="globalSearch" type="search" placeholder="Ej: Storm, Varika, Cardinal, Kusto…" autocomplete="off" />
+        <button class="btn accent" type="button" id="btnSearch">Buscar</button>
+      </div>
+      <div class="search-results" id="searchResults" hidden></div>
+    </div>
+
     <!-- STEP 1: RACE -->
     <section id="step-race" class="step-panel active">
       <h1>¿Cuál es tu raza?</h1>
-      <p class="lead">Elige tu raza. Luego verás <strong>todas las clases</strong> de esa raza. Al elegir una, verás la guía completa del nivel 1 al 85: lista de misiones, mejores zonas de farmeo, Path, Templo, marcas, Saga y reglas claras de Lu4.</p>
+      <p class="lead">Elige tu raza, o usa el buscador de arriba. Luego verás la guía completa del 1 al 85: misiones, zonas, Path, Templo, marcas y Saga.</p>
       <div class="grid grid-3" id="raceGrid" style="margin-top:20px"></div>
     </section>
 
@@ -171,6 +230,21 @@
     <!-- STEP 3: GUIDE -->
     <section id="step-guide" class="step-panel">
       <div id="guideRoot"></div>
+    </section>
+
+    <!-- COMPARE -->
+    <section id="step-compare" class="step-panel">
+      <h1>Comparar 2 clases</h1>
+      <p class="lead">Elige dos clases finales para ver rol, Path, marcas, equipo 40+ y Saga lado a lado.</p>
+      <div class="card tools">
+        <div class="tools-row">
+          <select id="cmpA"></select>
+          <span class="muted">vs</span>
+          <select id="cmpB"></select>
+          <button class="btn accent" type="button" id="btnDoCompare">Comparar</button>
+        </div>
+        <div id="compareOut" style="margin-top:14px"></div>
+      </div>
     </section>
   </div>
 
@@ -202,31 +276,50 @@
   <script>
     const G = window.Lu4Guides;
     if (!G) {
-      document.querySelector(".wrap").innerHTML = "<div class='card'><p>Falta <code>lu4-guides.js</code> en la misma carpeta que este HTML.</p></div>";
+      document.querySelector(".wrap").innerHTML = "<div class='card'><p>Falta <code>lu4-guides.js</code>.</p></div>";
       throw new Error("Lu4Guides missing");
     }
 
-    const state = { race: null, classId: null };
+    const state = { race: null, classId: null, level: null };
     const panels = {
       race: document.getElementById("step-race"),
       class: document.getElementById("step-class"),
-      guide: document.getElementById("step-guide")
+      guide: document.getElementById("step-guide"),
+      compare: document.getElementById("step-compare")
     };
 
     function show(step) {
       Object.values(panels).forEach(p => p.classList.remove("active"));
       panels[step].classList.add("active");
       const crumbs = document.getElementById("crumbs");
-      if (step === "race") crumbs.textContent = "1. Elige raza → 2. Clase → 3. Guía completa";
-      if (step === "class") crumbs.innerHTML = `1. <button type="button" id="crumbRace">${G.RACES[state.race].name}</button> → 2. Elige clase`;
+      if (step === "race") crumbs.textContent = "1. Raza → 2. Clase → 3. Guía";
+      if (step === "class") crumbs.innerHTML = `1. <button type="button" id="crumbRace">${G.RACES[state.race].name}</button> → 2. Clase`;
       if (step === "guide") {
         const c = G.getClass(state.classId);
         crumbs.innerHTML = `1. <button type="button" id="crumbRace">${G.RACES[state.race].name}</button> → 2. <button type="button" id="crumbClass">${c.name}</button> → 3. Guía`;
       }
+      if (step === "compare") crumbs.textContent = "Comparar clases";
       document.getElementById("crumbRace")?.addEventListener("click", () => { state.classId = null; renderClasses(); show("class"); });
       document.getElementById("crumbClass")?.addEventListener("click", () => show("class"));
       window.scrollTo({ top: 0, behavior: "smooth" });
       bindShots();
+      bindGuideControls();
+    }
+
+    function openClass(id, level) {
+      const c = G.getClass(id);
+      if (!c) return;
+      state.race = c.race;
+      state.classId = c.id;
+      state.level = level != null ? level : state.level;
+      renderClasses();
+      document.getElementById("guideRoot").innerHTML = G.buildGuideHtml(c, { level: state.level });
+      show("guide");
+      const url = new URL(location.href);
+      url.searchParams.set("class", c.id);
+      if (state.level) url.searchParams.set("lv", state.level);
+      else url.searchParams.delete("lv");
+      history.replaceState(null, "", url);
     }
 
     function renderRaces() {
@@ -242,7 +335,7 @@
           <div class="name">${r.name}</div>
           <p class="muted" style="margin:0;font-size:.9rem">${r.village}</p>
           <p style="margin:8px 0 0">${r.blurb}</p>
-          <p style="margin:10px 0 0"><span class="tag info">${count} clases finales disponibles</span></p>`;
+          <p style="margin:10px 0 0"><span class="tag info">${count} clases finales</span></p>`;
         btn.onclick = () => {
           state.race = r.id;
           state.classId = null;
@@ -256,7 +349,7 @@
     function renderClasses() {
       const r = G.RACES[state.race];
       document.getElementById("classTitle").textContent = `Clases ${r.name}`;
-      document.getElementById("classLead").textContent = `Elige la clase final (3ª) que quieres jugar. Aquí tienes la ruta completa: inicio ${r.name} → Path → Templo/marcas → zonas → Saga.`;
+      document.getElementById("classLead").textContent = `Elige la clase final (3ª). Ruta: inicio ${r.name} → Path → Templo/marcas → zonas → Saga.`;
       const grid = document.getElementById("classGrid");
       grid.innerHTML = "";
       G.getClassesByRace(state.race).forEach(c => {
@@ -274,11 +367,7 @@
           </div>
           <p style="margin:12px 0 0;font-size:.92rem">${c.tip}</p>
           <p class="muted" style="margin:8px 0 0;font-size:.85rem">Marcas: ${c.marks}</p>`;
-        btn.onclick = () => {
-          state.classId = c.id;
-          document.getElementById("guideRoot").innerHTML = G.buildGuideHtml(c);
-          show("guide");
-        };
+        btn.onclick = () => openClass(c.id);
         grid.appendChild(btn);
       });
     }
@@ -292,8 +381,92 @@
       });
     }
 
+    function bindGuideControls() {
+      const apply = () => {
+        const v = document.getElementById("levelFilter")?.value;
+        state.level = v ? +v : null;
+        if (state.classId) openClass(state.classId, state.level);
+      };
+      document.getElementById("btnApplyLevel")?.addEventListener("click", apply);
+      document.getElementById("btnClearLevel")?.addEventListener("click", () => {
+        state.level = null;
+        openClass(state.classId, null);
+      });
+      document.getElementById("levelFilter")?.addEventListener("keydown", e => {
+        if (e.key === "Enter") apply();
+      });
+      document.querySelector("[data-clear-level]")?.addEventListener("click", () => {
+        state.level = null;
+        openClass(state.classId, null);
+      });
+    }
+
+    function renderSearch() {
+      const q = document.getElementById("globalSearch").value;
+      const box = document.getElementById("searchResults");
+      const { classes, npcs } = G.searchAll(q);
+      if (!q || q.trim().length < 2) {
+        box.hidden = true;
+        box.innerHTML = "";
+        return;
+      }
+      box.hidden = false;
+      let html = "";
+      if (classes.length) {
+        html += `<p class="muted" style="margin:0">Clases</p>`;
+        classes.forEach(c => {
+          html += `<button type="button" class="search-hit" data-class="${c.id}">
+            <strong>${c.name}</strong> <span class="muted">(${c.name2} · ${G.RACES[c.race].name})</span><br>
+            <span style="font-size:.88rem">${c.role} — ${c.tip}</span>
+          </button>`;
+        });
+      }
+      if (npcs.length) {
+        html += `<p class="muted" style="margin:8px 0 0">NPCs / lugares</p>`;
+        npcs.forEach(n => {
+          html += `<button type="button" class="search-hit" data-npc-wiki="${n.wiki}">
+            <strong>${n.name}</strong><br>
+            <span class="pin" style="font-size:.88rem">📍 ${n.where}</span><br>
+            <span class="muted" style="font-size:.85rem">${n.tip}</span>
+          </button>`;
+        });
+      }
+      if (!classes.length && !npcs.length) {
+        html = `<p class="muted">Sin resultados. Prueba «Storm», «Varika», «Cardinal», «Kusto».</p>`;
+      }
+      box.innerHTML = html;
+      box.querySelectorAll("[data-class]").forEach(b => b.onclick = () => openClass(b.dataset.class));
+      box.querySelectorAll("[data-npc-wiki]").forEach(b => b.onclick = () => window.open(b.dataset.npcWiki, "_blank"));
+    }
+
+    function fillCompareSelects() {
+      const opts = G.CLASSES.slice().sort((a, b) => a.name.localeCompare(b.name))
+        .map(c => `<option value="${c.id}">${c.name} (${G.RACES[c.race].name})</option>`).join("");
+      document.getElementById("cmpA").innerHTML = opts;
+      document.getElementById("cmpB").innerHTML = opts;
+      document.getElementById("cmpA").value = "cardinal";
+      document.getElementById("cmpB").value = "hierophant";
+    }
+
     document.getElementById("btnHome").onclick = () => {
       state.race = null; state.classId = null; show("race");
+      history.replaceState(null, "", location.pathname);
+    };
+    document.getElementById("btnCompareNav").onclick = () => show("compare");
+    document.getElementById("btnSearch").onclick = renderSearch;
+    document.getElementById("globalSearch").addEventListener("input", () => {
+      if (document.getElementById("globalSearch").value.trim().length >= 2) renderSearch();
+      else {
+        document.getElementById("searchResults").hidden = true;
+      }
+    });
+    document.getElementById("globalSearch").addEventListener("keydown", e => {
+      if (e.key === "Enter") { e.preventDefault(); renderSearch(); }
+    });
+    document.getElementById("btnDoCompare").onclick = () => {
+      const a = document.getElementById("cmpA").value;
+      const b = document.getElementById("cmpB").value;
+      document.getElementById("compareOut").innerHTML = G.compareClasses(a, b);
     };
     document.getElementById("lbClose").onclick = () => document.getElementById("lightbox").classList.remove("open");
     document.getElementById("lightbox").onclick = e => {
@@ -318,10 +491,7 @@
     function ask(q) {
       if (!q.trim()) return;
       addMsg("user", q.replace(/</g, "&lt;"));
-      if (!window.Lu4Chat) {
-        addMsg("bot", "Falta lu4-chat.js");
-        return;
-      }
+      if (!window.Lu4Chat) { addMsg("bot", "Falta lu4-chat.js"); return; }
       addMsg("bot", window.Lu4Chat.answer(q).html);
     }
     document.getElementById("chatForm").onsubmit = e => {
@@ -331,22 +501,18 @@
       ask(v);
     };
     document.querySelectorAll("#chatSuggestions button").forEach(b => b.onclick = () => ask(b.dataset.q));
-    addMsg("bot", "Elige <strong>raza → clase</strong> arriba para la guía completa, o pregúntame aquí (por ejemplo: «qué hago en el nivel 18»).");
+    addMsg("bot", "Busca una clase arriba, elige raza, o pregúntame (ej. «qué hago en el 37»).");
 
     renderRaces();
+    fillCompareSelects();
     show("race");
 
-    // Deep link ?class=stormscreamer
     const params = new URLSearchParams(location.search);
     const deep = params.get("class");
-    if (deep && G.getClass(deep)) {
-      const c = G.getClass(deep);
-      state.race = c.race;
-      state.classId = c.id;
-      renderClasses();
-      document.getElementById("guideRoot").innerHTML = G.buildGuideHtml(c);
-      show("guide");
-    }
+    const lv = params.get("lv");
+    if (lv) state.level = +lv;
+    if (deep && G.getClass(deep)) openClass(deep, state.level);
+    if (params.get("compare") === "1") show("compare");
   </script>
 </body>
 </html>

@@ -160,6 +160,7 @@
       race: "human", name: "Warrior", classId: 1,
       pathUrl: `${W}/lu4/posts/post/64-path-of-the-warrior-18`,
       startNpc: "Auron (Master) — Gremio de Guerreros de Gludin",
+      where: "Gludin: Gremio de Guerreros (Auron) → Gludio Weapon Shop → Ruinas de la Agonía / Colina del Molino",
       changeNpc: "Grand Master en Gludin/Gludio (Gremio de Guerreros)",
       reward: "Medallón del Guerrero + 250k EXP + cupón NG→D",
       opens: ["Gladiator", "Warlord"],
@@ -181,6 +182,7 @@
       race: "human", name: "Human Knight", classId: 4,
       pathUrl: `${W}/lu4/posts/post/74-path-of-the-human-knight-18`,
       startNpc: "Sir Klaus Vasper — cerca del Gremio de Guerreros de Gludin",
+      where: "Gludin: Klaus + Bezique + Templo Levian → Colina del Molino",
       changeNpc: "Grand Master (Caballero)",
       reward: "Espada del Ritual + 250k EXP + cupón NG→D",
       opens: ["Paladin", "Dark Avenger"],
@@ -201,6 +203,7 @@
       race: "human", name: "Rogue", classId: 7,
       pathUrl: `${W}/lu4/posts/post/80-path-of-the-rogue-18`,
       startNpc: "Capitán Bezique — puerta oeste de Gludin",
+      where: "Gludin: puerta oeste (Bezique) → plaza norte (Neti) → Ramos",
       changeNpc: "Grand Master Ramos",
       reward: "Recomendación de Bezique + 250k EXP",
       opens: ["Treasure Hunter", "Hawkeye"],
@@ -221,6 +224,7 @@
       race: "human", name: "Human Wizard", classId: 11,
       pathUrl: `${W}/lu4/posts/post/66-path-of-the-human-wizard-18`,
       startNpc: "Parina — Templo de Gludin",
+      where: "Gludin: Templo (Parina) → Ruinas de la Desesperación / Páramo",
       changeNpc: "Grand Magister de Gludio/Gludin",
       reward: "Cuenta de la Estación + 250k EXP",
       opens: ["Sorcerer", "Necromancer", "Warlock"],
@@ -241,6 +245,7 @@
       race: "human", name: "Cleric", classId: 15,
       pathUrl: `${W}/lu4/posts/post/65-path-of-the-cleric-18`,
       startNpc: "Sacerdote Zigaunt — Templo de Gludin",
+      where: "Gludin: Templo (Zigaunt) → Gludio (Simplon / Praga / Lionel)",
       changeNpc: "Sumo Sacerdote / Grand Master Cleric",
       reward: "Marca de la Fe + 250k EXP",
       opens: ["Bishop", "Prophet"],
@@ -257,16 +262,97 @@
       ]
     },
     // Otras razas — Paths compactos con enlace a la wiki
-    elvenknight: { race: "elf", name: "Elven Knight", classId: 19, pathUrl: `${W}/lu4/posts/post/76-path-of-the-elven-knight-18`, startNpc: "Path Elven Knight (wiki)", changeNpc: "Grand Master Elfo", reward: "250k EXP Lu4", opens: ["Temple Knight", "Swordsinger"], steps: ["Sigue el Path of the Elven Knight en la wiki desde el nivel 18", "En grupo los objetos de misión dropean para todos", "Cambio a Elven Knight → abre Temple Knight / Swordsinger"] },
-    elvenscout: { race: "elf", name: "Elven Scout", classId: 22, pathUrl: `${W}/lu4/posts/post/72-path-of-the-elven-scout-18`, startNpc: "Path Elven Scout (wiki)", changeNpc: "Grand Master Elfo", reward: "250k EXP", opens: ["Plains Walker", "Silver Ranger"], steps: ["Path of the Elven Scout al nivel 18", "Cambio → Plains Walker o Silver Ranger"] },
-    elvenwizard: { race: "elf", name: "Elven Wizard", classId: 26, pathUrl: `${W}/lu4/posts/post/75-path-of-the-elven-wizard-18`, startNpc: "Rosella — Aldea Élfica", changeNpc: "Sumo Sacerdote Raymond (Gludio)", reward: "250k EXP", opens: ["Spellsinger", "Elemental Summoner"], steps: ["Path of the Elven Wizard al nivel 18", "Cambio en Gludio → Spellsinger o Elemental Summoner"] },
-    oracle: { race: "elf", name: "Elven Oracle", classId: 29, pathUrl: `${W}/lu4/posts/post/70-path-of-the-elven-oracle-18`, startNpc: "Path Elven Oracle (wiki)", changeNpc: "Grand Master Elfo", reward: "250k EXP", opens: ["Elven Elder"], steps: ["Path of the Elven Oracle al nivel 18", "Cambio → Elven Elder"] },
-    palus: { race: "darkelf", name: "Palus Knight", classId: 32, pathUrl: `${W}/lu4/posts/post/78-path-of-the-palus-knight-18`, startNpc: "Path Palus Knight (wiki)", changeNpc: "Grand Master Elfo Oscuro", reward: "250k EXP", opens: ["Shillien Knight", "Bladedancer"], steps: ["Path Palus Knight al nivel 18", "Cambio → Shillien Knight o Bladedancer"] },
-    assassin: { race: "darkelf", name: "Assassin", classId: 35, pathUrl: `${W}/lu4/posts/post/67-path-of-the-assassin-18`, startNpc: "Path Assassin (wiki)", changeNpc: "Grand Master Elfo Oscuro", reward: "250k EXP", opens: ["Abyss Walker", "Phantom Ranger"], steps: ["Path Assassin al nivel 18", "Cambio → Abyss Walker o Phantom Ranger"] },
+    elvenknight: {
+      race: "elf", name: "Elven Knight", classId: 19,
+      pathUrl: `${W}/lu4/posts/post/76-path-of-the-elven-knight-18`,
+      startNpc: "Master Sorius — Aldea Élfica (gremio de guerreros)",
+      changeNpc: "Grand Master Elfo",
+      where: "Aldea Élfica → Gludio/Gludin (según pasos wiki)",
+      reward: "250k EXP + cupón NG→D (Lu4)",
+      opens: ["Temple Knight", "Swordsinger"],
+      steps: [
+        "Gremio de guerreros de la **Aldea Élfica**: habla con **Master Sorius**",
+        "Sigue cartas/entregas hacia Gludio (NPCs listados en la wiki)",
+        "Farmea monstruos blancos (−5/+4) de cada paso",
+        "En grupo, los objetos de misión cuentan para todos",
+        "Cambia a **Elven Knight** → abre Temple Knight / Swordsinger"
+      ]
+    },
+    elvenscout: {
+      race: "elf", name: "Elven Scout", classId: 22,
+      pathUrl: `${W}/lu4/posts/post/72-path-of-the-elven-scout-18`,
+      startNpc: "Master Reisa — Aldea Élfica",
+      changeNpc: "Grand Master Elfo",
+      where: "Aldea Élfica → zonas bajas cerca de Gludio",
+      reward: "250k EXP (Lu4)",
+      opens: ["Plains Walker", "Silver Ranger"],
+      steps: [
+        "Habla con **Master Reisa** en la Aldea Élfica",
+        "Completa recomendaciones y farm de la cadena (wiki)",
+        "Cambia a **Elven Scout** → Plains Walker o Silver Ranger"
+      ]
+    },
+    elvenwizard: {
+      race: "elf", name: "Elven Wizard", classId: 26,
+      pathUrl: `${W}/lu4/posts/post/75-path-of-the-elven-wizard-18`,
+      startNpc: "Rosella — Aldea Élfica",
+      changeNpc: "Sumo Sacerdote Raymond — Gludio",
+      where: "Aldea Élfica (Rosella) → Templo/Gludio (Raymond)",
+      reward: "250k EXP (Lu4)",
+      opens: ["Spellsinger", "Elemental Summoner"],
+      steps: [
+        "Habla con **Rosella** en la Aldea Élfica",
+        "Completa pruebas de libros/espíritus (pasos en la wiki)",
+        "Cierra con **Raymond** en Gludio → **Elven Wizard**"
+      ]
+    },
+    oracle: {
+      race: "elf", name: "Elven Oracle", classId: 29,
+      pathUrl: `${W}/lu4/posts/post/70-path-of-the-elven-oracle-18`,
+      startNpc: "NPC Path Oracle — Aldea Élfica (ver wiki)",
+      changeNpc: "Grand Master / High Priest Elfo",
+      where: "Aldea Élfica → Gludio",
+      reward: "250k EXP (Lu4)",
+      opens: ["Elven Elder"],
+      steps: [
+        "Inicia Path of the Elven Oracle (NPC en la wiki)",
+        "Completa cartas/libros sagrados de la cadena",
+        "Cambia a **Elven Oracle** → camino a Elven Elder"
+      ]
+    },
+    palus: {
+      race: "darkelf", name: "Palus Knight", classId: 32,
+      pathUrl: `${W}/lu4/posts/post/78-path-of-the-palus-knight-18`,
+      startNpc: "Master Virgil — Aldea Elfo Oscuro",
+      changeNpc: "Grand Master Elfo Oscuro — Gludio",
+      where: "Aldea DE → Gremio Dark Elf de Gludio",
+      reward: "250k EXP (Lu4)",
+      opens: ["Shillien Knight", "Bladedancer"],
+      steps: [
+        "Habla con **Master Virgil** (Path Palus) en la aldea DE",
+        "Completa pruebas/cartas de la wiki",
+        "Cambia en Gludio a **Palus Knight** → SK o Bladedancer"
+      ]
+    },
+    assassin: {
+      race: "darkelf", name: "Assassin", classId: 35,
+      pathUrl: `${W}/lu4/posts/post/67-path-of-the-assassin-18`,
+      startNpc: "Triskel — Aldea Elfo Oscuro",
+      changeNpc: "Grand Master Elfo Oscuro — Gludio",
+      where: "Aldea DE → Gludio",
+      reward: "250k EXP (Lu4)",
+      opens: ["Abyss Walker", "Phantom Ranger"],
+      steps: [
+        "Habla con **Triskel** (Path Assassin)",
+        "Farmea objetivos de daga/arco de la cadena",
+        "Cambia a **Assassin** → Abyss Walker o Phantom Ranger"
+      ]
+    },
     darkwizard: {
       race: "darkelf", name: "Dark Wizard", classId: 39,
       pathUrl: `${W}/lu4/posts/post/81-path-of-the-dark-wizard-18`,
       startNpc: "Bruja Varika — Altar de los Ritos",
+      where: "Altar de los Ritos (Varika / Arkenia) → Gludio gremio DE (Tobias)",
       changeNpc: "Grand Master Tobias — Gremio DE de Gludio",
       reward: "Joya Oscura + 250k EXP",
       opens: ["Spellhowler", "Phantom Summoner"],
@@ -284,11 +370,25 @@
         { alt: "Tobias", src: `${W}/file/12219_2891836565_1746266210.jpg` }
       ]
     },
-    shillienoracle: { race: "darkelf", name: "Shillien Oracle", classId: 42, pathUrl: `${W}/lu4/posts/post/71-path-of-the-shillien-oracle-18`, startNpc: "Path Shillien Oracle (wiki)", changeNpc: "Grand Master Elfo Oscuro", reward: "250k EXP", opens: ["Shillien Elder"], steps: ["Path Shillien Oracle al nivel 18", "Cambio → Shillien Elder"] },
+    shillienoracle: {
+      race: "darkelf", name: "Shillien Oracle", classId: 42,
+      pathUrl: `${W}/lu4/posts/post/71-path-of-the-shillien-oracle-18`,
+      startNpc: "Magister Sidra / NPC Path — Aldea DE (wiki)",
+      changeNpc: "Grand Master Elfo Oscuro — Gludio",
+      where: "Aldea DE → Gludio",
+      reward: "250k EXP (Lu4)",
+      opens: ["Shillien Elder"],
+      steps: [
+        "Inicia Path of the Shillien Oracle (NPC en la wiki)",
+        "Completa la cadena de oráculos de Shilen",
+        "Cambia a **Shillien Oracle** → Shillien Elder (SE)"
+      ]
+    },
     orcraider: {
       race: "orc", name: "Orc Raider", classId: 45,
       pathUrl: `${W}/lu4/posts/post/69-path-of-the-orc-raider-18`,
       startNpc: "Prefecto Karukia — Salón de los Reyes",
+      where: "Aldea Orco (Karukia) → Gludin Orc Guild (Kasman / Osborn)",
       changeNpc: "Alto Prefecto Osborn — Gremio Orco de Gludin",
       reward: "Marca del Raider + 250k EXP",
       opens: ["Destroyer"],
@@ -305,12 +405,40 @@
         { alt: "Osborn", src: `${W}/file/12298_4977469374_1746868623.jpg` }
       ]
     },
-    orcmonk: { race: "orc", name: "Orc Monk", classId: 47, pathUrl: `${W}/lu4/posts/post/68-path-of-the-orc-monk-18`, startNpc: "Path Orc Monk (wiki)", changeNpc: "Alto Prefecto", reward: "250k EXP", opens: ["Tyrant"], steps: ["Path Orc Monk al nivel 18", "Cambio → Tyrant"] },
-    orcshaman: { race: "orc", name: "Orc Shaman", classId: 50, pathUrl: `${W}/lu4/posts/post/79-path-of-the-orc-shaman-18`, startNpc: "Path Orc Shaman (wiki)", changeNpc: "Alto Prefecto", reward: "250k EXP", opens: ["Overlord", "Warcryer"], steps: ["Path Orc Shaman al nivel 18", "Cambio → Overlord o Warcryer", "SECRETO: a partir del 40 puedes hacer Alligator e Ivory"] },
+    orcmonk: {
+      race: "orc", name: "Orc Monk", classId: 47,
+      pathUrl: `${W}/lu4/posts/post/68-path-of-the-orc-monk-18`,
+      startNpc: "Gantaki Zu Urutu — Aldea Orco",
+      changeNpc: "Alto Prefecto — Gludin (gremio orco)",
+      where: "Aldea Orco → Gludin Orc Guild",
+      reward: "250k EXP (Lu4)",
+      opens: ["Tyrant"],
+      steps: [
+        "Habla con **Gantaki Zu Urutu** (Path Monk) en Aldea Orco",
+        "Completa pruebas de puños / tótems de la wiki",
+        "Cambia con el Alto Prefecto → **Orc Monk** → Tyrant"
+      ]
+    },
+    orcshaman: {
+      race: "orc", name: "Orc Shaman", classId: 50,
+      pathUrl: `${W}/lu4/posts/post/79-path-of-the-orc-shaman-18`,
+      startNpc: "Tataru Zu Hestui — Aldea Orco",
+      changeNpc: "Alto Prefecto — Gludin",
+      where: "Aldea Orco → Gludin Orc Guild",
+      reward: "250k EXP (Lu4)",
+      opens: ["Overlord", "Warcryer"],
+      steps: [
+        "Habla con **Tataru Zu Hestui** (Path Shaman)",
+        "Completa tótems / espíritus de la cadena (wiki)",
+        "Cambia a **Orc Shaman** → Overlord o Warcryer",
+        "SECRETO Lu4: desde el 40 puedes hacer **Alligator e Ivory**"
+      ]
+    },
     scavenger: {
       race: "dwarf", name: "Scavenger", classId: 54,
       pathUrl: `${W}/lu4/posts/post/77-path-of-the-scavanger-18`,
       startNpc: "Coleccionista Pippi — norte de la Aldea Enana",
+      where: "Aldea Enana (Pippi / Mion) → Minería Occidental (Toma) → Almacén Gludin (Moke)",
       changeNpc: "Jefe de Almacén Moke — Almacén de Gludin",
       reward: "Anillo del Cuervo + 250k EXP",
       opens: ["Bounty Hunter"],
@@ -326,10 +454,64 @@
         { alt: "Mion", src: `${W}/file/12316_1960413220_1746870042.jpg` }
       ]
     },
-    artisan: { race: "dwarf", name: "Artisan", classId: 56, pathUrl: `${W}/lu4/posts/post/73-path-of-the-artisan-18`, startNpc: "Path Artisan (wiki)", changeNpc: "Herrero Jefe", reward: "250k EXP", opens: ["Warsmith"], steps: ["Path Artisan al nivel 18", "Cambio → Warsmith"] },
-    geomancer: { race: "dwarf", name: "Geomancer", classId: 209, pathUrl: `${W}/lu4/posts/post/153-path-of-geomancer`, startNpc: "Prueba del Geomancer (wiki)", changeNpc: "Ver wiki", reward: "250k EXP", opens: ["Terramancer"], steps: ["Prueba del Geomancer al nivel 18", "Cambio → Terramancer (mago enano)"] },
-    trooper: { race: "kamael", name: "Trooper", classId: 1, pathUrl: `${W}/masterwork/posts/post/278-path-of-the-trooper-18`, startNpc: "Path of the Trooper", changeNpc: "Grand Master Kamael", reward: "250k EXP", opens: ["Berserker", "Soul Breaker"], steps: ["Path Trooper al nivel 18 (masculino)", "Certificados de 2ª desde el 35"] },
-    warder: { race: "kamael", name: "Warder", classId: 1, pathUrl: `${W}/masterwork/posts/post/277-path-of-the-warder-18`, startNpc: "Path of the Warder", changeNpc: "Grand Master Kamael", reward: "250k EXP", opens: ["Arbalester", "Soul Breaker"], steps: ["Path Warder al nivel 18 (femenino)", "Certificados de 2ª desde el 35"] }
+    artisan: {
+      race: "dwarf", name: "Artisan", classId: 56,
+      pathUrl: `${W}/lu4/posts/post/73-path-of-the-artisan-18`,
+      startNpc: "Blacksmith Silvera — Aldea Enana",
+      changeNpc: "Head Blacksmith — Gludin/Gludio",
+      where: "Aldea Enana (herrería) → Gludin Blacksmith",
+      reward: "250k EXP (Lu4)",
+      opens: ["Warsmith"],
+      steps: [
+        "Habla con **Blacksmith Silvera** en la Aldea Enana",
+        "Completa encargos de craft/materiales de la wiki",
+        "Cambia a **Artisan** → Warsmith (Maestro)"
+      ]
+    },
+    geomancer: {
+      race: "dwarf", name: "Geomancer", classId: 209,
+      pathUrl: `${W}/lu4/posts/post/153-path-of-geomancer`,
+      startNpc: "Trial of Geomancer — ver wiki Lu4",
+      changeNpc: "NPC de cambio en la wiki",
+      where: "Aldea Enana / zona del Trial (wiki)",
+      reward: "250k EXP (Lu4)",
+      opens: ["Terramancer"],
+      steps: [
+        "Abre la guía **Path of Geomancer** en la wiki (clase especial Lu4)",
+        "Completa el Trial paso a paso",
+        "Cambia a **Geomancer** → Terramancer (Tectonic Sage)"
+      ]
+    },
+    trooper: {
+      race: "kamael", name: "Trooper", classId: 1,
+      pathUrl: `${W}/masterwork/posts/post/278-path-of-the-trooper-18`,
+      startNpc: "Path of the Trooper — Isla/Aldea Kamael",
+      changeNpc: "Grand Master Kamael",
+      where: "Aldea Kamael (solo personajes masculinos)",
+      reward: "250k EXP (Lu4)",
+      opens: ["Berserker", "Soul Breaker"],
+      steps: [
+        "En la aldea Kamael inicia **Path of the Trooper** (♂)",
+        "Sigue los pasos de la wiki MasterWork/Lu4",
+        "Cambia a **Trooper** → Berserker o Soul Breaker",
+        "Certificados de 2ª clase disponibles desde el **35**"
+      ]
+    },
+    warder: {
+      race: "kamael", name: "Warder", classId: 1,
+      pathUrl: `${W}/masterwork/posts/post/277-path-of-the-warder-18`,
+      startNpc: "Path of the Warder — Isla/Aldea Kamael",
+      changeNpc: "Grand Master Kamael",
+      where: "Aldea Kamael (solo personajes femeninos)",
+      reward: "250k EXP (Lu4)",
+      opens: ["Arbalester", "Soul Breaker"],
+      steps: [
+        "En la aldea Kamael inicia **Path of the Warder** (♀)",
+        "Sigue los pasos de la wiki",
+        "Cambia a **Warder** → Arbalester o Soul Breaker",
+        "Certificados de 2ª desde el **35**"
+      ]
+    }
   };
 
   /** Segunda → tercera (clase final jugable) */
@@ -380,69 +562,184 @@
   function gearBlock(gear) {
     if (gear === "alligator") return {
       title: "Alligator Hunter — Cazador de cocodrilos (40–47)",
-      body: "NPC Enverun, tienda de comestibles de Heine. Solo guerreros y chamanes orcos con 2ª clase. Da equipo C/D, pergaminos y tintes."
+      body: "NPC Enverun, tienda de comestibles de Heine. Solo guerreros y chamanes orcos con 2ª clase. Da equipo C/D, pergaminos y tintes.",
+      where: "Heine → tienda de comestibles (Grocery) → Enverun",
+      wiki: `${W}/lu4/posts/post/368-lu4-equipment-quests`
     };
     if (gear === "ivory") return {
       title: "Torre de Marfil — Under the Shadow of the Ivory Tower (40–47)",
-      body: "NPC Cema, Academia de Hardin. Solo místicos y chamanes orcos con 2ª clase. Farmeas Orbes de Nebulita y canjeas por equipo grado C."
+      body: "NPC Cema, Academia de Hardin. Solo místicos y chamanes orcos con 2ª clase. Farmeas Orbes de Nebulita y canjeas por equipo grado C.",
+      where: "Academia de Hardin (territorio Giran) → Cema Magic Trader",
+      wiki: `${W}/lu4/posts/post/368-lu4-equipment-quests`
     };
     return {
       title: "Alligator + Torre de Marfil (ventaja de chamán orco)",
-      body: "Como chamán orco puedes hacer las dos misiones de equipo del 40–47. Es una ventaja única."
+      body: "Como chamán orco puedes hacer las dos misiones de equipo del 40–47. Es una ventaja única.",
+      where: "Heine (Enverun) + Academia de Hardin (Cema)",
+      wiki: `${W}/lu4/posts/post/368-lu4-equipment-quests`
     };
   }
 
-  /** Lista maestra: misiones + mejores zonas (misma para todas las clases; equipo C según rol) */
-  function roadmapTable(cls, gear) {
-    const gearLabel = gear === "alligator"
-      ? "Alligator Hunter (Heine — Enverun)"
-      : gear === "ivory"
-        ? "Torre de Marfil (Hardin — Cema)"
-        : "Alligator + Torre de Marfil (puedes hacer ambas)";
+  /** Lugares clave con ubicación simple (+ capturas cuando hay) */
+  const PLACES = {
+    gludin: { name: "Gludin", tip: "Pueblo costero oeste. Gremios, templo, almacén, puerta oeste." },
+    gludio: { name: "Gludio", tip: "Capital del territorio. Gremios humanos/DE, templo, tiendas." },
+    dion: { name: "Dion", tip: "Pueblo. Almacén (Ranspo) para el Festín Magnífico." },
+    giran: { name: "Giran", tip: "Ciudad grande. Herrería (Kusto) en la zona de blacksmith." },
+    heine: { name: "Heine", tip: "Ciudad de Innadril. Grocery Store → Enverun (Alligator)." },
+    hunters: { name: "Aldea de los Cazadores", tip: "Edificio central → Grey (Canción del Cazador)." },
+    hardin: { name: "Academia de Hardin", tip: "Territorio Giran. Cema (Torre de Marfil quest)." },
+    schuttgart: { name: "Schuttgart / zonas Élite", tip: "Criptas, Grave Robber, Den of Evil, Caron (grupo 5–9)." },
+    ivory: { name: "Torre de Marfil", tip: "4º piso: Fairen (Saga Storm Screamer). Cráter para farm Mage." },
+    rune: { name: "Rune", tip: "Gremio de guerreros (Tazki) / Almacén (Mond) para Sagas." }
+  };
 
-    const rows = [
-      ["1–17", "Misión", "Misiones únicas de tu aldea", "Haz todas. Dan equipo NG, adena y EXP. Ver tabla de abajo."],
-      ["1–17", "Zona", "Alrededores de tu aldea", "Solo monstruos blancos (tu nivel −5 a +4)."],
-      ["16–26", "Misión", "¿Se romperá el sello?", "Obligatoria. Armadura NG + pergaminos D."],
-      ["18", "Clase", `Path → ${FIRST[cls.first].name}`, "250k EXP. Hazlo entre 18 y 20 (después del 26 no da EXP)."],
-      ["19–29", "Misión", "Colmillos de dragón (Dragon Fangs)", "~350k EXP + armadura D. Guardia Luis / lagartos Langk."],
-      ["20–28", "Misión", "Invasores de ojos rojos", "~280–330k EXP. Guardia Babenco, puerta oeste de Gludio."],
-      ["20–40", "Misión", "Festín Magnífico (Dion)", "Cadena larga → joyería D. Empieza por Harlan / Jonas / Rollant → Ranspo."],
-      ["27–32", "Misión", "Actos del mal", "Armadura grado D."],
-      ["30–36", "Zona", "Criptas de la Desgracia (Élite 33–35)", "Mejor zona de este rango. Grupo de 5–9."],
-      ["30+", "Misión", "Canción del Cazador", "Grey en Aldea de los Cazadores. Adena y consumibles a largo plazo."],
-      ["35–44", "Misión", "Cadena del Templo (Executor)", "CRÍTICO: antes del 45. ~2.5–2.7M EXP. Misionero → … → Ángel Caído."],
-      ["35–40", "Misión", `Marcas 3-en-1 → ${cls.name2}`, `${cls.marks}. ~750k EXP por marca. Guía 3-en-1 en la wiki.`],
-      ["40", "Clase", `Cambio a ${cls.name2}`, "Cuando tengas las 3 marcas."],
-      ["40–44", "Misión", "Cadena Kusto (Giran)", "CRÍTICO: antes del 45. ~600k EXP. Herrero Jefe Kusto."],
-      ["40–47", "Misión", gearLabel, "Tu misión de equipo grado C según rol."],
-      ["40–52", "Misión", "Pasatiempo del almacén / Caza del tesoro", "Más equipo C y adena."],
-      ["40–48", "Zona", "Guarida de ladrones de tumbas (Élite 42–45)", "Mejor zona ~40–48. Grupo 5–9."],
-      ["47–57", "Zona", "Guarida del Mal (Den of Evil)", "Mejor zona mid. Solo, dúo o grupo."],
-      ["52+", "Clase", "Subclase (Fate's Whisper)", "Desde 52. La subclase también llega a 85."],
-      ["56–64", "Zona", "Mazmorra de Caron (Élite 59–60)", "Grupo. Ideal ~56–64."],
-      ["60–65", "Zona", "Laboratorio Arcaico", "Siguiente paso después de Caron."],
-      ["66–74", "Zona", "Asentamiento Hatoum", "Grupo ~68–72. Muy buena EXP."],
-      ["72–74", "Misión", "Preparar Saga", "Cristal de Hielo (72+) + Piedra Divina Ketra/Varka (74+)."],
-      ["74–83", "Zona", "Isla de la Oración / Tierras Altas Cromáticas", "Isla: máx. 3 jugadores. Cromáticas: grupo grande (mejor EXP)."],
-      ["76", "Clase", `Saga → ${cls.name}`, `${cls.sagaNpc}. ~2.3M EXP + Códice.`],
-      ["78–85", "Zona", "Templo Pagano / Asentamiento de las Hadas", "Hasta el tope 85."],
-    ];
+  const NPC_INDEX = [
+    { q: ["varika", "bruja varika"], name: "Varika", where: "Pie del Altar de los Ritos (sur tierras DE)", tip: "Inicia Path Dark Wizard", wiki: `${W}/lu4/posts/post/81-path-of-the-dark-wizard-18` },
+    { q: ["arkenia", "hub scent"], name: "Arkenia", where: "Cerca del Altar de los Ritos", tip: "Te da Hub Scent (obligatorio en Path DW)", wiki: `${W}/lu4/posts/post/81-path-of-the-dark-wizard-18` },
+    { q: ["karukia"], name: "Karukia", where: "Salón de los Reyes, Aldea Orco (1er piso)", tip: "Path Orc Raider", wiki: `${W}/lu4/posts/post/69-path-of-the-orc-raider-18` },
+    { q: ["pippi", "mion", "toma", "moke"], name: "Pippi / Mion / Toma / Moke", where: "Aldea Enana → Minería Occidental → Almacén Gludin", tip: "Path Scavenger", wiki: `${W}/lu4/posts/post/77-path-of-the-scavanger-18` },
+    { q: ["kusto"], name: "Kusto", where: "Herrería de Giran (Head Blacksmith)", tip: "Cadena Kusto 40–45", wiki: `${W}/lu4/posts/post/386-lu4-kusto-quest-chain-40` },
+    { q: ["enverun", "alligator"], name: "Enverun", where: "Heine, tienda de comestibles", tip: "Alligator Hunter 40–47", wiki: `${W}/lu4/posts/post/368-lu4-equipment-quests` },
+    { q: ["cema", "ivory", "hardin"], name: "Cema", where: "Academia de Hardin", tip: "Torre de Marfil quest 40–47", wiki: `${W}/lu4/posts/post/368-lu4-equipment-quests` },
+    { q: ["fairen", "storm"], name: "Fairen", where: "Torre de Marfil, 4º piso", tip: "Saga Storm Screamer 76+", wiki: `${W}/lu4/posts/post/425-saga-of-the-storm-screamer-76` },
+    { q: ["tazki", "titan"], name: "Tazki", where: "Gremio de Guerreros de Rune", tip: "Saga Titan 76+", wiki: `${W}/lu4/posts/post/428-saga-of-the-titan-76` },
+    { q: ["mond", "fortune", "spoiler"], name: "Mond", where: "Almacén de Rune", tip: "Saga Fortune Seeker 76+", wiki: `${W}/lu4/posts/post/433-saga-of-the-fortune-seeker-76` },
+    { q: ["grey", "cazador", "hunter"], name: "Grey", where: "Edificio central, Aldea de los Cazadores", tip: "Canción del Cazador 30+", wiki: `${W}/lu4/posts/post/379-lu4-quest-song-of-hunter-30` },
+    { q: ["babenco", "ojos rojos"], name: "Babenco", where: "Puerta oeste de Gludio", tip: "Invasores de ojos rojos 20–28", wiki: `${W}/lu4/posts/post/369-lu4-quests-20-39` },
+    { q: ["ranspo", "festín", "feast", "dion"], name: "Ranspo", where: "Almacén de Dion", tip: "Festín Magnífico 20–40", wiki: `${W}/lu4/posts/post/369-lu4-quests-20-39` },
+    { q: ["auron", "warrior"], name: "Auron", where: "Gremio de Guerreros de Gludin", tip: "Path Warrior", wiki: `${W}/lu4/posts/post/64-path-of-the-warrior-18` },
+    { q: ["zigaunt", "cleric"], name: "Zigaunt", where: "Templo de Gludin", tip: "Path Cleric", wiki: `${W}/lu4/posts/post/65-path-of-the-cleric-18` },
+    { q: ["parina", "wizard"], name: "Parina", where: "Templo de Gludin", tip: "Path Human Wizard", wiki: `${W}/lu4/posts/post/66-path-of-the-human-wizard-18` }
+  ];
 
-    return rows.map(([lv, tipo, nombre, detalle]) => {
-      const clsTag = tipo === "Misión" ? "mision" : tipo === "Zona" ? "zona" : "clase";
-      return `<tr><td>${lv}</td><td><span class="tag ${clsTag}">${tipo}</span></td><td><strong>${nombre}</strong></td><td>${detalle}</td></tr>`;
+  function parseLvRange(lv) {
+    if (lv.includes("+")) {
+      const n = parseInt(lv, 10);
+      return { min: n || 0, max: 85 };
+    }
+    const m = lv.match(/(\d+)\s*[–-]\s*(\d+)/);
+    if (m) return { min: +m[1], max: +m[2] };
+    const one = parseInt(lv, 10);
+    return { min: one || 0, max: one || 85 };
+  }
+
+  function getRoadmapRows(cls) {
+    const first = FIRST[cls.first];
+    const g = gearBlock(cls.gear);
+    const gearLabel = g.title.split("—")[0].trim();
+    return [
+      { lv: "1–17", tipo: "Misión", nombre: "Misiones únicas de tu aldea", detalle: "Haz todas. Equipo NG, adena y EXP.", where: RACES[cls.race].village, wiki: `${W}/lu4/posts/post/365-lu4-quests-in-starter-zones-1-19` },
+      { lv: "1–17", tipo: "Zona", nombre: "Alrededores de tu aldea", detalle: "Solo monstruos blancos (−5/+4).", where: RACES[cls.race].village, wiki: `${W}/lu4/posts/post/498-gaining-experience-and-penalties` },
+      { lv: "16–26", tipo: "Misión", nombre: "¿Se romperá el sello?", detalle: "Obligatoria. Armadura NG + pergaminos D.", where: "Cadena de equipo (wiki)", wiki: `${W}/lu4/posts/post/368-lu4-equipment-quests` },
+      { lv: "18", tipo: "Clase", nombre: `Path → ${first.name}`, detalle: "250k EXP. Hazlo entre 18 y 20.", where: first.where || first.startNpc, wiki: first.pathUrl },
+      { lv: "19–29", tipo: "Misión", nombre: "Colmillos de dragón", detalle: "~350k EXP + armadura D. Guardia Luis / Langk.", where: "Gludin / lagartos Langk", wiki: `${W}/quest/38/lu4` },
+      { lv: "20–28", tipo: "Misión", nombre: "Invasores de ojos rojos", detalle: "~280–330k EXP. Guardia Babenco.", where: "Gludio — puerta oeste", wiki: `${W}/lu4/posts/post/369-lu4-quests-20-39` },
+      { lv: "20–40", tipo: "Misión", nombre: "Festín Magnífico (Dion)", detalle: "Cadena → joyería D. Harlan / Jonas / Rollant → Ranspo.", where: "Dion — Almacén (Ranspo)", wiki: `${W}/lu4/posts/post/369-lu4-quests-20-39` },
+      { lv: "27–32", tipo: "Misión", nombre: "Actos del mal", detalle: "Armadura grado D.", where: "Ver wiki misiones 20–39", wiki: `${W}/lu4/posts/post/369-lu4-quests-20-39` },
+      { lv: "30–36", tipo: "Zona", nombre: "Criptas de la Desgracia", detalle: "Élite 33–35. Mejor zona. Grupo 5–9.", where: "Schuttgart — Crypts of Disgrace", wiki: `${W}/lu4/posts/post/322-update-crypts-of-disgrace-3236` },
+      { lv: "30–85", tipo: "Misión", nombre: "Canción del Cazador", detalle: "Grey. Adena y consumibles a largo plazo.", where: "Aldea de los Cazadores — edificio central", wiki: `${W}/lu4/posts/post/379-lu4-quest-song-of-hunter-30` },
+      { lv: "35–44", tipo: "Misión", nombre: "Cadena del Templo", detalle: "CRÍTICO antes del 45. ~2.5–2.7M EXP.", where: "Empieza cadena Missionary/Executor (wiki)", wiki: `${W}/lu4/posts/post/380-temple-executor-quest-chain-35` },
+      { lv: "35–40", tipo: "Misión", nombre: `Marcas 3-en-1 → ${cls.name2}`, detalle: `${cls.marks}. ~750k EXP c/u.`, where: "NPCs de cada marca (guía 3-en-1)", wiki: cls.threeInOne },
+      { lv: "40", tipo: "Clase", nombre: `Cambio a ${cls.name2}`, detalle: "Cuando tengas las 3 marcas.", where: "Grand Master / Prefect de tu raza", wiki: cls.threeInOne },
+      { lv: "40–44", tipo: "Misión", nombre: "Cadena Kusto", detalle: "CRÍTICO antes del 45. ~600k EXP.", where: "Giran — Herrería (Kusto)", wiki: `${W}/lu4/posts/post/386-lu4-kusto-quest-chain-40` },
+      { lv: "40–47", tipo: "Misión", nombre: gearLabel, detalle: g.body, where: g.where, wiki: g.wiki },
+      { lv: "40–52", tipo: "Misión", nombre: "Pasatiempo / Caza del tesoro", detalle: "Más equipo C y adena.", where: "Almacenes / Heine zona Alligator", wiki: `${W}/lu4/posts/post/368-lu4-equipment-quests` },
+      { lv: "40–48", tipo: "Zona", nombre: "Guarida de ladrones de tumbas", detalle: "Élite 42–45. Grupo 5–9.", where: "Schuttgart — Grave Robber Hideout", wiki: `${W}/lu4/posts/post/323-update-grave-robber-hideout-4050` },
+      { lv: "47–57", tipo: "Zona", nombre: "Guarida del Mal (Den of Evil)", detalle: "Mejor zona mid.", where: "Schuttgart — Den of Evil", wiki: `${W}/lu4/posts/post/324-update-den-of-evil-4757` },
+      { lv: "52–85", tipo: "Clase", nombre: "Subclase (Fate's Whisper)", detalle: "Desde 52. Subclase también a 85.", where: "Ver wiki subclasses", wiki: `${W}/lu4/posts/post/45-subclasses-on-masterwork` },
+      { lv: "56–64", tipo: "Zona", nombre: "Mazmorra de Caron", detalle: "Élite 59–60. Grupo.", where: "Caron's Dungeon", wiki: `${W}/lu4/posts/post/325-update-carons-dungeon-5664` },
+      { lv: "60–65", tipo: "Zona", nombre: "Laboratorio Arcaico", detalle: "Siguiente zona después de Caron.", where: "Archaic Laboratory", wiki: `${W}/lu4/posts/post/326-update-archaic-laboratory-6065` },
+      { lv: "66–74", tipo: "Zona", nombre: "Asentamiento Hatoum", detalle: "Grupo ~68–72.", where: "Hatoum Settlement", wiki: `${W}/lu4/posts/post/174-new-hatoum-settlement-6674` },
+      { lv: "72–74", tipo: "Misión", nombre: "Preparar Saga", detalle: "Cristal de Hielo + Piedra Divina Ketra/Varka.", where: "Hot Springs / Ketra o Varka", wiki: cls.saga },
+      { lv: "74–83", tipo: "Zona", nombre: "Isla de la Oración / Cromáticas", detalle: "Isla máx. 3 · Cromáticas grupo grande.", where: "Isle of Prayer / Chromatic Highlands", wiki: `${W}/lu4/posts/post/171-isle-of-prayer-and-chromatic-highlands-7483` },
+      { lv: "76–85", tipo: "Clase", nombre: `Saga → ${cls.name}`, detalle: `${cls.sagaNpc}. ~2.3M EXP.`, where: cls.sagaNpc, wiki: cls.saga },
+      { lv: "78–85", tipo: "Zona", nombre: "Templo Pagano / Asentamiento de las Hadas", detalle: "Hasta el tope 85.", where: "Pagan Temple / Fairy Settlement", wiki: `${W}/lu4/posts/post/173-new-fairy-settlement-7885` }
+    ].map(r => {
+      const range = parseLvRange(r.lv);
+      return { ...r, lvMin: range.min, lvMax: range.max };
+    });
+  }
+
+  function rowMatchesLevel(row, level) {
+    if (level == null || Number.isNaN(level)) return true;
+    // relevante: estás dentro del rango, o a punto de empezar (−3), o acabas de pasar (+2)
+    return level >= row.lvMin - 3 && level <= row.lvMax + 2;
+  }
+
+  function roadmapTableHtml(cls, filterLevel) {
+    const rows = getRoadmapRows(cls).filter(r => rowMatchesLevel(r, filterLevel));
+    if (!rows.length) {
+      return `<tr><td colspan="5">No hay filas para el nivel ${filterLevel}. Prueba otro número o limpia el filtro.</td></tr>`;
+    }
+    return rows.map(r => {
+      const tag = r.tipo === "Misión" ? "mision" : r.tipo === "Zona" ? "zona" : "clase";
+      const wiki = r.wiki ? `<a class="wiki-link" href="${r.wiki}" target="_blank" rel="noopener">Wiki</a>` : "";
+      return `<tr class="road-row" data-min="${r.lvMin}" data-max="${r.lvMax}">
+        <td data-label="Nivel">${r.lv}</td>
+        <td data-label="Tipo"><span class="tag ${tag}">${r.tipo}</span></td>
+        <td data-label="Qué hacer"><strong>${r.nombre}</strong>${wiki}</td>
+        <td data-label="Dónde"><span class="pin">${r.where || "—"}</span></td>
+        <td data-label="Detalle">${r.detalle}</td>
+      </tr>`;
     }).join("");
   }
 
-  function buildGuideHtml(cls) {
+  function compareClasses(idA, idB) {
+    const a = getClass(idA), b = getClass(idB);
+    if (!a || !b) return "<p>Elige dos clases válidas.</p>";
+    const fa = FIRST[a.first], fb = FIRST[b.first];
+    const gearName = g => g === "alligator" ? "Alligator (guerrero)" : g === "ivory" ? "Torre de Marfil (mago)" : "Alligator + Ivory";
+    const rows = [
+      ["Clase final", a.name, b.name],
+      ["2ª clase", a.name2, b.name2],
+      ["Raza", RACES[a.race].name, RACES[b.race].name],
+      ["1ª (Path)", fa.name, fb.name],
+      ["Rol", a.role, b.role],
+      ["Tip", a.tip, b.tip],
+      ["Marcas", a.marks, b.marks],
+      ["Equipo 40+", gearName(a.gear), gearName(b.gear)],
+      ["Saga", a.sagaNpc, b.sagaNpc]
+    ];
+    return `
+      <table class="compare-table">
+        <thead><tr><th>Aspecto</th><th>${a.name}</th><th>${b.name}</th></tr></thead>
+        <tbody>
+          ${rows.map(([k, x, y]) => `<tr><td data-label="Aspecto"><strong>${k}</strong></td><td data-label="${a.name}">${x}</td><td data-label="${b.name}">${y}</td></tr>`).join("")}
+        </tbody>
+      </table>
+      <p class="muted" style="margin-top:10px">
+        <a href="?class=${a.id}">Abrir guía ${a.name}</a> ·
+        <a href="?class=${b.id}">Abrir guía ${b.name}</a>
+      </p>`;
+  }
+
+  function searchAll(query) {
+    const q = (query || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    if (!q || q.length < 2) return { classes: [], npcs: [] };
+    const classes = CLASSES.filter(c => {
+      const blob = `${c.id} ${c.name} ${c.name2} ${c.role} ${c.tip} ${c.marks}`.toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      return blob.includes(q) || q.split(/\s+/).every(t => blob.includes(t));
+    }).slice(0, 12);
+    const npcs = NPC_INDEX.filter(n =>
+      n.q.some(t => t.includes(q) || q.includes(t)) ||
+      n.name.toLowerCase().includes(q) ||
+      n.tip.toLowerCase().includes(q)
+    ).slice(0, 10);
+    return { classes, npcs };
+  }
+
+  function buildGuideHtml(cls, opts) {
+    opts = opts || {};
+    const filterLevel = opts.level != null && opts.level !== "" ? +opts.level : null;
     const race = RACES[cls.race];
     const first = FIRST[cls.first];
     const g = gearBlock(cls.gear);
     const cid = cls.classId;
 
     const starterRows = race.starters.map(s =>
-      `<tr><td>${s.lv}</td><td><strong>${s.name}</strong><br><span class="muted">${s.npc}</span></td><td>${s.reward}</td><td><span class="tag ok">${s.tip}</span></td></tr>`
+      `<tr><td data-label="Nv.">${s.lv}</td><td data-label="Misión"><strong>${s.name}</strong><br><span class="muted">${s.npc}</span></td><td data-label="Recompensa">${s.reward}</td><td data-label="Nota"><span class="tag ok">${s.tip}</span></td></tr>`
     ).join("");
 
     const pathSteps = (first.steps || []).map((s) => `<li>${s}</li>`).join("");
@@ -454,7 +751,10 @@
       `<div class="secret"><h4>${s.title}</h4><p class="what"><strong>Qué significa:</strong> ${s.what}</p><p class="do"><strong>Qué hacer:</strong> ${s.do}</p></div>`
     ).join("");
 
-    const roadmap = roadmapTable(cls, cls.gear);
+    const roadmap = roadmapTableHtml(cls, filterLevel);
+    const filterNote = filterLevel
+      ? `<p class="filter-note">Mostrando lo relevante cerca del nivel <strong>${filterLevel}</strong>. <button type="button" class="linkish" data-clear-level="1">Ver lista completa</button></p>`
+      : `<p class="muted">Usa el filtro de arriba si quieres ver solo tu nivel actual.</p>`;
 
     return `
       <div class="guide-hero card">
@@ -469,143 +769,124 @@
           </div>
         </div>
         <p>${race.blurb}</p>
+        <div class="level-filter card soft" style="margin:12px 0;padding:12px">
+          <label for="levelFilter"><strong>Estoy en el nivel</strong></label>
+          <div class="level-filter-row">
+            <input id="levelFilter" type="number" min="1" max="85" placeholder="ej. 37" value="${filterLevel || ""}" />
+            <button type="button" class="btn accent" id="btnApplyLevel">Filtrar lista</button>
+            <button type="button" class="btn" id="btnClearLevel">Ver todo</button>
+          </div>
+          <p class="muted" style="margin:8px 0 0;font-size:.85rem">Escribe tu nivel y verás solo misiones/zonas relevantes (no toda la guía).</p>
+        </div>
         <div class="howto">
-          <p><strong>Cómo usar esta guía:</strong> primero lee los <em>Secretos</em> (reglas del servidor). Después mira la <em>Lista completa</em> (misiones + mejores zonas). Al final están los pasos detallados por fase.</p>
-          <p class="muted">Verde = zona de farmeo · Azul = misión · Dorado = cambio de clase</p>
+          <p><strong>Cómo usar esta guía:</strong> lee el aviso Lu4 → mira la <em>Lista</em> (con filtro si quieres) → Path y fases.</p>
+          <p class="muted">Verde = zona · Azul = misión · Dorado = clase · Pin = dónde ir · Wiki = enlace</p>
         </div>
         <div class="hero-badges">
-          <a class="badge" href="${first.pathUrl}" target="_blank" rel="noopener">Path en la wiki</a>
+          <a class="badge" href="${first.pathUrl}" target="_blank" rel="noopener">Path wiki</a>
           <a class="badge" href="${cls.threeInOne}" target="_blank" rel="noopener">Marcas 3-en-1</a>
           <a class="badge" href="${cls.saga}" target="_blank" rel="noopener">Saga 76+</a>
-          <a class="badge" href="${W}/lu4/posts/post/365-lu4-quests-in-starter-zones-1-19" target="_blank" rel="noopener">Misiones 1–19</a>
+          <a class="badge" href="?class=${cls.id}">Link de esta clase</a>
         </div>
       </div>
 
-      <h2>Secretos de Lu4 (léelos primero)</h2>
+      <h2>Secretos de Lu4</h2>
       <div class="card" style="border-color:var(--accent)">
-        <p class="muted" style="margin-top:0">Estas reglas son del servidor Lu4. Si las ignoras, subes mucho más lento.</p>
         <div class="secrets">${secrets}</div>
       </div>
 
-      <h2>Lista completa — Misiones + mejores zonas (1 → 85)</h2>
+      <h2>Lista — Misiones + zonas ${filterLevel ? `(nivel ~${filterLevel})` : "(1 → 85)"}</h2>
       <div class="card">
-        <p>Sigue esta lista en orden. Cuando diga <span class="tag zona">Zona</span>, ve a farmear ahí. Cuando diga <span class="tag mision">Misión</span>, haz esa quest.</p>
-        <table class="roadmap">
-          <thead><tr><th>Nivel</th><th>Tipo</th><th>Qué hacer</th><th>Detalle / por qué</th></tr></thead>
-          <tbody>${roadmap}</tbody>
-        </table>
+        ${filterNote}
+        <div class="table-scroll">
+          <table class="roadmap responsive">
+            <thead><tr><th>Nivel</th><th>Tipo</th><th>Qué hacer</th><th>Dónde</th><th>Detalle</th></tr></thead>
+            <tbody>${roadmap}</tbody>
+          </table>
+        </div>
       </div>
 
       <h2>Detalle por fase</h2>
 
       <h3>Fase 1 — Niveles 1 a 17 · Aldea ${race.name}</h3>
       <div class="card">
-        <p><strong>Objetivo:</strong> terminar todas las misiones únicas y llegar a 18 con buen equipo NG.</p>
-        <p><strong>Dónde farmear:</strong> alrededores de ${race.village}. Solo monstruos blancos (tu nivel −5 a +4).</p>
-        <table>
-          <thead><tr><th>Nv.</th><th>Misión / NPC</th><th>Recompensa</th><th>Nota</th></tr></thead>
-          <tbody>${starterRows}</tbody>
-        </table>
-        <p class="muted">Más detalle: <a href="${W}/lu4/posts/post/365-lu4-quests-in-starter-zones-1-19" target="_blank">Misiones 1–19</a> · <a href="${W}/lu4/posts/post/368-lu4-equipment-quests" target="_blank">Misiones de equipo</a></p>
+        <p><strong>Objetivo:</strong> misiones únicas y llegar a 18 con equipo NG.</p>
+        <p class="pin"><strong>Dónde farmear:</strong> alrededores de ${race.village}. Monstruos blancos (−5/+4).</p>
+        <div class="table-scroll">
+          <table class="responsive">
+            <thead><tr><th>Nv.</th><th>Misión / NPC</th><th>Recompensa</th><th>Nota</th></tr></thead>
+            <tbody>${starterRows}</tbody>
+          </table>
+        </div>
       </div>
 
       <h3>Fase 2 — Nivel 18 · Path → ${first.name}</h3>
       <div class="card">
-        <p><strong>Objetivo:</strong> cambiar a 1ª clase y ganar 250.000 EXP.</p>
-        <p><strong>Inicio:</strong> ${first.startNpc}<br>
-        <strong>Cambio de clase:</strong> ${first.changeNpc}<br>
-        <strong>Recompensa Lu4:</strong> ${first.reward}<br>
+        <p><strong>Objetivo:</strong> 1ª clase + 250.000 EXP.</p>
+        <div class="place-box">
+          <strong>📍 Ubicación</strong>
+          <p>${first.where || first.startNpc}</p>
+          <p class="muted">Inicio: ${first.startNpc}<br>Cambio: ${first.changeNpc}</p>
+        </div>
+        <p><strong>Recompensa Lu4:</strong> ${first.reward}<br>
         <strong>Después puedes ser:</strong> ${first.opens.join(" / ")}</p>
         <ol>${pathSteps}</ol>
-        ${shots ? `<div class="shots" style="margin-top:12px">${shots}</div>` : ""}
-        <p><a href="${first.pathUrl}" target="_blank">Abrir el Path paso a paso en la wiki →</a></p>
+        ${shots ? `<div class="shots" style="margin-top:12px">${shots}</div>` : `<p class="muted">Capturas: abre la <a href="${first.pathUrl}" target="_blank">wiki del Path</a> (ahí están las imágenes de NPCs).</p>`}
+        <p><a href="${first.pathUrl}" target="_blank">Path completo en la wiki →</a></p>
       </div>
 
-      <h3>Fase 3 — Niveles 20 a 34 · EXP + equipo D</h3>
+      <h3>Fase 3 — Niveles 20 a 34</h3>
       <div class="card">
-        <p><strong>Objetivo:</strong> mucha EXP con misiones + primer zona Élite.</p>
-        <p><strong>Mejor zona:</strong> Criptas de la Desgracia (Élite 33–35), en grupo de 5–9. <a href="${W}/lu4/posts/post/322-update-crypts-of-disgrace-3236" target="_blank">Ver zona</a></p>
+        <p class="pin"><strong>📍 Mejor zona:</strong> Criptas de la Desgracia (Schuttgart, Élite 33–35, grupo 5–9).
+          <a href="${W}/lu4/posts/post/322-update-crypts-of-disgrace-3236" target="_blank">Wiki</a></p>
         <ol>
-          <li><strong>Festín Magnífico</strong> (Dion, 20–40): Vino fantástico → Adepto del gusto → Sacar el sabor → partituras → Ranspo (Almacén). Recompensa: joyería D.</li>
-          <li><strong>Invasores de ojos rojos</strong> (20–28): Guardia Babenco, puerta oeste de Gludio → ~280–330k EXP.</li>
-          <li>Demonio de sangre / Seducción peligrosa / Semilla del mal (21–26).</li>
-          <li><strong>Actos del mal</strong> (27–32): armadura D.</li>
-          <li><strong>Canción del Cazador</strong> (30+): Grey — Aldea de los Cazadores.</li>
-          <li>Si estás agotado (Fatigue): haz misiones. No farmees monstruos al 10% de EXP.</li>
+          <li><strong>Festín Magnífico</strong> — Dion Almacén (Ranspo).</li>
+          <li><strong>Invasores de ojos rojos</strong> — Babenco, puerta oeste Gludio.</li>
+          <li><strong>Actos del mal</strong> — armadura D.</li>
+          <li><strong>Canción del Cazador</strong> — Grey, Aldea de los Cazadores.</li>
         </ol>
       </div>
 
-      <h3>Fase 4 — Niveles 35 a 40 · Templo + marcas → ${cls.name2}</h3>
+      <h3>Fase 4 — 35 a 40 · Templo + marcas → ${cls.name2}</h3>
       <div class="card">
-        <p><span class="tag warn">IMPORTANTE</span> La cadena del Templo <strong>antes del nivel 45</strong>. Si no, pierdes ~2.7M de EXP.</p>
-        <ol>
-          <li><strong>Cadena del Ejecutor del Templo</strong>: Misionero → Ejecutor → Campeón 1–2 → Zorro de las Sombras 1–3 → Ángel Caído (Amanecer o Anochecer).<br>
-            <a href="${W}/lu4/posts/post/380-temple-executor-quest-chain-35" target="_blank">Guía del Templo</a></li>
-          <li><strong>Marcas 3-en-1</strong> desde el 35: <em>${cls.marks}</em><br>
-            Guía: <a href="${cls.threeInOne}" target="_blank">3-en-1 ${cls.name2}</a><br>
-            Recompensa Lu4: ~750k EXP <strong>por marca</strong> (≈2.25M las 3).</li>
-          <li>Nivel 40: cambia a <strong>${cls.name2}</strong>.</li>
-        </ol>
+        <p><span class="tag warn">IMPORTANTE</span> Templo <strong>antes del 45</strong>.</p>
+        <p class="pin">📍 Marcas: <a href="${cls.threeInOne}" target="_blank">guía 3-en-1 ${cls.name2}</a> · ${cls.marks}</p>
+        <p>📍 Templo: <a href="${W}/lu4/posts/post/380-temple-executor-quest-chain-35" target="_blank">cadena Executor</a></p>
       </div>
 
-      <h3>Fase 5 — Niveles 40 a 45 · Kusto + equipo C</h3>
+      <h3>Fase 5 — 40 a 45 · Kusto + equipo C</h3>
       <div class="card">
-        <p><strong>Mejor zona:</strong> Guarida de ladrones de tumbas (Élite 42–45). <a href="${W}/lu4/posts/post/323-update-grave-robber-hideout-4050" target="_blank">Ver zona</a></p>
-        <ol>
-          <li><strong>Kusto</strong> (4 misiones, antes del 45): Herrero Kusto en Giran → ~600k EXP. <a href="${W}/lu4/posts/post/386-lu4-kusto-quest-chain-40" target="_blank">Ver guía</a></li>
-          <li><strong>${g.title}</strong><br>${g.body}</li>
-          <li>Pasatiempo del almacenero (40–52) · Caza del tesoro (42–50).</li>
-        </ol>
+        <p class="pin">📍 <strong>Kusto:</strong> Herrería de Giran.
+          <a href="${W}/lu4/posts/post/386-lu4-kusto-quest-chain-40" target="_blank">Wiki</a></p>
+        <p class="pin">📍 <strong>${g.title}</strong><br>${g.where}<br>${g.body}
+          <a href="${g.wiki}" target="_blank">Wiki</a></p>
+        <p class="pin">📍 Zona: Guarida de ladrones de tumbas (Élite 42–45).
+          <a href="${W}/lu4/posts/post/323-update-grave-robber-hideout-4050" target="_blank">Wiki</a></p>
       </div>
 
-      <h3>Fase 6 — Niveles 45 a 75 · Escalera de zonas</h3>
+      <h3>Fase 6 — 45 a 75 · Zonas</h3>
       <div class="card">
-        <table class="roadmap">
-          <thead><tr><th>Nivel</th><th>Mejor zona / tarea</th><th>Nota</th></tr></thead>
-          <tbody>
-            <tr><td>47–57</td><td><a href="${W}/lu4/posts/post/324-update-den-of-evil-4757" target="_blank">Guarida del Mal (Den of Evil)</a></td><td>Zona principal de este rango</td></tr>
-            <tr><td>52+</td><td>Subclase — Fate's Whisper</td><td>Simplificado en MasterWork/Lu4</td></tr>
-            <tr><td>56–64</td><td><a href="${W}/lu4/posts/post/325-update-carons-dungeon-5664" target="_blank">Mazmorra de Caron</a></td><td>Élite 59–60, grupo</td></tr>
-            <tr><td>60–65</td><td><a href="${W}/lu4/posts/post/326-update-archaic-laboratory-6065" target="_blank">Laboratorio Arcaico</a></td><td>Siguiente zona</td></tr>
-            <tr><td>66–74</td><td><a href="${W}/lu4/posts/post/174-new-hatoum-settlement-6674" target="_blank">Asentamiento Hatoum</a></td><td>Grupo ~68–72</td></tr>
-            <tr><td>72–74</td><td>Preparar Saga</td><td>Cristal de Hielo + Piedra Divina (Ketra o Varka)</td></tr>
-          </tbody>
-        </table>
+        <div class="table-scroll">
+          <table class="roadmap responsive">
+            <thead><tr><th>Nivel</th><th>Zona</th><th>Dónde / nota</th></tr></thead>
+            <tbody>
+              <tr><td data-label="Nivel">47–57</td><td data-label="Zona"><a href="${W}/lu4/posts/post/324-update-den-of-evil-4757" target="_blank">Den of Evil</a></td><td data-label="Nota">Schuttgart</td></tr>
+              <tr><td data-label="Nivel">52+</td><td data-label="Zona"><a href="${W}/lu4/posts/post/45-subclasses-on-masterwork" target="_blank">Subclase</a></td><td data-label="Nota">Fate's Whisper</td></tr>
+              <tr><td data-label="Nivel">56–64</td><td data-label="Zona"><a href="${W}/lu4/posts/post/325-update-carons-dungeon-5664" target="_blank">Caron</a></td><td data-label="Nota">Élite 59–60</td></tr>
+              <tr><td data-label="Nivel">60–65</td><td data-label="Zona"><a href="${W}/lu4/posts/post/326-update-archaic-laboratory-6065" target="_blank">Lab Arcaico</a></td><td data-label="Nota">Siguiente zona</td></tr>
+              <tr><td data-label="Nivel">66–74</td><td data-label="Zona"><a href="${W}/lu4/posts/post/174-new-hatoum-settlement-6674" target="_blank">Hatoum</a></td><td data-label="Nota">Grupo ~68–72</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <h3>Fase 7 — Nivel 76+ · Saga → ${cls.name}</h3>
+      <h3>Fase 7–8 — Saga y 76–85</h3>
       <div class="card">
-        <p><strong>Inicio de la Saga:</strong> ${cls.sagaNpc}</p>
-        <p>Recompensa típica: ~2.3M EXP · 5M Adena · Códice de los Gigantes</p>
-        <p><a href="${cls.saga}" target="_blank">Abrir la Saga en la wiki →</a></p>
-        <ol>
-          <li>Sigue las tabletas: Valle Encantado Norte → Valle de los Santos → Ketra/Varka según tu clase</li>
-          <li>Entrega la Piedra Divina y el Cristal de Hielo donde lo pida la saga</li>
-          <li>Cambia a <strong>${cls.name}</strong></li>
-        </ol>
-      </div>
-
-      <h3>Fase 8 — 76 a 85 · Nivel máximo</h3>
-      <div class="card">
-        <p><strong>Mejores zonas:</strong></p>
-        <ul>
-          <li><a href="${W}/lu4/posts/post/171-isle-of-prayer-and-chromatic-highlands-7483" target="_blank">Isla de la Oración</a> (máximo 3 jugadores) o <strong>Tierras Altas Cromáticas</strong> (grupo grande, mejor EXP)</li>
-          <li><a href="${W}/lu4/posts/post/241-update-pagan-temple-7883" target="_blank">Templo Pagano</a> · <a href="${W}/lu4/posts/post/173-new-fairy-settlement-7885" target="_blank">Asentamiento de las Hadas</a></li>
-        </ul>
-        <p>Tope de nivel: <strong>85</strong> (también la subclase). Siempre monstruos blancos (−5/+4). Si estás agotado, haz misiones.</p>
-      </div>
-
-      <div class="card soft" style="margin-top:16px">
-        <h3 style="margin-top:0">Lista de control — ${cls.name}</h3>
-        <ul>
-          <li>☐ Aldea ${race.name} completa + Sello + Colmillos de dragón</li>
-          <li>☐ Path ${first.name} en el nivel 18</li>
-          <li>☐ Festín + Invasores ojos rojos + Criptas</li>
-          <li>☐ Templo + marcas 3-en-1 antes del 45</li>
-          <li>☐ Kusto + equipo 40+ antes del 45</li>
-          <li>☐ Subclase 52 · Cristal/Piedra 72–74</li>
-          <li>☐ Saga → ${cls.name} · Cromáticas/Hadas → 85</li>
-        </ul>
+        <p class="pin">📍 Saga: ${cls.sagaNpc} · <a href="${cls.saga}" target="_blank">Wiki Saga</a></p>
+        <p class="pin">📍 Endgame: <a href="${W}/lu4/posts/post/171-isle-of-prayer-and-chromatic-highlands-7483" target="_blank">Isla / Cromáticas</a> ·
+          <a href="${W}/lu4/posts/post/241-update-pagan-temple-7883" target="_blank">Pagano</a> ·
+          <a href="${W}/lu4/posts/post/173-new-fairy-settlement-7885" target="_blank">Hadas</a></p>
+        <p>Tope <strong>85</strong>. Monstruos blancos. Si fatiga agotada → solo misiones.</p>
       </div>
     `;
   }
@@ -619,7 +900,8 @@
   }
 
   global.Lu4Guides = {
-    W, RACES, FIRST, CLASSES, SECRETS,
-    icon, art, getClassesByRace, getClass, buildGuideHtml
+    W, RACES, FIRST, CLASSES, SECRETS, PLACES, NPC_INDEX,
+    icon, art, getClassesByRace, getClass, buildGuideHtml,
+    getRoadmapRows, compareClasses, searchAll, gearBlock
   };
 })(window);
