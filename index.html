@@ -312,20 +312,12 @@
   <div class="chat-panel" id="chatPanel">
     <div class="chat-head">
       <img src="https://masterwork.wiki/i64/etc_exp_point_i00.png" width="32" height="32" alt="" style="image-rendering:pixelated" />
-      <div><strong>Asistente Lu4</strong><span id="chatHeadSub">Niveles, NPCs, misiones…</span></div>
+      <div><strong>Asistente Lu4</strong><span id="chatHeadSub">Guía local · clases, SA, items</span></div>
       <button class="chat-close" id="chatClose">×</button>
     </div>
     <div class="chat-keybar">
-      <span class="mode-pill" id="chatModePill">Modo local</span>
-      <button type="button" class="linkish" id="chatKeyToggle">Configurar Gemini</button>
+      <span class="mode-pill on" id="chatModePill">Guía Lu4</span>
       <button type="button" class="linkish" id="chatClearHist" title="Olvidar esta charla">Nueva charla</button>
-      <form class="chat-key-form" id="chatKeyForm" autocomplete="off">
-        <input id="chatApiKey" type="password" placeholder="Pega tu API key de Gemini" spellcheck="false" />
-        <button type="submit">Guardar</button>
-        <button type="button" id="chatKeyClear">Usar key del grupo</button>
-        <button type="button" id="chatKeyOff">Solo local</button>
-        <p class="chat-key-hint">Crea una key en <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">AI Studio</a>, pégala aquí y Guarda (queda en este navegador). Si falla con error de autenticación, genera una key <strong>nueva</strong> (las filtradas se bloquean).</p>
-      </form>
     </div>
     <div class="chat-msgs" id="chatMsgs"></div>
     <div class="chat-suggestions" id="chatSuggestions"></div>
@@ -620,15 +612,6 @@
     document.getElementById("btnChat").onclick = openChat;
     document.getElementById("chatClose").onclick = () => chatPanel.classList.remove("open");
 
-    function refreshChatMode() {
-      const on = !!(window.Lu4Chat && Lu4Chat.hasGemini());
-      const pill = document.getElementById("chatModePill");
-      const sub = document.getElementById("chatHeadSub");
-      pill.textContent = on ? "Gemini activo" : "Modo local";
-      pill.classList.toggle("on", on);
-      if (sub) sub.textContent = on ? "Conversación con Gemini + guía Lu4" : "Base local · opcional Gemini";
-    }
-
     function chatContext() {
       const ctx = { level: state.level || null, classId: state.classId || null, className: null, raceName: null };
       if (state.classId && G.getClass(state.classId)) {
@@ -698,43 +681,6 @@
       ask(v);
     };
 
-    document.getElementById("chatKeyToggle").onclick = () => {
-      const form = document.getElementById("chatKeyForm");
-      form.classList.toggle("open");
-      if (form.classList.contains("open")) {
-        const key = Lu4Chat.getApiKey();
-        document.getElementById("chatApiKey").value = key ? "••••••••" + key.slice(-4) : "";
-        document.getElementById("chatApiKey").focus();
-      }
-    };
-    document.getElementById("chatKeyForm").onsubmit = e => {
-      e.preventDefault();
-      const input = document.getElementById("chatApiKey");
-      let v = input.value.trim();
-      if (v.startsWith("••••")) {
-        document.getElementById("chatKeyForm").classList.remove("open");
-        return;
-      }
-      Lu4Chat.setApiKey(v);
-      input.value = "";
-      document.getElementById("chatKeyForm").classList.remove("open");
-      refreshChatMode();
-      addMsg("bot", v
-        ? "Gemini activado. Puedes hablar con más fluidez; si falla, uso la guía local."
-        : "Key vacía: sigo en modo local.");
-    };
-    document.getElementById("chatKeyClear").onclick = () => {
-      Lu4Chat.clearApiKey();
-      document.getElementById("chatApiKey").value = "";
-      refreshChatMode();
-      addMsg("bot", "Usando la key compartida del grupo. Gemini activo.");
-    };
-    document.getElementById("chatKeyOff").onclick = () => {
-      Lu4Chat.disableGemini();
-      document.getElementById("chatApiKey").value = "";
-      refreshChatMode();
-      addMsg("bot", "Gemini desactivado en este navegador. Modo local.");
-    };
     document.getElementById("chatClearHist").onclick = () => {
       if (window.Lu4Chat) Lu4Chat.clearHistory();
       chatMsgs.innerHTML = "";
@@ -742,15 +688,8 @@
       setSuggestions(Lu4Chat.defaultSuggestions());
     };
 
-    refreshChatMode();
     setSuggestions(window.Lu4Chat ? Lu4Chat.defaultSuggestions() : []);
-    addMsg("bot", window.Lu4Chat && Lu4Chat.hasGemini()
-      ? "Gemini listo. Pregúntame (ej. «qué hago en el 37») o elige una clase arriba."
-      : "Modo local por ahora. Para Gemini: <button type='button' class='linkish' id='bootGemini'>Configurar Gemini</button> y pega una API key nueva de AI Studio.");
-    document.getElementById("bootGemini")?.addEventListener("click", () => {
-      document.getElementById("chatKeyForm").classList.add("open");
-      document.getElementById("chatApiKey").focus();
-    });
+    addMsg("bot", "Asistente con la <strong>guía Lu4</strong> (clases, SA, equipo, items). Pregúntame, por ej. «qué hago en el 37» o «cómo consigo Gemstone C».");
 
     renderRaces();
     fillCompareSelects();

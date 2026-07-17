@@ -1,18 +1,9 @@
 /**
- * Lu4 Guide Chat — KB local + Gemini opcional (API key en localStorage).
+ * Lu4 Guide Chat — solo base local (guía + ítems + wiki links).
  * Español neutro LatAm. Quests / aldeas / NPCs en inglés wiki.
  */
 (function (global) {
   const W = "https://masterwork.wiki";
-  const KEY_STORAGE = "lu4_gemini_api_key";
-  const KEY_OFF_STORAGE = "lu4_gemini_off";
-  /**
-   * Key compartida opcional del grupo.
-   * Vacía a propósito: la anterior AQ. quedó inválida/filtrada.
-   * Pega una key NUEVA en «Configurar Gemini» (se guarda en este navegador).
-   */
-  const SHARED_KEY = "";
-  const MODEL = "gemini-2.5-flash";
   const MAX_HISTORY = 8;
 
   const KB = [
@@ -439,54 +430,7 @@
     return s.replace(/\n/g, "<br>");
   }
 
-  function isGeminiDisabled() {
-    try { return localStorage.getItem(KEY_OFF_STORAGE) === "1"; }
-    catch (_) { return false; }
-  }
-
-  function getApiKey() {
-    if (isGeminiDisabled()) return "";
-    try {
-      const personal = (localStorage.getItem(KEY_STORAGE) || "").trim();
-      if (personal) return personal;
-    } catch (_) { /* ignore */ }
-    return SHARED_KEY;
-  }
-
-  function setApiKey(key) {
-    const v = (key || "").trim();
-    try {
-      if (v) {
-        localStorage.setItem(KEY_STORAGE, v);
-        localStorage.removeItem(KEY_OFF_STORAGE);
-      } else {
-        localStorage.removeItem(KEY_STORAGE);
-      }
-    } catch (_) { /* ignore */ }
-    return !!getApiKey();
-  }
-
-  /** Quita override personal y vuelve a la key compartida del grupo. */
-  function clearApiKey() {
-    try {
-      localStorage.removeItem(KEY_STORAGE);
-      localStorage.removeItem(KEY_OFF_STORAGE);
-    } catch (_) { /* ignore */ }
-  }
-
-  /** Desactiva Gemini en este navegador (solo modo local). */
-  function disableGemini() {
-    try {
-      localStorage.setItem(KEY_OFF_STORAGE, "1");
-      localStorage.removeItem(KEY_STORAGE);
-    } catch (_) { /* ignore */ }
-  }
-
-  function hasGemini() {
-    return !!getApiKey();
-  }
-
-  /** Historial de sesión para Gemini (role: user|model) */
+  /** Historial corto de la sesión (para “Nueva charla”). */
   let history = [];
 
   function clearHistory() {
@@ -496,54 +440,6 @@
   function pushHistory(role, text) {
     history.push({ role, text: String(text || "").slice(0, 4000) });
     while (history.length > MAX_HISTORY) history.shift();
-  }
-
-  function buildKbDigest(question, limit) {
-    const qNorm = normalize(question);
-    const tokens = qNorm.split(" ").filter(t => t.length > 2);
-    const ranked = KB.map(e => ({ e, s: scoreEntry(e, qNorm, tokens) }))
-      .filter(x => x.s > 0)
-      .sort((a, b) => b.s - a.s)
-      .slice(0, limit || 6);
-    if (!ranked.length) {
-      return KB.slice(0, 8).map(e => `- [${e.id}] ${e.a.replace(/\n/g, " ").slice(0, 280)}`).join("\n");
-    }
-    return ranked.map(x => `- [${x.e.id}] ${x.e.a.replace(/\n/g, " ").slice(0, 320)}`).join("\n");
-  }
-
-  function guideContextBlock(ctx, question) {
-    const G = global.Lu4Guides;
-    if (!G || !G.explainGuideTopic) return "";
-    const explained = G.explainGuideTopic(question || "", ctx || {});
-    if (explained) return explained.slice(0, 3500);
-    if (ctx && ctx.classId && G.getClass) {
-      const cls = G.getClass(ctx.classId);
-      if (cls && G.classDigest) return G.classDigest(cls).slice(0, 2000);
-    }
-    return "";
-  }
-
-  function buildSystemPrompt(ctx) {
-    const classLine = ctx && ctx.className
-      ? `Clase abierta en la guía: ${ctx.className}${ctx.raceName ? " (" + ctx.raceName + ")" : ""}${ctx.level ? ", filtro nivel " + ctx.level : ""}${ctx.classId ? " [id=" + ctx.classId + "]" : ""}.`
-      : (ctx && ctx.level ? `El usuario filtró nivel ${ctx.level} en la guía.` : "No hay clase abierta ahora.");
-    const guideBlock = guideContextBlock(ctx, (ctx && ctx.lastQuestion) || "");
-    return [
-      "Eres el asistente de la guía Lineage 2 Lu4 (MasterWork / E-Global).",
-      "Responde en español neutro latinoamericano (tú: haz, puedes, elige). Nunca uses voseo rioplatense.",
-      "Nombres de quests, aldeas, zonas, NPCs, ítems y clases: déjalos en inglés como en la wiki.",
-      "Sé conversacional y claro: explica el POR QUÉ y el CÓMO, no solo listes links. Usa 4–10 bullets si hace falta.",
-      "Prioriza SIEMPRE los datos de la guía/contexto debajo. Si hablan de un ítem/material, indica tip + que abran Drop Spoil en la wiki del ítem.",
-      "Si citas la wiki, 1 link al final como «Más info». No inventes mecánicas fuera de Lu4.",
-      "Reglas Lu4: Fatigue Worn = EXP mobs ×0.1 (quests OK); mobs −5/+4; party 5–9; sin pets/pesca; Path 18=250k; Marks 35+; Temple+Kusto <45; cap 85.",
-      classLine,
-      "",
-      "=== DATOS DE LA GUÍA (fuente principal) ===",
-      guideBlock || "(sin digest específico)",
-      "",
-      "=== KB corta ===",
-      buildKbDigest((ctx && ctx.lastQuestion) || "", 5)
-    ].join("\n");
   }
 
   function defaultSuggestions(topic) {
@@ -725,133 +621,9 @@
     return result;
   }
 
-  function extractFollowUps(text) {
-    const lines = String(text || "").split("\n").map(l => l.trim()).filter(Boolean);
-    const chips = [];
-    for (const line of lines) {
-      const m = line.match(/^FOLLOWUP:\s*(.+)$/i);
-      if (m) chips.push({ label: m[1].slice(0, 36), q: m[1] });
-    }
-    return chips.slice(0, 4);
-  }
-
-  function stripFollowUps(text) {
-    return String(text || "")
-      .split("\n")
-      .filter(l => !/^FOLLOWUP:/i.test(l.trim()))
-      .join("\n")
-      .trim();
-  }
-
-  function geminiAuthError(msg, status) {
-    const m = String(msg || "");
-    const authFail = status === 401 || /invalid authentication|UNAUTHENTICATED|API_KEY|ACCESS_TOKEN/i.test(m);
-    if (authFail) {
-      return new Error(
-        "La API key de Gemini no es válida o fue bloqueada. " +
-        "Crea una key NUEVA en https://aistudio.google.com/apikey " +
-        "→ Configurar Gemini → pegarla y Guardar. " +
-        "(Las keys AQ. se invalidan si se filtran en GitHub/chat.)"
-      );
-    }
-    const err = new Error(m || ("HTTP " + status));
-    err.status = status;
-    return err;
-  }
-
-  async function postGemini(url, key, body, authMode) {
-    const headers = { "Content-Type": "application/json" };
-    let finalUrl = url;
-    if (authMode === "header") headers["x-goog-api-key"] = key;
-    else if (authMode === "query") finalUrl += (url.includes("?") ? "&" : "?") + "key=" + encodeURIComponent(key);
-    else if (authMode === "bearer") headers["Authorization"] = "Bearer " + key;
-
-    const res = await fetch(finalUrl, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(body)
-    });
-    const data = await res.json().catch(() => ({}));
-    return { res, data };
-  }
-
-  function extractGeminiText(data) {
-    // generateContent
-    const parts = (((data.candidates || [])[0] || {}).content || {}).parts || [];
-    let text = parts.map(p => p.text || "").join("").trim();
-    if (text) return text;
-    // interactions API
-    if (data.output_text) return String(data.output_text).trim();
-    if (Array.isArray(data.outputs)) {
-      text = data.outputs.map(o => (o && o.text) || "").join("").trim();
-      if (text) return text;
-    }
-    return "";
-  }
-
-  async function callGemini(question, ctx) {
-    const key = getApiKey();
-    if (!key) throw new Error("NO_KEY");
-
-    const contents = history.map(h => ({
-      role: h.role === "model" ? "model" : "user",
-      parts: [{ text: h.text }]
-    }));
-    contents.push({ role: "user", parts: [{ text: question }] });
-
-    const genBody = {
-      system_instruction: {
-        parts: [{ text: buildSystemPrompt({ ...(ctx || {}), lastQuestion: question }) }]
-      },
-      contents,
-      generationConfig: {
-        temperature: 0.55,
-        maxOutputTokens: 900
-      }
-    };
-
-    const sys = buildSystemPrompt({ ...(ctx || {}), lastQuestion: question });
-    const interactBody = {
-      model: MODEL,
-      input: question,
-      system_instruction: sys,
-      generation_config: {
-        temperature: 0.55,
-        max_output_tokens: 900
-      }
-    };
-
-    const attempts = [
-      { url: `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, body: genBody, auth: "header" },
-      { url: `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, body: genBody, auth: "query" },
-      { url: "https://generativelanguage.googleapis.com/v1beta/interactions", body: interactBody, auth: "header" }
-    ];
-
-    let lastErr = null;
-    for (const a of attempts) {
-      try {
-        const { res, data } = await postGemini(a.url, key, a.body, a.auth);
-        if (!res.ok) {
-          lastErr = geminiAuthError((data.error && data.error.message) || ("HTTP " + res.status), res.status);
-          if (res.status === 401 || res.status === 403) continue;
-          throw lastErr;
-        }
-        const text = extractGeminiText(data);
-        if (!text) {
-          lastErr = new Error("Respuesta vacía de Gemini");
-          continue;
-        }
-        return text;
-      } catch (e) {
-        lastErr = e;
-      }
-    }
-    throw lastErr || new Error("Gemini no respondió");
-  }
-
   /**
-   * Respuesta async: Gemini si hay key; si no / falla → local.
-   * ctx: { className, raceName, level }
+   * Respuesta del asistente (solo guía local / ítems / wiki links).
+   * ctx: { className, raceName, level, classId }
    */
   async function ask(question, ctx) {
     const raw = (question || "").trim();
@@ -863,49 +635,10 @@
         mode: "local"
       };
     }
-
-    if (!hasGemini()) {
-      const local = answer(raw, ctx || {});
-      pushHistory("user", raw);
-      pushHistory("model", local.html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 800));
-      return local;
-    }
-
-    try {
-      const promptHint = [
-        raw,
-        "",
-        "Explica con claridad usando los DATOS DE LA GUÍA del system prompt. Si preguntan por un ítem, di cómo orientarse al Drop Spoil de la wiki.",
-        "Al final, si tiene sentido, agrega hasta 3 líneas exactamente así:",
-        "FOLLOWUP: pregunta corta sugerida"
-      ].join("\n");
-
-      const text = await callGemini(promptHint, { ...(ctx || {}), lastQuestion: raw });
-      const follow = extractFollowUps(text);
-      const clean = stripFollowUps(text);
-      pushHistory("user", raw);
-      pushHistory("model", clean);
-
-      return {
-        html: formatAnswer(clean),
-        sources: ["gemini"],
-        suggestions: follow.length ? follow : defaultSuggestions(),
-        mode: "gemini"
-      };
-    } catch (e) {
-      const local = answer(raw, ctx || {});
-      pushHistory("user", raw);
-      pushHistory("model", local.html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 800));
-      const note = e && e.message === "NO_KEY"
-        ? ""
-        : "<p class='chat-fallback-note'>Gemini no respondió (" + formatAnswer(String(e.message || e)).replace(/<br>/g, " ") + "). Usé la guía local:</p>";
-      return {
-        html: note + local.html,
-        sources: local.sources,
-        suggestions: local.suggestions || defaultSuggestions(),
-        mode: "local-fallback"
-      };
-    }
+    const local = answer(raw, ctx || {});
+    pushHistory("user", raw);
+    pushHistory("model", local.html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 800));
+    return local;
   }
 
   global.Lu4Chat = {
@@ -913,14 +646,8 @@
     ask,
     KB,
     answerByLevel,
-    getApiKey,
-    setApiKey,
-    clearApiKey,
-    disableGemini,
-    hasGemini,
     clearHistory,
     formatAnswer,
-    defaultSuggestions,
-    MODEL
+    defaultSuggestions
   };
 })(window);
