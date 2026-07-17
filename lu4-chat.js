@@ -59,7 +59,7 @@
       id: "alligator",
       tags: ["alligator", "alligators", "cazador", "enverun", "heine", "fisico", "warrior"],
       q: ["alligator hunter", "dónde es alligator"],
-      a: `**Alligator Hunter (40–47)** — solo **guerreros y chamanes orcos** con 2ª profesión.\n\nNPC: **Enverun** (comerciante de accesorios) — Heine, tienda de comestibles.\nRecompensas: adena, equipo C/D, pergaminos, tintes, EXP por minijuegos.\n\nMagos: usa **Bajo la sombra de la Torre de Marfil** en vez de esta.`
+      a: `**Alligator Hunter (40–47)** — solo **guerreros y chamanes orcos** con 2ª profesión.\n\nNPC: **Enverun** (comerciante de accesorios) — Heine, tienda de comestibles.\nRecompensas: adena, equipo C/D, pergaminos, tintes, EXP por minijuegos.\n\nMagos: usa **Under the Shadow of the Ivory Tower** en vez de esta.`
     },
     {
       id: "ivory",
@@ -315,7 +315,7 @@
       steps = [
         "Toma la **2ª profesión** al 40",
         "**Kusto** + termina el **Templo** ANTES del 45",
-        "Alligator (físicos/chamán) o Torre de Marfil (magos/chamán)",
+        "Alligator (físicos/chamán) o Ivory Tower (magos/chamán)",
         "Grave Robber Hideout (Elite 42–45)"
       ];
     } else if (lv <= 51) {

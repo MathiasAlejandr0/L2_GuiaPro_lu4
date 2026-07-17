@@ -30,7 +30,7 @@ Notas globales Lu4:
 
 ### 1–17 — Inicio Dwarf (ventaja spoil temprano)
 
-Aldea: **Aldea Enana**. Prioridad ([Equipment Quests](https://masterwork.wiki/lu4/posts/post/368-lu4-equipment-quests) + [Starter 1–19](https://masterwork.wiki/lu4/posts/post/365-lu4-quests-in-starter-zones-1-19)):
+Aldea: **Dwarven Village**. Prioridad ([Equipment Quests](https://masterwork.wiki/lu4/posts/post/368-lu4-equipment-quests) + [Starter 1–19](https://masterwork.wiki/lu4/posts/post/365-lu4-quests-in-starter-zones-1-19)):
 
 1. Miner’s Favor · Brigands Sweep · The Hidden Veins (adena/shots)
 2. **Jumble, Tumble, Diamond Fuss** (10–14) → Silversmith Hammer
@@ -45,7 +45,7 @@ Farmeo: mobs −5/+4. Sets NG con bonus Lu4 en shops de aldea ([Ng/D Sets](https
 
 ### 18 — Path of the Scavenger (1ª)
 
-**NPC de inicio:** Pippi Collector (norte Aldea Enana)  
+**NPC de inicio:** Pippi Collector (norte Dwarven Village)  
 **Cambio de clase:** Moke Warehouse Chief (Almacén de Gludin) → **Scavenger**  
 **Recompensa Lu4:** Ring of Raven + 250k EXP + 25k SP + coupon NG→D + shots/pots (+ Proof of Loyalty)
 
@@ -171,7 +171,7 @@ Cap **85** + subclase 85
 
 ### 1–17 — Inicio Orc
 
-Aldea: **Aldea Orco**. Prioridad:
+Aldea: **Orc Village**. Prioridad:
 
 1. **Long live the Pa’agrio Lord!** → Club  
 2. **Proof of Valor** → Necklace Courage/Valor  
@@ -186,7 +186,7 @@ Heavy/sets NG con bonus Lu4. Farm blancos −5/+4.
 
 ### 18 — Path of the Orc Raider (1ª)
 
-**NPC de inicio:** Karukia Prefect — 1er piso Hall of Kings (Aldea Orco)  
+**NPC de inicio:** Karukia Prefect — 1er piso Hall of Kings (Orc Village)  
 **Cambio:** Osborn High Prefect — Orc Guild Gludin → **Orc Raider** (abre Destroyer)  
 **Recompensa Lu4:** Mark of Raider + 250k EXP + 25k SP + coupon NG→D + shots/pots  
 
@@ -229,7 +229,7 @@ Priorizá arma 2H / heavy. Alligator llega a 40.
 12. Dion: **Chianta Gandi Chief** …  
 13. … (cadena Glory/Champion: Leto Overlord, Mouen, etc.)  
 14. Ascalon → **Mark of Champion**  
-15. Chianta → Scepter Box → Aldea Orco **Tanapi Seer** → Immortal Plateau South: Ragna Orcs → **Revenant of Tantos Chief** → Scepter of Tantos  
+15. Chianta → Scepter Box → Orc Village **Tanapi Seer** → Immortal Plateau South: Ragna Orcs → **Revenant of Tantos Chief** → Scepter of Tantos  
 16. Tanapi → Ritual Box → **Kakai Flame Lord** → **Mark of Glory**  
 17. Completá Challenger restante según guía → 3 marks  
 
@@ -309,7 +309,7 @@ Ventana −5/+4 · Fatigue → quests
 
 ### 1–17 — Inicio Dark Elf
 
-Aldea: **Aldea de los Elfos Oscuros**. Prioridad:
+Aldea: **Dark Elven Village**. Prioridad:
 
 1. Mass of Darkness · Deliver Supplies · Shilen’s Hunt  
 2. Bonds of Slavery / Invaders-style DE repeats  
@@ -440,7 +440,7 @@ Attribute farming en Chromatic (wiki IoP/Chromatic)
 | Estilo | Spoil + DD | Melee 2H | Nuke mágico |
 | Equipo misión 40 | Alligator | Alligator | **Ivory Tower** |
 | Ventaja Lu4 | Adena/mats en cada kill | Tanquea Elite grupo | Daño AoE / Chromatic |
-| Path start | Pippi (Dwarf Village) | Karukia (Aldea Orco) | Varika (Altar of Rites) |
+| Path start | Pippi (Dwarven Village) | Karukia (Orc Village) | Varika (Altar of Rites) |
 | 3-in-1 | Guildsman+Prosperity+Searcher | Challenger+Glory+Champion | Scholar+Fate+Magus |
 | Saga start | Mond (Rune WH) | Tazki (Rune WG) | Fairen (Ivory 4F) |
 | Prep 72–74 | Ice Crystal + Divine Stone | Igual | Igual |

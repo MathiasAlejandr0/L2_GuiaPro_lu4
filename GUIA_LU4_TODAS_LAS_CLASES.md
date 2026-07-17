@@ -80,7 +80,7 @@ Detalle: [1–19](https://masterwork.wiki/lu4/posts/post/365-lu4-quests-in-start
 
 Sets NG tienen **bonos nuevos** en Lu4 ([Ng/D Upgrades](https://masterwork.wiki/lu4/posts/post/362-ngd-grade-sets-upgrades)). Completá quests de equipo de tu raza.
 
-### Humano — Isla que Habla
+### Humano — Talking Island
 | Prioridad | Misión | Recompensa clave |
 |---|---|---|
 | 1 | Letters of Love / Deliver Goods / Sacrifice to the Sea | Joyería NG |
@@ -88,7 +88,7 @@ Sets NG tienen **bonos nuevos** en Lu4 ([Ng/D Upgrades](https://masterwork.wiki/
 | 3 | Collect Arrowheads / Spirit of Mirrors | Armor / Wand of Adept |
 | 4 | Cure for Fever → Will the Seal → Dragon Fangs | Shield / armadura / D armor |
 
-### Elfo — Aldea Élfica
+### Elfo — Elven Village
 | Prioridad | Misión | Recompensa clave |
 |---|---|---|
 | 1 | What Women Want / Fruit of Mother Tree / Nerupa | Joyería / pots |
@@ -96,7 +96,7 @@ Sets NG tienen **bonos nuevos** en Lu4 ([Ng/D Upgrades](https://masterwork.wiki/
 | 3 | **Sea of Spores Fever** | Sword/Staff of Sentinel |
 | 4 | Dreaming of the Skies → Seal → Dragon Fangs | Ring / armor |
 
-### Elfo Oscuro — Aldea de los Elfos Oscuros
+### Elfo Oscuro — Dark Elven Village
 | Prioridad | Misión | Recompensa clave |
 |---|---|---|
 | 1 | Mass of Darkness / Deliver Supplies / Shilen's Hunt | EXP + adena |
@@ -104,7 +104,7 @@ Sets NG tienen **bonos nuevos** en Lu4 ([Ng/D Upgrades](https://masterwork.wiki/
 | 3 | **Spirit of Craftsman** | Blood Saber |
 | 4 | Scent of Death → Seal → Dragon Fangs | Adena / armor |
 
-### Orco — Aldea Orco
+### Orco — Orc Village
 | Prioridad | Misión | Recompensa clave |
 |---|---|---|
 | 1 | **Long live the Pa'agrio Lord!** | Club |
@@ -112,7 +112,7 @@ Sets NG tienen **bonos nuevos** en Lu4 ([Ng/D Upgrades](https://masterwork.wiki/
 | 3 | **Merciless Punishment** | Butcher's Sword |
 | 4 | Totem of the Hestui → Seal → Dragon Fangs | Adena / armor |
 
-### Enano — Aldea Enana
+### Enano — Dwarven Village
 | Prioridad | Misión | Recompensa clave |
 |---|---|---|
 | 1 | Miner's Favor / Brigands Sweep / Hidden Veins | EXP + shots |
