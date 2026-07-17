@@ -498,17 +498,47 @@
     const tokens = qNorm.split(" ").filter(t => t.length > 2);
     const G = global.Lu4Guides;
     const I = global.Lu4Items;
+    const Rag = global.Lu4Rag;
 
     if (/^(hola|hey|buenas|hi|hello|que tal|qué tal)\b/.test(qNorm)) {
+      const st = Rag && Rag.status ? Rag.status() : null;
+      const n = st && st.chunks ? st.chunks : "…";
       return {
-        html: formatAnswer("¡Hola! Puedo explicar **cualquier parte de la guía** (clases, equipo, SA, zonas) y ayudarte a buscar **ítems/materiales**.\n\nEjemplos:\n• «Explícame el Path de Storm Screamer»\n• «¿Qué armas uso de C a B?»\n• «¿Cómo consigo Gemstone C / Steel / Enria?»\n• «¿Qué hago en el 40?»"),
+        html: formatAnswer(
+          `¡Hola! Soy el asistente **Lu4** con índice RAG local (**${n} trozos** de la guía, SA, clases e ítems).\n\nPregúntame:\n• «Explícame el Path de Storm Screamer»\n• «¿Qué armas uso de C a B?»\n• «¿Cómo consigo Gemstone C?»\n• «¿Qué hago en el 40?»`
+        ),
         sources: [],
         suggestions: defaultSuggestions(),
         mode: "local"
       };
     }
 
-    // Ítems / materiales (prioridad)
+    // 1) RAG — recuperación sobre todo el corpus “entrenado”
+    if (Rag && Rag.answer) {
+      if (!Rag.status().ready) Rag.train();
+      const rag = Rag.answer(raw, { classId: ctx.classId, limit: 5 });
+      if (rag && rag.score >= 10) {
+        let html = formatAnswer(rag.text);
+        // Complemento corto de nivel si aplica
+        const lv = extractLevel(raw);
+        if (lv != null && /(que|qué|hacer|hago|nivel)/.test(qNorm)) {
+          const byLv = answerByLevel(lv);
+          if (byLv) html += "<br><br><hr style='border-color:#3a4454;margin:10px 0'>" + formatAnswer(byLv);
+        }
+        return {
+          html,
+          sources: rag.sources,
+          suggestions: defaultSuggestions(
+            /(item|gemstone|steel|material|drop)/.test(qNorm) ? "item"
+              : (G && G.findClassByText && G.findClassByText(raw)) || ctx.classId ? "class"
+                : "level"
+          ),
+          mode: "rag"
+        };
+      }
+    }
+
+    // 2) Ítems / materiales (prioridad si RAG flojo)
     if (I && /(dropea|drop|spoil|material|conseguir|gemstone|crystal|steel|acero|enria|asofe|thons|varnish|animal skin|mithril|oriharukon|mold|soul crystal stage)/.test(qNorm)) {
       const hits = I.searchItems(raw, 6);
       if (hits.length) {
@@ -523,7 +553,7 @@
       }
     }
 
-    // Digests de la guía (clase abierta / SA / equipo)
+    // 3) Digests de la guía
     if (G && G.explainGuideTopic) {
       const explained = G.explainGuideTopic(raw, ctx);
       if (explained && (/(explica|explicame|explícame|cómo|como|armas|equipo|sa|path|saga|mi clase|guía|guia|set|soul)/.test(qNorm) || G.findClassByText(raw) || ctx.classId)) {
@@ -575,7 +605,6 @@
       .filter(x => x.s > 0)
       .sort((a, b) => b.s - a.s);
 
-    // Clase mencionada → digest aunque KB sea floja
     if (G && G.findClassByText) {
       const cls = G.findClassByText(raw);
       if (cls && (!ranked.length || ranked[0].s < 8)) {
@@ -592,7 +621,7 @@
       const wikiItem = I ? I.wikiItemSearchUrl(raw) : W + "/lu4/search";
       return {
         html: formatAnswer(
-          "No encontré una respuesta clara.\n\nPrueba:\n• Nivel: «qué hago en el 35»\n• Clase: «explícame Destroyer»\n• SA: «cómo levear Soul Crystal»\n• Ítem: «Gemstone C» / «Steel» / «Enria»\n• Buscador **Items** de la guía\n\nWiki ítems: " + wikiItem
+          "No encontré una respuesta clara en el índice.\n\nPrueba:\n• Nivel: «qué hago en el 35»\n• Clase: «explícame Destroyer»\n• SA: «cómo levear Soul Crystal»\n• Ítem: «Gemstone C» / «Steel»\n\nWiki ítems: " + wikiItem
         ),
         sources: [],
         suggestions: defaultSuggestions(),
@@ -605,7 +634,6 @@
     if (top[1] && top[1].s >= top[0].s * 0.7 && top[1].s >= 6) {
       html += "<br><br><hr style='border-color:#3a4454;margin:10px 0'>" + formatAnswer(top[1].e.a);
     }
-    // Enriquecer con digest de guía si aplica
     if (G && G.explainGuideTopic) {
       const extra = G.explainGuideTopic(raw, ctx);
       if (extra && extra.length > 80) {

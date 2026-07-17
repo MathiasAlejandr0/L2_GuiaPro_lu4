@@ -312,12 +312,13 @@
   <div class="chat-panel" id="chatPanel">
     <div class="chat-head">
       <img src="https://masterwork.wiki/i64/etc_exp_point_i00.png" width="32" height="32" alt="" style="image-rendering:pixelated" />
-      <div><strong>Asistente Lu4</strong><span id="chatHeadSub">Guía local · clases, SA, items</span></div>
+      <div><strong>Asistente Lu4</strong><span id="chatHeadSub">Índice RAG local · guía + items</span></div>
       <button class="chat-close" id="chatClose">×</button>
     </div>
     <div class="chat-keybar">
-      <span class="mode-pill on" id="chatModePill">Guía Lu4</span>
+      <span class="mode-pill on" id="chatModePill">RAG Lu4</span>
       <button type="button" class="linkish" id="chatClearHist" title="Olvidar esta charla">Nueva charla</button>
+      <button type="button" class="linkish" id="chatRetrain" title="Reconstruir índice">Reentrenar índice</button>
     </div>
     <div class="chat-msgs" id="chatMsgs"></div>
     <div class="chat-suggestions" id="chatSuggestions"></div>
@@ -330,6 +331,7 @@
   <script src="lu4-items.js"></script>
   <script src="lu4-guides.js"></script>
   <script src="lu4-chat.js"></script>
+  <script src="lu4-rag.js"></script>
   <script>
     const G = window.Lu4Guides;
     if (!G) {
@@ -687,9 +689,27 @@
       addMsg("bot", "Charla reiniciada. ¿En qué nivel estás o qué clase juegas?");
       setSuggestions(Lu4Chat.defaultSuggestions());
     };
+    document.getElementById("chatRetrain").onclick = () => {
+      if (!window.Lu4Rag) {
+        addMsg("bot", "Falta lu4-rag.js");
+        return;
+      }
+      const st = Lu4Rag.train();
+      addMsg("bot", `Índice reentrenado: <strong>${st.chunks}</strong> trozos indexados (${st.builtAt}). Ya puedo responder con esa base.`);
+    };
+
+    // Entrenar RAG al cargar (todas las fuentes ya están en memoria)
+    if (window.Lu4Rag) {
+      const st = Lu4Rag.train();
+      const pill = document.getElementById("chatModePill");
+      if (pill) pill.textContent = `RAG · ${st.chunks} trozos`;
+    }
 
     setSuggestions(window.Lu4Chat ? Lu4Chat.defaultSuggestions() : []);
-    addMsg("bot", "Asistente con la <strong>guía Lu4</strong> (clases, SA, equipo, items). Pregúntame, por ej. «qué hago en el 37» o «cómo consigo Gemstone C».");
+    const ragN = window.Lu4Rag && Lu4Rag.status().chunks;
+    addMsg("bot", ragN
+      ? `Asistente con <strong>RAG local</strong> (${ragN} trozos: clases, SA, equipo, items). Pregúntame, por ej. «qué hago en el 37» o «cómo consigo Gemstone C».`
+      : "Asistente Lu4 listo. Pregúntame por nivel, clase, SA o materiales.");
 
     renderRaces();
     fillCompareSelects();
