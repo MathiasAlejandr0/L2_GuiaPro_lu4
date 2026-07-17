@@ -47,25 +47,25 @@
       id: "temple45",
       tags: ["temple", "templo", "executor", "champion", "shadow fox", "fallen angel", "antes del 45", "45"],
       q: ["temple chain", "qué es temple", "hacer temple"],
-      a: `**Cadena del Ejecutor del Templo (35–45)** — HACELA ANTES DEL 45 (después no da EXP/SP).\n\nOrden: Misionero → Ejecutor → Campeón 1 → Campeón 2 → Zorro de las Sombras 1–3 → Ángel Caído Amanecer **o** Anochecer.\n\nTotal ≈ **2.5–2.7M EXP** + adena/consumibles.\n\nWiki: ${W}/lu4/posts/post/380-temple-executor-quest-chain-35`
+      a: `**Temple Executor chain (35–45)** — HACELA ANTES DEL 45 (después no da EXP/SP).\n\nOrden: Missionary → Executor → Champion-1 → Champion-2 → Shadow Fox 1–3 → Fallen Angel Dawn **o** Dusk.\n\nTotal ≈ **2.5–2.7M EXP** + adena/consumibles.\n\nWiki: ${W}/lu4/posts/post/380-temple-executor-quest-chain-35`
     },
     {
       id: "kusto",
       tags: ["kusto", "relic exploration", "nikola", "vain conclusion", "loraine"],
       q: ["qué es kusto", "cadena kusto"],
-      a: `**Cadena Kusto (40–45)** — también **antes del 45**.\n\n4 misiones (~590–615k EXP):\nRelic Exploration → Nikola (elección) → Heart/Seal/Contract → Lost Dream / Vain Conclusion / Contract Completion.\n\nNPC inicio: **Herrero Jefe Kusto** (Herrería de Giran).\n\nWiki: ${W}/lu4/posts/post/386-lu4-kusto-quest-chain-40`
+      a: `**Kusto chain (40–45)** — también **antes del 45**.\n\n4 misiones (~590–615k EXP):\nRelic Exploration → Nikola (elección) → Heart/Seal/Contract → Lost Dream / Vain Conclusion / Contract Completion.\n\nNPC inicio: **Head Blacksmith Kusto** (Giran Blacksmith).\n\nWiki: ${W}/lu4/posts/post/386-lu4-kusto-quest-chain-40`
     },
     {
       id: "alligator",
       tags: ["alligator", "alligators", "cazador", "enverun", "heine", "fisico", "warrior"],
       q: ["alligator hunter", "dónde es alligator"],
-      a: `**Cazador de cocodrilos / Alligator Hunter (40–47)** — solo **guerreros y chamanes orcos** con 2ª profesión.\n\nNPC: **Enverun** (comerciante de accesorios) — Heine, tienda de comestibles.\nRecompensas: adena, equipo C/D, pergaminos, tintes, EXP por minijuegos.\n\nMagos: usa **Bajo la sombra de la Torre de Marfil** en vez de esta.`
+      a: `**Alligator Hunter (40–47)** — solo **guerreros y chamanes orcos** con 2ª profesión.\n\nNPC: **Enverun** (comerciante de accesorios) — Heine, tienda de comestibles.\nRecompensas: adena, equipo C/D, pergaminos, tintes, EXP por minijuegos.\n\nMagos: usa **Bajo la sombra de la Torre de Marfil** en vez de esta.`
     },
     {
       id: "ivory",
       tags: ["ivory", "ivory tower", "cema", "hardin", "mage", "mistico", "nebulite"],
       q: ["ivory tower quest", "shadow of the ivory"],
-      a: `**Bajo la sombra de la Torre de Marfil (40–47)** — solo **místicos y chamanes orcos** con 2ª.\n\nNPC: **Cema** (comerciante mágico) — Academia de Hardin (territorio de Giran).\nFarmea Orbes de Nebulita → juegos / lotería → equipo C, tintes, EXP.\n\nWiki equipo: ${W}/lu4/posts/post/368-lu4-equipment-quests`
+      a: `**Under the Shadow of the Ivory Tower (40–47)** — solo **místicos y chamanes orcos** con 2ª.\n\nNPC: **Cema** (comerciante mágico) — Academia de Hardin (territorio de Giran).\nFarmea Orbes de Nebulita → juegos / lotería → equipo C, tintes, EXP.\n\nWiki equipo: ${W}/lu4/posts/post/368-lu4-equipment-quests`
     },
     {
       id: "saga-prep",
@@ -85,91 +85,91 @@
       id: "npc-pippi",
       tags: ["pippi", "collector pippi", "scavenger", "scavanger", "dwarven village"],
       q: ["dónde está pippi", "donde esta pippi"],
-      a: `**Coleccionista Pippi** — norte de la **Aldea Enana**. Inicia *Path of the Scavenger* (18+).\nCambio a Scavenger: **Jefe de Almacén Moke** en el Almacén de **Gludin**.`
+      a: `**Collector Pippi** — north of **Dwarven Village**. Starts *Path of the Scavenger* (18+).\nClass change: **Warehouse Chief Moke** at **Gludin Warehouse**.`
     },
     {
       id: "npc-mion",
       tags: ["mion", "grocer mion"],
       q: ["dónde está mion"],
-      a: `**Mion (tendera)** — tienda de comestibles de la **Aldea Enana**. Parte del Path Scavenger (entregas hasta la Carta de Mion).`
+      a: `**Mion** (Grocer) — Grocery Store, **Dwarven Village**. Part of Path Scavenger (deliveries until Mion's Letter).`
     },
     {
       id: "npc-toma",
       tags: ["toma", "master toma"],
       q: ["dónde está toma", "master toma"],
-      a: `**Master Toma** — Zona de Minería Occidental (isla cerca de la desembocadura del río).\nEn **Lu4 no teleporta**: existe a la vez en todos sus hábitats.`
+      a: `**Master Toma** — Western Mining Zone (isla cerca de la desembocadura del río).\nEn **Lu4 no teleporta**: existe a la vez en todos sus hábitats.`
     },
     {
       id: "npc-karukia",
       tags: ["karukia", "orc raider", "hall of kings"],
       q: ["dónde está karukia"],
-      a: `**Prefecto Karukia** — 1er piso del **Salón de los Reyes**, Aldea Orco. Inicia *Path of the Orc Raider*.\nCambio de clase: **Alto Prefecto Osborn**, Gremio Orco de **Gludin**.`
+      a: `**Prefect Karukia** — 1st floor of **Hall of Kings**, Orc Village. Starts *Path of the Orc Raider*.\nClass change: **High Prefect Osborn**, Orc Guild of **Gludin**.`
     },
     {
       id: "npc-kasman",
       tags: ["kasman"],
       q: ["dónde está kasman"],
-      a: `**Prefecto Kasman** — Gremio Orco de **Gludin**. Parte del Path Orc Raider.`
+      a: `**Prefect Kasman** — Orc Guild of **Gludin**. Part of Path Orc Raider.`
     },
     {
       id: "npc-varika",
       tags: ["varika", "altar of rites", "dark wizard"],
       q: ["dónde está varika"],
-      a: `**Bruja Varika** — pie del **Altar de los Ritos**, sur de las tierras de Elfos Oscuros. Inicia *Path of the Dark Wizard*.\nCambio: **Grand Master Tobias**, Gremio DE de **Gludio**.`
+      a: `**Varika** — foot of the **Altar of Rites**, south Dark Elf lands. Starts *Path of the Dark Wizard*.\nClass change: **Grand Master Tobias**, Dark Elf Guild of **Gludio**.`
     },
     {
       id: "npc-arkenia",
       tags: ["arkenia", "hub scent"],
       q: ["dónde está arkenia", "hub scent"],
-      a: `**Bruja Arkenia** — cerca del **Altar de los Ritos** (tierras DE). Te da **Hub Scent** — sin eso pueden fallar drops del Path Dark Wizard (Hearts of Lunacy).`
+      a: `**Arkenia** — near the **Altar of Rites** (Dark Elf lands). Gives **Hub Scent** — without it Path Dark Wizard drops (Hearts of Lunacy) can fail.`
     },
     {
       id: "npc-kusto",
       tags: ["kusto blacksmith", "head blacksmith kusto"],
       q: ["dónde está kusto"],
-      a: `**Herrero Jefe Kusto** — Herrería de **Giran**. Inicia la cadena Relic Exploration / Kusto (40–45).`
+      a: `**Head Blacksmith Kusto** — Blacksmith of **Giran**. Starts Relic Exploration / Kusto chain (40–45).`
     },
     {
       id: "npc-enverun",
       tags: ["enverun"],
       q: ["dónde está enverun"],
-      a: `**Enverun** (accesorios) — **Heine**, tienda de comestibles. Misión *Alligator Hunter* (40–47).`
+      a: `**Enverun** (Accessory Merchant) — **Heine**, Grocery Store. Quest *Alligator Hunter* (40–47).`
     },
     {
       id: "npc-cema",
       tags: ["cema"],
       q: ["dónde está cema"],
-      a: `**Cema** (comerciante mágico) — **Academia de Hardin** (territorio de Giran). Misión *Bajo la sombra de la Torre de Marfil* (40–47).`
+      a: `**Cema** (Magic Trader) — **Hardin's Academy** (Giran Territory). Quest *Under the Shadow of the Ivory Tower* (40–47).`
     },
     {
       id: "npc-fairen",
       tags: ["fairen", "storm screamer saga"],
       q: ["dónde está fairen"],
-      a: `**Grand Magister Fairen** — **4º piso de la Torre de Marfil**. Inicia *Saga of the Storm Screamer* (76+).`
+      a: `**Grand Magister Fairen** — **Ivory Tower 4th floor**. Starts *Saga of the Storm Screamer* (76+).`
     },
     {
       id: "npc-tazki",
       tags: ["tazki", "titan saga"],
       q: ["dónde está tazki"],
-      a: `**Prefecto Tazki** — Gremio de Guerreros de **Rune**. Inicia *Saga of the Titan* (76+).`
+      a: `**Prefect Tazki** — Warriors Guild of **Rune**. Starts *Saga of the Titan* (76+).`
     },
     {
       id: "npc-mond",
       tags: ["mond", "fortune seeker saga"],
       q: ["dónde está mond"],
-      a: `**Inspector Jefe Mond** — Almacén de **Rune**. Inicia *Saga of the Fortune Seeker* (76+).`
+      a: `**Chief Inspector Mond** — Warehouse of **Rune**. Starts *Saga of the Fortune Seeker* (76+).`
     },
     {
       id: "npc-grey",
       tags: ["grey", "song of hunter", "hunter guild", "hunter's village"],
       q: ["dónde está grey", "song of the hunter"],
-      a: `**Grey (miembro del gremio)** — edificio central de la **Aldea de los Cazadores**. Misión *Canción del Cazador* (30+, reworkeada en Lu4).\nWiki: ${W}/lu4/posts/post/379-lu4-quest-song-of-hunter-30`
+      a: `**Grey** — central building of **Hunter's Village**. Quest *Song of the Hunter* (30+, reworked in Lu4).\nWiki: ${W}/lu4/posts/post/379-lu4-quest-song-of-hunter-30`
     },
     {
       id: "npc-ranspo",
       tags: ["ranspo", "magnificent feast", "dion feast"],
       q: ["magnificent feast", "dónde feast"],
-      a: `**Festín Magnífico (20–40)** — Jefe de Almacén de Dion **Ranspo**.\nCadena previa: Vino Fantástico (Harlan), Adepto del Gusto (Jonas), Sacar el Sabor (Rollant), partituras de músicos (Barbado/Nanarin/Swan).\nRecompensa: joyería D al azar.`
+      a: `**Magnificent Feast (20–40)** — Dion Warehouse Chief **Ranspo**.\nPrevious chain: Fantasy Wine (Harlan), Adept of Taste (Jonas), Bring Out Flavor (Rollant), musician scores (Barbado/Nanarin/Swan).\nReward: random D jewelry.`
     },
 
     // —— Clases fichas ——
@@ -177,19 +177,19 @@
       id: "class-spoiler",
       tags: ["spoiler", "scavenger", "bounty hunter", "fortune seeker", "enano", "dwarf spoil"],
       q: ["guía spoiler", "cómo subir spoiler", "fortune seeker"],
-      a: `**Spoiler → Fortune Seeker (Enano)**\n\n1. Inicio enano: Jaleo de diamantes, Negocio encubierto (Anillo del Mapache)\n2. **18:** Path Scavenger — Pippi → Mion → Toma (Spoil) → Moke en Gludin\n3. **35–40:** 3-en-1 BH (Guildsman+Prosperity+Searcher) — prepara Acero/Barniz/Piel/Cristales\n4. **Antes del 45:** Templo + Kusto + Alligator\n5. **76:** Saga Mond (Almacén de Rune) — Cristal de Hielo + Piedra Divina\n\nPath: ${W}/lu4/posts/post/77-path-of-the-scavanger-18\n3-en-1: ${W}/lu4/posts/post/319-3-in-1-bounty-hunter-profession-quest\nSaga: ${W}/lu4/posts/post/433-saga-of-the-fortune-seeker-76`
+      a: `**Spoiler → Fortune Seeker (Dwarf)**\n\n1. Starter Dwarf: Jumble Tumble Diamond Fuss, Covert Business (Ring of Raccoon)\n2. **18:** Path Scavenger — Pippi → Mion → Toma (Spoil) → Moke en Gludin\n3. **35–40:** 3-en-1 BH (Guildsman+Prosperity+Searcher) — prepara Acero/Barniz/Piel/Cristales\n4. **Antes del 45:** Templo + Kusto + Alligator\n5. **76:** Saga Mond (Almacén de Rune) — Cristal de Hielo + Piedra Divina\n\nPath: ${W}/lu4/posts/post/77-path-of-the-scavanger-18\n3-en-1: ${W}/lu4/posts/post/319-3-in-1-bounty-hunter-profession-quest\nSaga: ${W}/lu4/posts/post/433-saga-of-the-fortune-seeker-76`
     },
     {
       id: "class-destroyer",
       tags: ["destroyer", "titan", "orc raider", "destru"],
       q: ["guía destroyer", "cómo subir destroyer", "titan"],
-      a: `**Destroyer → Titan (Orco)**\n\n1. Inicio: ¡Larga vida al Señor Pa'agrio!, Prueba de valor, Castigo sin piedad (Espada del Carnicero)\n2. **18:** Path Raider — Karukia → dientes Kuruka → Kasman → Umbar Orcs → Osborn Gludin\n3. **35–40:** 3-en-1 Destroyer (Challenger+Glory+Champion)\n4. **Antes del 45:** Templo + Kusto + Alligator\n5. **76:** Saga Tazki (Gremio de Guerreros de Rune)\n\nPath: ${W}/lu4/posts/post/69-path-of-the-orc-raider-18\n3-en-1: ${W}/lu4/posts/post/315-3-in-1-destroyer-profession-quest\nSaga: ${W}/lu4/posts/post/428-saga-of-the-titan-76`
+      a: `**Destroyer → Titan (Orc)**\n\n1. Starter: Long Live the Pa'agrio Lord!, Proof of Valor, Merciless Punishment (Butcher's Sword)\n2. **18:** Path Raider — Karukia → dientes Kuruka → Kasman → Umbar Orcs → Osborn Gludin\n3. **35–40:** 3-en-1 Destroyer (Challenger+Glory+Champion)\n4. **Antes del 45:** Templo + Kusto + Alligator\n5. **76:** Saga Tazki (Gremio de Guerreros de Rune)\n\nPath: ${W}/lu4/posts/post/69-path-of-the-orc-raider-18\n3-en-1: ${W}/lu4/posts/post/315-3-in-1-destroyer-profession-quest\nSaga: ${W}/lu4/posts/post/428-saga-of-the-titan-76`
     },
     {
       id: "class-storm",
       tags: ["storm screamer", "storm", "spellhowler", "dark wizard", "ss"],
       q: ["guía storm screamer", "cómo subir storm", "spellhowler"],
-      a: `**Storm Screamer (Elfo Oscuro)**\n\n1. Inicio DE: Verdad olvidada (libro), Sello, Colmillos de dragón\n2. **18:** Path Dark Wizard — Varika → Arkenia (**Hub Scent**) → Annika → Charkeren → Tobias Gludio\n3. **35–40:** 3-en-1 Spellhowler (Scholar+Fate+Magus)\n4. **Antes del 45:** Templo + Kusto + **Torre de Marfil** (no Alligator)\n5. **76:** Saga Fairen (Torre de Marfil 4º piso) — Allector se mata **con skills**\n\nPath: ${W}/lu4/posts/post/81-path-of-the-dark-wizard-18\n3-en-1: ${W}/lu4/posts/post/312-3-in-1-spellhowler-profession-quest\nSaga: ${W}/lu4/posts/post/425-saga-of-the-storm-screamer-76`
+      a: `**Storm Screamer (Dark Elf)**\n\n1. Starter DE: Forgotten Truth (spellbook), Will the Seal be Broken?, Dragon Fangs\n2. **18:** Path Dark Wizard — Varika → Arkenia (**Hub Scent**) → Annika → Charkeren → Tobias Gludio\n3. **35–40:** 3-in-1 Spellhowler (Scholar+Fate+Magus)\n4. **Before 45:** Temple + Kusto + **Ivory Tower** (no Alligator)\n5. **76:** Saga Fairen (Ivory Tower 4F) — kill Allector **with skills**\n\nPath: ${W}/lu4/posts/post/81-path-of-the-dark-wizard-18\n3-en-1: ${W}/lu4/posts/post/312-3-in-1-spellhowler-profession-quest\nSaga: ${W}/lu4/posts/post/425-saga-of-the-storm-screamer-76`
     },
 
     // —— Zonas ——
@@ -197,55 +197,55 @@
       id: "zone-crypts",
       tags: ["crypts", "crypts of disgrace", "schuttgart", "33", "34", "35", "30-36"],
       q: ["dónde farmear 30", "crypts"],
-      a: `**Criptas de la Desgracia** — monstruos Élite **33–35**, pensado para **grupo**. Ideal niveles ~30–36.\nWiki: ${W}/lu4/posts/post/322-update-crypts-of-disgrace-3236`
+      a: `**Crypts of Disgrace** — monstruos Élite **33–35**, pensado para **grupo**. Ideal niveles ~30–36.\nWiki: ${W}/lu4/posts/post/322-update-crypts-of-disgrace-3236`
     },
     {
       id: "zone-grave",
       tags: ["grave robber", "grave", "42", "43", "44", "45", "40-48"],
       q: ["dónde farmear 40", "grave robber"],
-      a: `**Guarida de los ladrones de tumbas** — Élite **42–45**, grupo. Ideal ~40–48.\nWiki: ${W}/lu4/posts/post/323-update-grave-robber-hideout-4050`
+      a: `**Grave Robber Hideout** — Élite **42–45**, grupo. Ideal ~40–48.\nWiki: ${W}/lu4/posts/post/323-update-grave-robber-hideout-4050`
     },
     {
       id: "zone-den",
       tags: ["den of evil", "den", "47", "50", "55", "57"],
       q: ["dónde farmear 50", "den of evil"],
-      a: `**Guarida del Mal (Den of Evil)** — ~47–57. Sirve solo, grupo chico o grupo completo.\nWiki: ${W}/lu4/posts/post/324-update-den-of-evil-4757`
+      a: `**Den of Evil** — ~47–57. Sirve solo, grupo chico o grupo completo.\nWiki: ${W}/lu4/posts/post/324-update-den-of-evil-4757`
     },
     {
       id: "zone-caron",
       tags: ["caron", "caron's", "59", "60", "56-64"],
       q: ["dónde farmear 60", "caron"],
-      a: `**Mazmorra de Caron** — Élite **59–60**, grupo. Ideal ~56–64.\nWiki: ${W}/lu4/posts/post/325-update-carons-dungeon-5664`
+      a: `**Caron's Dungeon** — Élite **59–60**, grupo. Ideal ~56–64.\nWiki: ${W}/lu4/posts/post/325-update-carons-dungeon-5664`
     },
     {
       id: "zone-lab",
       tags: ["archaic", "laboratory", "lab", "61", "65"],
       q: ["archaic laboratory"],
-      a: `**Laboratorio Arcaico** — ~60–65.\nWiki: ${W}/lu4/posts/post/326-update-archaic-laboratory-6065`
+      a: `**Archaic Laboratory** — ~60–65.\nWiki: ${W}/lu4/posts/post/326-update-archaic-laboratory-6065`
     },
     {
       id: "zone-hatoum",
       tags: ["hatoum", "66", "68", "70", "72", "74"],
       q: ["hatoum", "dónde farmear 70"],
-      a: `**Asentamiento Hatoum** — grupo ~**68–72**, misión pasiva de recetas.\nWiki: ${W}/lu4/posts/post/174-new-hatoum-settlement-6674`
+      a: `**Hatoum Settlement** — grupo ~**68–72**, misión pasiva de recetas.\nWiki: ${W}/lu4/posts/post/174-new-hatoum-settlement-6674`
     },
     {
       id: "zone-iop",
       tags: ["isle of prayer", "chromatic", "74", "75", "76", "77", "78", "80", "83", "island"],
       q: ["isle of prayer", "chromatic", "dónde farmear 80"],
-      a: `**Isla de la Oración / Tierras Altas Cromáticas (74–83)**\n• Isla: mecánica *no more than three* → **máx. 3 jugadores**\n• Cromáticas: grupo grande + dragones reworkeados (buena EXP)\nWiki: ${W}/lu4/posts/post/171-isle-of-prayer-and-chromatic-highlands-7483`
+      a: `**Isle of Prayer / Chromatic Highlands (74–83)**\n• Isla: mecánica *no more than three* → **máx. 3 jugadores**\n• Cromáticas: grupo grande + dragones reworkeados (buena EXP)\nWiki: ${W}/lu4/posts/post/171-isle-of-prayer-and-chromatic-highlands-7483`
     },
     {
       id: "zone-pagan",
       tags: ["pagan", "pagan temple", "78-83"],
       q: ["pagan temple"],
-      a: `**Templo Pagano (78–83)** — monstruos ~80, solo/grupo, farmeo A/S.\nWiki: ${W}/lu4/posts/post/241-update-pagan-temple-7883`
+      a: `**Pagan Temple (78–83)** — monstruos ~80, solo/grupo, farmeo A/S.\nWiki: ${W}/lu4/posts/post/241-update-pagan-temple-7883`
     },
     {
       id: "zone-fairy",
       tags: ["fairy", "fairy settlement", "78-85", "85"],
       q: ["fairy settlement"],
-      a: `**Asentamiento de las Hadas (78–85)** — 3 zonas de dificultad + misiones semanales.\nWiki: ${W}/lu4/posts/post/173-new-fairy-settlement-7885`
+      a: `**Fairy Settlement (78–85)** — 3 zonas de dificultad + misiones semanales.\nWiki: ${W}/lu4/posts/post/173-new-fairy-settlement-7885`
     },
 
     // —— Quests sueltas ——
@@ -253,25 +253,25 @@
       id: "dragon-fangs",
       tags: ["dragon fangs", "fangs", "19", "langk"],
       q: ["dragon fangs"],
-      a: `**Colmillos de dragón (19–29)** — gran EXP (~350k) + armadura D al azar.\nInicio: Guardia Luis (zona Gludin / cadena lagartos Langk).\nWiki: ${W}/quest/38/lu4`
+      a: `**Dragon Fangs (19–29)** — gran EXP (~350k) + armadura D al azar.\nStart: Guard Luis (Gludin area / Langk Lizardmen chain).\nWiki: ${W}/quest/38/lu4`
     },
     {
       id: "red-eyed",
       tags: ["red-eyed", "red eyed", "invaders", "20", "28", "babenco"],
       q: ["red-eyed invaders"],
-      a: `**Invasores de ojos rojos (20–28)** — única ≈ **280–330k EXP**.\nNPC: **Guardia Babenco**, puerta oeste de Gludio.`
+      a: `**Red-Eyed Invaders (20–28)** — one-time ≈ **280–330k EXP**.\nNPC: **Guard Babenco**, Gludio Western Gate.`
     },
     {
       id: "seal",
       tags: ["seal", "will the seal", "sellado"],
       q: ["will the seal be broken"],
-      a: `**¿Se romperá el sello? (16–26)** — misión única. Armadura NG al azar + pergaminos enchant D. Hazla sí o sí en niveles bajos.`
+      a: `**Will the Seal be Broken? (16–26)** — one-time. Random NG armor + D enchant scrolls. Hazla sí o sí en niveles bajos.`
     },
     {
       id: "coins",
       tags: ["coins of magic", "monedas"],
       q: ["coins of magic"],
-      a: `**Coins of Magic no está disponible en Lu4.** Usa Alligator / Torre de Marfil / Pasatiempo / Caza del tesoro para grado C.`
+      a: `**Coins of Magic no está disponible en Lu4.** Usa Alligator / Ivory Tower / Warehouse Pastime / Treasure Hunt para C-grade.`
     }
   ];
 
@@ -282,75 +282,75 @@
     if (lv <= 17) {
       steps = [
         "Misiones únicas de tu aldea + equipo de raza",
-        "¿Se romperá el sello? (16–26) y Colmillos de dragón (19–29) cuando puedas",
+        "Will the Seal be Broken? (16–26) y Dragon Fangs (19–29) cuando puedas",
         "Farmea monstruos blancos (−5/+4)",
         "Al 18: Path de 1ª profesión (250k EXP)"
       ];
     } else if (lv <= 19) {
       steps = [
         "Haz el **Path** de tu clase (18+) → 250k EXP",
-        "Colmillos de dragón si no lo terminaste",
-        "Empieza la cadena del Festín Magnífico en Dion (20+)"
+        "Dragon Fangs si no lo terminaste",
+        "Empieza Magnificent Feast en Dion (20+)"
       ];
     } else if (lv <= 29) {
       steps = [
-        "Festín Magnífico + Adepto del gusto / Vino fantástico (Dion)",
-        "Invasores de ojos rojos (20–28) — mucha EXP",
-        "Actos del mal (27–32) para armadura D",
-        "Criptas de la Desgracia en grupo (~30–36)"
+        "Magnificent Feast + Adept of Taste / Fantasy Wine (Dion)",
+        "Red-Eyed Invaders (20–28) — mucha EXP",
+        "Acts of Evil (27–32) para armadura D",
+        "Crypts of Disgrace en grupo (~30–36)"
       ];
     } else if (lv <= 34) {
       steps = [
-        "Criptas de la Desgracia (Élite 33–35) en grupo 5–9",
-        "Canción del Cazador (Grey en Aldea de los Cazadores)",
+        "Crypts of Disgrace (Elite 33–35) en grupo 5–9",
+        "Song of the Hunter (Grey en Hunter's Village)",
         "Prepara la cadena del Templo (desde 35)"
       ];
     } else if (lv <= 39) {
       steps = [
-        "**PRIORIDAD:** cadena del Ejecutor del Templo (antes del 45)",
+        "**PRIORIDAD:** Temple Executor chain (antes del 45)",
         "Empieza las marcas 3-en-1 de tu 2ª (disponibles desde 35)",
-        "Criptas / transición a Guarida de ladrones cerca del 40"
+        "Crypts / transición a Grave Robber Hideout cerca del 40"
       ];
     } else if (lv <= 44) {
       steps = [
         "Toma la **2ª profesión** al 40",
         "**Kusto** + termina el **Templo** ANTES del 45",
         "Alligator (físicos/chamán) o Torre de Marfil (magos/chamán)",
-        "Guarida de ladrones de tumbas (Élite 42–45)"
+        "Grave Robber Hideout (Elite 42–45)"
       ];
     } else if (lv <= 51) {
       steps = [
-        "Guarida del Mal (~47–57)",
-        "Pasatiempo del almacén / Caza del tesoro / Canción del Cazador",
+        "Den of Evil (~47–57)",
+        "Warehouse Pastime / Treasure Hunt / Song of the Hunter",
         "Al 52: Fate's Whisper → subclase"
       ];
     } else if (lv <= 59) {
       steps = [
         "Subclase si todavía no la tienes",
-        "Guarida del Mal → Mazmorra de Caron (59–60)",
+        "Den of Evil → Caron's Dungeon (59–60)",
         "Sigue misiones de Cazador / adena"
       ];
     } else if (lv <= 65) {
       steps = [
-        "Mazmorra de Caron / Laboratorio Arcaico",
+        "Caron's Dungeon / Archaic Laboratory",
         "Prepara rumbo a Hatoum (~68–72)"
       ];
     } else if (lv <= 73) {
       steps = [
-        "Asentamiento Hatoum en grupo",
+        "Hatoum Settlement en grupo",
         "**72+:** The Finest Ingredients → Cristal de Hielo",
         "**72–74:** Alianza Ketra o Varka → Piedra Divina de la Sabiduría"
       ];
     } else if (lv <= 75) {
       steps = [
-        "Isla de la Oración (máx. 3) o Tierras Altas Cromáticas (grupo)",
+        "Isle of Prayer (máx. 3) o Chromatic Highlands (grupo)",
         "Asegura Cristal de Hielo + Piedra Divina",
         "Al 76: Saga de tu clase → 3ª"
       ];
     } else if (lv <= 85) {
       steps = [
         "Saga si aún no eres 3ª clase",
-        "Cromáticas / Templo Pagano / Asentamiento de las Hadas",
+        "Chromatic Highlands / Pagan Temple / Fairy Settlement",
         "Respeta ventana −5/+4 y Fatiga (misiones si estás Worn)",
         "Tope 85 + subclase 85"
       ];
